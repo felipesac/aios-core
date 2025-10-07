@@ -50,7 +50,6 @@ Esta abordagem de duas fases elimina tanto a **inconsistência de planejamento**
 - **[Criar meus próprios agentes IA](#criando-seu-próprio-expansion-pack)** → Construir agentes para seu domínio
 - **[Navegar expansion packs prontos](expansion-packs/)** → Game dev, DevOps, infraestrutura e inspire-se com ideias e exemplos
 - **[Entender a arquitetura](docs/core-architecture.md)** → Mergulho técnico profundo
-- **[Juntar-se à comunidade](https://discord.gg/gk8jAdXWmj)** → Obter ajuda e compartilhar ideias
 
 ## Importante: Mantenha Sua Instalação AIOS Atualizada
 
@@ -268,9 +267,7 @@ Explore o diretório [expansion-packs/](expansion-packs/) para mais inspiração
 
 ## Suporte
 
-- 💬 [Comunidade Discord](https://discord.gg/gk8jAdXWmj)
 - 🐛 [Rastreador de Issues](https://github.com/Pedrovaleriolopez/aios-fullstack/issues)
-- 💬 [Discussões](https://github.com/Pedrovaleriolopez/aios-fullstack/discussions)
 
 ## Contribuindo
 
