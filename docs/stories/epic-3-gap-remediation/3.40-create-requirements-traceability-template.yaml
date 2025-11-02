@@ -1,0 +1,211 @@
+---
+id: "3.40"
+title: "Create Requirements Traceability Matrix Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing requirements-traceability-matrix-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task trace-requirements.md needs requirements-traceability-matrix-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create requirements-traceability-matrix-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a requirements traceability matrix template (requirements-traceability-matrix-tmpl.md),
+  **so that** the trace-requirements task can map story requirements to test cases using Given-When-Then patterns.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.40.1"
+      description: "Create requirements-traceability-matrix-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/requirements-traceability-matrix-tmpl.md
+        - Template includes traceability matrix structure (requirements → tests mapping)
+        - Template uses Markdown format with Given-When-Then documentation patterns
+        - Template includes placeholders for requirement details, test mappings, and coverage levels
+        - Template supports coverage gap identification
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.40.2"
+      description: "Update trace-requirements task to reference template"
+      requirements:
+        - Remove TODO comment from trace-requirements.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references requirements-traceability-matrix-tmpl.md in frontmatter"
+
+    - id: "TR-3.40.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template with sample traceability matrix
+        - Document template placeholders and Given-When-Then usage
+      validation: "Gap detection shows trace-requirements has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze traceability requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review trace-requirements.md task to understand traceability workflow"
+      - "Identify matrix structure: requirements, test mappings, coverage levels"
+      - "Review Given-When-Then pattern for test documentation"
+      - "Define template sections and placeholders"
+
+  - task: "Task 2: Create requirements-traceability-matrix-tmpl.md template"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/templates/requirements-traceability-matrix-tmpl.md file"
+      - "Add header: # Requirements Traceability Matrix: Story {{storyId}}"
+      - "Add Summary section with coverage statistics"
+      - "Add Requirement Mapping section with AC → Test mapping"
+      - "Add Test Case template with Given-When-Then structure"
+      - "Add Coverage Gaps section"
+      - "Add Traceability Matrix table"
+      - "Include inline comments explaining Given-When-Then usage"
+
+  - task: "Task 3: Integrate template with trace-requirements task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/trace-requirements.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: requirements-traceability-matrix-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify trace-requirements now shows template reference"
+      - "Generate sample traceability matrix using template with test data"
+      - "Validate Given-When-Then patterns documented correctly"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/trace-requirements.md
+    ```yaml
+    ---
+    # TODO: Create requirements-traceability-matrix-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - requirements-traceability-matrix-tmpl.md  # Template doesn't exist yet
+    ---
+    ```
+
+  template_structure: |
+    Requirements Traceability Matrix template should include:
+
+    ```markdown
+    # Requirements Traceability Matrix: Story {{storyId}} - {{storyTitle}}
+
+    **Story**: {{storyId}}
+    **Date**: {{date}}
+    **Coverage**: {{coveragePercentage}}%
+
+    ## Summary
+    - **Total Requirements**: {{totalRequirements}}
+    - **Requirements with Full Coverage**: {{fullCoverage}}
+    - **Requirements with Partial Coverage**: {{partialCoverage}}
+    - **Requirements with No Coverage**: {{noCoverage}}
+    - **Total Test Cases**: {{totalTestCases}}
+
+    ## Requirement to Test Mapping
+
+    {{#requirements}}
+    ### {{requirementId}}: {{requirementDescription}}
+
+    **Coverage Level**: {{coverageLevel}} (full/partial/none/integration/unit)
+
+    #### Test Mappings
+    {{#testMappings}}
+    **Test**: {{testFile}} - {{testCase}}
+    - **Given**: {{given}}
+    - **When**: {{when}}
+    - **Then**: {{then}}
+    - **Coverage**: {{coverage}}
+    {{/testMappings}}
+    {{/requirements}}
+
+    ## Coverage Gaps
+    {{#coverageGaps}}
+    ### Gap: {{requirementId}}
+    - **Requirement**: {{requirement}}
+    - **Gap**: {{gapDescription}}
+    - **Severity**: {{severity}} (low/medium/high)
+    - **Suggested Test**:
+      - **Type**: {{testType}} (unit/integration/performance)
+      - **Description**: {{testDescription}}
+    {{/coverageGaps}}
+
+    ## Traceability Matrix
+
+    | Requirement ID | Description | Test Cases | Coverage |
+    |----------------|-------------|------------|----------|
+    {{#matrixRows}}
+    | {{reqId}} | {{reqDesc}} | {{testCases}} | {{coverage}} |
+    {{/matrixRows}}
+
+    ## Notes
+    {{notes}}
+    ```
+
+  given_when_then_usage: |
+    **IMPORTANT**: Given-When-Then is used for DOCUMENTING the mapping between
+    requirements and tests, NOT for writing actual test code.
+
+    - **Given**: Describes the preconditions/context
+    - **When**: Describes the action/event
+    - **Then**: Describes the expected outcome
+
+    Example:
+    - **Given**: A registered user with valid credentials
+    - **When**: They submit the login form
+    - **Then**: They are redirected to dashboard and session is created
+
+  files_to_create:
+    - ".aios-core/templates/requirements-traceability-matrix-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/trace-requirements.md"
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

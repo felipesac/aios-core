@@ -1,0 +1,478 @@
+id: '3.1.4'
+title: Orphaned Task Integration - Batch 4 (Utils R-Y)
+epic: "3c-remediation"
+phase: 'Epic 3: Architecture Gap Remediation'
+status: Done
+priority: high
+estimated_hours: 8
+actual_hours: 2.0
+created_by: Sarah (@po) via Story 3.1 split
+validated_by:
+  - Sarah (@po) - v2.0.0 comprehensive validation and fixes (2025-10-31)
+approval_date: '2025-10-31'
+completed_date: '2025-10-31'
+completed_by: James (@dev)
+blocks: []
+blocked_by: ['3.1.3']
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Integrate orphaned utility files into agent dependencies (Batch 4 of 4 - FINAL)
+
+  This story addresses 25 gaps from Story 3.1's total of 88 "Orphaned Active" gaps.
+  This batch focuses on utility files starting with R-Y (alphabetical) - completing the integration.
+
+  **Parent Story**: 3.1 - Orphaned Task Integration (split into 4 batches)
+  **Pattern**: Following proven Stories 3.7-3.10 approach (95-98/100 quality, 62-81% under budget)
+  **Dependency**: Blocked by Story 3.1.3 for sequential batch processing
+
+  **Gap Reference**: See outputs/architecture-map/reports/gap-backlog.csv for 25 util-* entities (R-Y range)
+
+story: |
+  **As an** AIOS framework developer,
+  **I want** to integrate 25 orphaned utility files (R-Y alphabetical range) into framework references (Batch 4 - FINAL),
+  **so that** all utility scripts are properly documented and discoverable, completing Story 3.1.
+
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.1.4.1
+      description: Integrate or deprecate 25 orphaned utilities (R-Y)
+      requirements:
+        - Review each util-* entity (redundancy-analyzer through yaml-validator)
+        - Verify already-archived utilities (5 total) have no active references
+        - Determine if active utilities (20 total) should be integrated or deprecated
+        - Add utility references to tasks/agents that use them
+        - Mark deprecated utilities in core-config.yaml registry notes
+        - Move deprecated utilities to .aios-core/utils-archive/ if needed
+      validation: Gap detection shows 0 "not referenced" gaps for all 25 Batch 4 utilities
+
+    - id: TR-3.1.4.2
+      description: Validate utility dependencies
+      requirements:
+        - Verify all 25 utilities have no broken dependencies
+        - Check for requires to archived utilities (utils-archive/)
+        - Document any utilities requiring remediation
+        - Update core-config.yaml registry with utility metadata
+      validation: All utilities either integrated with valid dependencies or deprecated with rationale
+
+    - id: TR-3.1.4.3
+      description: Complete Story 3.1 integration (all 88 gaps)
+      requirements:
+        - Run gap detection for all 88 Orphaned Active entities
+        - Verify 0 gaps remain across all 4 batches
+        - Update Story 3.1 with completion summary
+        - Document final integration vs deprecation counts
+      validation: Gap detection shows 0 Orphaned Active gaps for all 88 entities from Story 3.1
+
+tasks:
+  - task: Batch 4 - Review Utils R-Y (TR-3.1.4.1)
+    subtasks:
+      - [x] util-redundancy-analyzer.js (⚠️ Already archived) - Verify no active references
+      - [x] util-refactoring-suggester.js - Review usage in refactoring workflows
+      - [x] util-rollback-handler.js - Review usage in rollback operations
+      - [x] util-safe-removal-handler.js - Review usage in removal workflows
+      - [x] util-sandbox-tester.js - Review usage in testing workflows
+      - [x] util-security-checker.js - Review usage in security validation
+      - [x] util-status-mapper.js - Review usage in status tracking
+      - [x] util-story-manager.js - Review usage in story management
+      - [x] util-story-update-hook.js - Review usage in story hooks
+      - [x] util-template-engine.js - Review usage in template rendering (Story 3.2 reference)
+      - [x] util-template-validator.js - Review usage in template validation (Story 3.2 reference)
+      - [x] util-test-generator.js - Review usage in test generation
+      - [x] util-test-quality-assessment.js - Review usage in test quality
+      - [x] util-test-template-system.js - Review usage in test templates
+      - [x] util-test-updater.js - Review usage in test updates
+      - [x] util-tool-helper-executor.js - Review usage (Story 3.18 archived reference)
+      - [x] util-tool-resolver.js - Review usage in tool resolution (Story 3.3 reference)
+      - [x] util-tool-validation-helper.js - Review usage (Story 3.18 archived reference)
+      - [x] util-transaction-manager.js - Review usage in transaction management
+      - [x] util-usage-analytics.js - Review usage in analytics
+      - [x] util-usage-tracker.js - Review usage (Story 3.18 archived reference)
+      - [x] util-validate-filenames.js (⚠️ Already archived) - Verify no active references
+      - [x] util-version-tracker.js - Review usage in version tracking
+      - [x] util-visual-impact-generator.js - Review usage in visual impact
+      - [x] util-yaml-validator.js - Review usage in YAML validation
+
+  - task: Batch 4 - Integrate or Deprecate (TR-3.1.4.1)
+    subtasks:
+      - [x] Add utility references to tasks that use them
+      - [x] Update core-config.yaml registry notes for active utilities
+      - [x] Mark deprecated utilities in core-config.yaml
+      - [x] Move deprecated utilities to utils-archive/ if confirmed unused
+      - [x] Document integration decisions in completion_notes
+
+  - task: Batch 4 - Validate Dependencies (TR-3.1.4.2)
+    subtasks:
+      - [x] Check each utility for broken require() statements
+      - [x] Flag utilities referencing utils-archive/
+      - [x] Document utilities needing remediation
+      - [x] Update core-config.yaml with utility status
+
+  - task: Batch 4 - Final Validation (TR-3.1.4.3)
+    subtasks:
+      - [x] Run gap detection: node outputs/architecture-map/schemas/detect-gaps.js
+      - [x] Verify 0 "Orphaned Active" gaps across ALL 4 batches (88 total)
+      - [x] Count integrated vs deprecated entities across all batches
+      - [x] Update Story 3.1 with completion summary
+      - [x] Document final statistics in completion_notes
+
+  - task: Batch 4 - Completion (All TRs)
+    subtasks:
+      - [x] Update story file_list with all modified files
+      - [x] Update change_log with v1.0.0 completion entry
+      - [x] Mark Story 3.1 as "Done" if all 4 batches complete
+
+dev_notes:
+  batch_scope: |
+    **Batch 4 Focus**: Utility files R-Y (25 utilities - FINAL BATCH)
+
+    **NOTE**: "util-" is a gap detection tracking prefix. Actual filenames in .aios-core/utils/
+    do NOT include the "util-" prefix (e.g., "util-story-manager" → "story-manager.js")
+
+    **Gap Breakdown**: 25 total = 20 active utilities + 5 already archived
+    - Active utilities: Require integration or deprecation decision
+    - Already archived: Verify no active references remain
+
+    1. util-redundancy-analyzer.js (⚠️ Already archived - verify status)
+    2. util-refactoring-suggester.js
+    3. util-rollback-handler.js
+    4. util-safe-removal-handler.js
+    5. util-sandbox-tester.js
+    6. util-security-checker.js
+    7. util-status-mapper.js
+    8. util-story-manager.js
+    9. util-story-update-hook.js
+    10. util-template-engine.js (✅ Story 3.2 integrated)
+    11. util-template-validator.js (✅ Story 3.2 integrated)
+    12. util-test-generator.js
+    13. util-test-quality-assessment.js
+    14. util-test-template-system.js
+    15. util-test-updater.js
+    16. util-tool-helper-executor.js (⚠️ Story 3.18 archived)
+    17. util-tool-resolver.js (✅ Story 3.3 integrated)
+    18. util-tool-validation-helper.js (⚠️ Story 3.18 archived)
+    19. util-transaction-manager.js
+    20. util-usage-analytics.js
+    21. util-usage-tracker.js (⚠️ Story 3.18 archived)
+    22. util-validate-filenames.js (⚠️ Already archived - verify status)
+    23. util-version-tracker.js
+    24. util-visual-impact-generator.js
+    25. util-yaml-validator.js
+
+    **⚠️ Known Archived**: Story 3.18 archived several utilities - verify these are documented
+
+  remediation_approach: |
+    **Follow Story 3.1 remediation_approach** in parent story.
+
+    **Utility Integration Strategy**:
+    1. Check if utility is actively imported/required by any tasks or agents
+    2. If used: Add reference to task/agent that uses it (not agent dependencies)
+    3. If unused: Deprecate and document in core-config.yaml registry notes
+    4. Cross-reference with Story 3.2 (template utils) and Story 3.3 (tool utils) for already-integrated utilities
+    5. Cross-reference with Story 3.18 for archived utilities
+
+  integration_examples: |
+    **Follow Story 3.1.2 integration examples** (lines 167-196):
+    - Method 1: Active utility (grep for require statements)
+    - Method 2: Inactive utility (no references → archive)
+    - Method 3: Already archived (verify no active references)
+
+    **Reference:** docs/stories/epic-3-gap-remediation/3.1.2-orphaned-task-integration-batch-2.yaml
+
+    **Example - Already Archived Utility Check:**
+    ```bash
+    # Verify redundancy-analyzer.js has no active references
+    $ grep -r "redundancy-analyzer" .aios-core/tasks/ .aios-core/agents/
+    # Expected: No results (if truly archived)
+
+    # If found: Must remediate broken reference before closing story
+    ```
+
+  final_validation: |
+    **Story 3.1 Completion Criteria** (TR-3.1.4.3):
+
+    After Batch 4 completion, verify across ALL batches:
+    - Batch 1 (3.1.1): 22 entities integrated/deprecated
+    - Batch 2 (3.1.2): 22 entities integrated/deprecated
+    - Batch 3 (3.1.3): 19 entities integrated/deprecated
+    - Batch 4 (3.1.4): 25 entities integrated/deprecated
+    - **TOTAL**: 88 entities = 0 Orphaned Active gaps
+
+  files_to_modify:
+    - .aios-core/tasks/* (add utility usage references in code blocks)
+    - .aios-core/core-config.yaml (update registry notes)
+    - .aios-core/utils-archive/* (if deprecating utilities)
+    - docs/stories/epic-3-gap-remediation/3.1.4-orphaned-task-integration-batch-4.yaml
+    - docs/stories/epic-3-gap-remediation/3.1-orphaned-task-integration.yaml (update with completion summary)
+
+testing:
+  approach: |
+    **Testing Strategy**: Follow Story 3.1 testing approach + final cross-batch validation
+
+    **Phase 1: Gap Detection Validation** (TR-3.1.4.1)
+    - Command: `node outputs/architecture-map/schemas/detect-gaps.js`
+    - Filter output for Batch 4 utility entities
+    - Expected: 0 "not referenced" gaps for integrated/deprecated utilities
+
+    **Phase 2: Dependency Validation** (TR-3.1.4.2)
+    - Check each utility for broken dependencies
+    - Flag archived utility references
+    - Document remediation needs
+
+    **Phase 3: Final Cross-Batch Validation** (TR-3.1.4.3)
+    - Run gap detection for ALL 88 entities
+    - Verify 0 Orphaned Active gaps across batches 3.1.1-3.1.4
+    - Generate final statistics report
+
+  validation_evidence:
+    - Gap detection output showing 0 gaps for Batch 4 utilities
+    - Final gap detection output showing 0 Orphaned Active gaps (all 88)
+    - List of integrated vs deprecated utilities with rationale
+    - Dependency validation report
+    - Story 3.1 completion summary
+
+change_log:
+  - date: '2025-10-31'
+    version: 3.0.0
+    description: Story 3.1.4 COMPLETE - Batch 4 finished, Story 3.1 complete
+    author: James (@dev)
+    changes:
+      - 'STATUS CHANGE: Approved → Done'
+      - 'FIXED: Broken reference to redundancy-analyzer in analyze-framework.md'
+      - 'ARCHIVED: 4 unused utilities (rollback-handler, safe-removal-handler, test-updater, version-tracker)'
+      - 'DOCUMENTED: 16 active utilities in core-config.yaml'
+      - 'VERIFIED: 5 already-archived utilities have no active references'
+      - 'VALIDATED: 0 Orphaned Active gaps (all 88 from Story 3.1 resolved)'
+      - 'UPDATED: Story 3.1 marked as Done with completion summary'
+    summary: |
+      Batch 4 (final batch) completed successfully. All 25 utilities reviewed:
+      - 16 active utilities documented
+      - 4 utilities archived (unused)
+      - 5 already-archived utilities verified clean
+      - 1 broken reference fixed
+
+      Story 3.1 now complete: All 4 batches finished, 88 gaps → 0 gaps.
+
+  - date: '2025-10-31'
+    version: 2.0.0
+    description: Story validation and critical fixes applied - APPROVED
+    author: Sarah (@po)
+    changes:
+      - 'FIXED: Marked util-redundancy-analyzer.js as already archived (⚠️)'
+      - 'FIXED: Marked util-validate-filenames.js as already archived (⚠️)'
+      - 'ADDED: Clarification note about "util-" prefix being tracking ID, not filename'
+      - 'ADDED: Gap breakdown (25 total = 20 active + 5 already archived)'
+      - 'UPDATED: TR-3.1.4.1 requirements to distinguish active vs pre-archived utilities'
+      - 'ADDED: integration_examples section with Story 3.1.2 reference'
+      - 'ADDED: Example for already-archived utility verification'
+      - 'UPDATED: Task subtasks for both archived utilities'
+      - 'STATUS CHANGE: Draft → Approved'
+    rationale: |
+      Story validation (*validate-story-draft) identified 2 critical blockers:
+
+      1. Two utilities (redundancy-analyzer.js, validate-filenames.js) already archived but treated as active
+      2. Gap count needed clarification (20 active + 5 archived = 25 total)
+
+      All critical issues resolved. Implementation readiness upgraded from 6/10 NO-GO to 9/10 GO.
+
+      Story now follows proven pattern from Stories 3.1.1-3.1.3 (95-98/100 quality, 62-81% under budget).
+
+  - date: '2025-10-31'
+    version: 1.0.0
+    description: Story created via Story 3.1 split - Batch 4 of 4 (Utils R-Y - FINAL)
+    author: Sarah (@po)
+
+dev_agent_record:
+  agent_model: Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
+  session_date: '2025-10-31'
+  workflow: develop-story
+  debug_log_references: []
+  completion_notes: |
+    **Batch 4 Integration Summary:**
+
+    **Active Utilities (16 documented in core-config.yaml):**
+    - refactoring-suggester.js (1 ref)
+    - sandbox-tester.js (1 ref)
+    - security-checker.js (6 refs)
+    - status-mapper.js (1 ref)
+    - story-manager.js (5 refs)
+    - story-update-hook.js (1 ref)
+    - template-engine.js (4 refs - Story 3.2 integrated)
+    - template-validator.js (1 ref - Story 3.2 integrated)
+    - test-generator.js (1 ref)
+    - test-quality-assessment.js (1 ref)
+    - test-template-system.js (1 ref)
+    - tool-resolver.js (5 refs - Story 3.3 integrated)
+    - transaction-manager.js (3 refs)
+    - usage-analytics.js (1 ref)
+    - visual-impact-generator.js (1 ref)
+    - yaml-validator.js (2 refs)
+
+    **Archived Utilities (5 total):**
+    - redundancy-analyzer.js (had 1 broken ref in analyze-framework.md - FIXED)
+    - rollback-handler.js (0 refs - archived)
+    - safe-removal-handler.js (0 refs - archived)
+    - test-updater.js (0 refs - archived)
+    - version-tracker.js (0 refs - archived)
+
+    **Already Archived (verified clean):**
+    - tool-helper-executor.js (0 refs)
+    - tool-validation-helper.js (0 refs)
+    - usage-tracker.js (already commented out in Story 3.18)
+    - validate-filenames.js (0 refs)
+
+    **Critical Fix:**
+    - analyze-framework.md: Commented out redundancy-analyzer require, instantiation, and usage
+
+    **Final Validation:**
+    - Gap Detection: 0 "Orphaned Active" gaps (SUCCESS)
+    - All 88 gaps from Story 3.1 resolved across 4 batches
+    - Story 3.1 marked as Done with completion summary
+
+  file_list:
+    created: []
+    modified:
+      - .aios-core/core-config.yaml
+      - .aios-core/tasks/analyze-framework.md
+      - .aios-core/utils-archive/rollback-handler.js (moved)
+      - .aios-core/utils-archive/safe-removal-handler.js (moved)
+      - .aios-core/utils-archive/test-updater.js (moved)
+      - .aios-core/utils-archive/version-tracker.js (moved)
+      - docs/stories/epic-3-gap-remediation/3.1-orphaned-task-integration.yaml
+      - docs/stories/epic-3-gap-remediation/3.1.4-orphaned-task-integration-batch-4.yaml
+
+qa_results:
+  review_date: '2025-10-31'
+  reviewed_by: 'Quinn (Test Architect)'
+
+  code_quality_assessment: |
+    **Overall Assessment: EXCELLENT (98/100)**
+
+    This is exemplary documentation and configuration work that demonstrates systematic rigor,
+    comprehensive validation, and excellent adherence to proven patterns. The implementation
+    follows the successful approach from Batches 1-3 (95-98/100 quality) and achieves the
+    critical objective of resolving all 88 Orphaned Active gaps from parent Story 3.1.
+
+    **Key Strengths:**
+    - Systematic grep-based utility scanning methodology
+    - Comprehensive documentation with usage details and rationale
+    - Critical broken reference properly identified and fixed
+    - Parent story properly updated with completion summary
+    - Validation rigor with gap detection confirmation
+    - Outstanding efficiency: 75% under budget
+
+  refactoring_performed: []
+
+  compliance_check:
+    coding_standards: '✓ N/A - Documentation story, no executable code'
+    project_structure: '✓ PASS - Proper file organization, utils-archive/ correctly used'
+    testing_strategy: '✓ PASS - Validated via gap detection script (0 Orphaned Active gaps)'
+    all_acs_met: '✓ PASS - All 3 technical requirements fully satisfied'
+
+  requirements_traceability:
+    TR-3.1.4.1:
+      requirement: 'Integrate or deprecate 25 orphaned utilities (R-Y)'
+      status: 'PASS'
+      evidence:
+        - 'Given 25 utilities in R-Y alphabetical range'
+        - 'When reviewed for usage via grep scanning'
+        - 'Then 16 documented as active in core-config.yaml'
+        - 'And 4 archived to utils-archive/ (rollback-handler, safe-removal-handler, test-updater, version-tracker)'
+        - 'And 5 already-archived utilities verified clean (no active references)'
+        - 'And 1 broken reference fixed (redundancy-analyzer in analyze-framework.md)'
+      validation: 'core-config.yaml lines 190-365, completion_notes lines 291-320'
+
+    TR-3.1.4.2:
+      requirement: 'Validate utility dependencies'
+      status: 'PASS'
+      evidence:
+        - 'Given all 25 utilities to validate'
+        - 'When checking for broken require() statements'
+        - 'Then 1 broken reference found (redundancy-analyzer in analyze-framework.md)'
+        - 'And broken reference properly commented out with Story 3.1.4 note'
+        - 'And all require, instantiation, and usage sites updated'
+        - 'And no other broken references detected'
+      validation: 'analyze-framework.md lines 37, 77, 105-108, 117'
+
+    TR-3.1.4.3:
+      requirement: 'Complete Story 3.1 integration (all 88 gaps)'
+      status: 'PASS'
+      evidence:
+        - 'Given all 4 batches complete (3.1.1, 3.1.2, 3.1.3, 3.1.4)'
+        - 'When gap detection script executed'
+        - 'Then 0 "Orphaned Active" gaps found (success)'
+        - 'And Story 3.1 status updated to Done'
+        - 'And Story 3.1 completed_date set to 2025-10-31'
+        - 'And completion summary added to Story 3.1 change_log v5.0.0'
+      validation: 'Gap detection output, Story 3.1 status: Done, change_log v5.0.0'
+
+  improvements_checklist:
+    - '[N/A] Refactoring - Documentation story, no code refactoring applicable'
+    - '[N/A] Additional tests - Validated via gap detection script'
+    - '[x] All documentation complete and comprehensive'
+    - '[x] All utilities properly categorized (active/archived)'
+    - '[x] All archived utilities have clear rationale'
+    - '[x] Broken reference properly remediated'
+    - '[x] Parent story properly updated'
+
+  security_review: |
+    **Status: PASS** - No security concerns
+
+    This is a documentation and configuration story with no executable code changes
+    that could introduce security vulnerabilities. All changes are limited to:
+    - Configuration file updates (core-config.yaml)
+    - Documentation comments (analyze-framework.md)
+    - File organization (moving to utils-archive/)
+
+  performance_considerations: |
+    **Status: EXCELLENT**
+
+    Story achieved 75% efficiency (2h actual vs 8h estimate), demonstrating:
+    - Effective systematic approach (grep-based scanning)
+    - Minimal investigation overhead
+    - Clear decision criteria (active vs archived)
+    - Streamlined remediation process
+
+    Batch performance comparison:
+    - Batch 1: 69% under budget
+    - Batch 2: 62.5% under budget
+    - Batch 3: 68.75% under budget
+    - Batch 4: 75% under budget (BEST)
+
+    Total Story 3.1 efficiency: 80% under budget (8.5h actual vs 43h estimate)
+
+  files_modified_during_review: []
+
+  gate_status: |
+    Gate: PASS
+    Location: docs/qa/gates/3c-remediation.3.1.4-orphaned-task-integration-batch-4.yml
+    Quality Score: 98/100
+
+    Decision Rationale:
+    - All 3 technical requirements fully validated
+    - 0 Orphaned Active gaps confirmed (critical objective achieved)
+    - Comprehensive documentation quality
+    - Broken reference properly remediated
+    - Parent story completion properly handled
+    - Outstanding efficiency and pattern consistency
+
+  recommended_status: '✓ Ready for Done - All requirements met, no issues found'
+
+  additional_notes: |
+    **Batch 4 Completion Significance:**
+
+    This story marks the completion of the 4-batch remediation of 88 Orphaned Active gaps
+    from Story 3.1. The batch approach proved highly effective:
+
+    - **Quality**: Consistently 95-98/100 across all batches
+    - **Efficiency**: 62-81% under budget per batch, 80% total
+    - **Risk**: Sequential batches prevented scope creep
+    - **Learning**: Pattern refinement improved with each batch
+
+    **Recommendations for Future Gap Remediation:**
+    - Continue using batch approach for large-scale remediation (>20 gaps)
+    - Maintain grep-based scanning methodology for utility usage
+    - Keep comprehensive documentation in core-config.yaml registry
+    - Consider automating gap detection in CI/CD to prevent future gaps
+
+    **Outstanding Work:** James delivered systematic, well-documented remediation
+    following proven patterns. Sarah's pre-validation (v2.0.0) ensured implementation
+    readiness. This is a model for future architecture gap remediation work.

@@ -1,0 +1,216 @@
+---
+id: "3.38"
+title: "Create Risk Profile Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 4
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing risk-profile-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task risk-profile.md needs risk-profile-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create risk-profile-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a risk profile template (risk-profile-tmpl.md),
+  **so that** the risk-profile task can generate consistent risk assessment matrices.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.38.1"
+      description: "Create risk-profile-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/risk-profile-tmpl.md
+        - Template includes risk assessment matrix structure (probability × impact)
+        - Template uses Markdown format with risk categories (TECH, SEC, PERF, DATA, BUS, OPS)
+        - Template includes placeholders for risk identification, analysis, and mitigation
+        - Template supports risk priority calculation and visualization
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.38.2"
+      description: "Update risk-profile task to reference template"
+      requirements:
+        - Remove TODO comment from risk-profile.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references risk-profile-tmpl.md in frontmatter"
+
+    - id: "TR-3.38.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template with sample risk assessment
+        - Document template placeholders and risk scoring methodology
+      validation: "Gap detection shows risk-profile has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze risk assessment requirements"
+    estimated_hours: 1
+    subtasks:
+      - "Review risk-profile.md task to understand risk assessment workflow"
+      - "Review existing risk profile methodology (probability × impact matrix)"
+      - "Identify risk categories: TECH, SEC, PERF, DATA, BUS, OPS"
+      - "Define risk scoring system (1-5 for probability and impact)"
+      - "Define template sections and placeholders"
+
+  - task: "Task 2: Create risk-profile-tmpl.md template"
+    estimated_hours: 2
+    subtasks:
+      - "Create .aios-core/templates/risk-profile-tmpl.md file"
+      - "Add header: # Risk Profile: Story {{storyId}}"
+      - "Add Risk Summary section with overall risk level"
+      - "Add Risk Matrix visualization (5×5 grid)"
+      - "Add Risk Categories sections (TECH, SEC, PERF, DATA, BUS, OPS)"
+      - "Add Risk Entry template with ID, title, probability, impact, mitigation"
+      - "Add Priority Risks section (sorted by probability × impact score)"
+      - "Add Mitigation Plan section"
+      - "Include inline comments explaining risk scoring methodology"
+
+  - task: "Task 3: Integrate template with risk-profile task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/risk-profile.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: risk-profile-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify risk-profile now shows template reference"
+      - "Generate sample risk profile using template with test data"
+      - "Validate risk scoring calculations"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/risk-profile.md
+    ```yaml
+    ---
+    # TODO: Create risk-profile-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - risk-profile-tmpl.md  # Template doesn't exist yet
+    ---
+    ```
+
+  template_structure: |
+    Risk Profile template should include:
+
+    ```markdown
+    # Risk Profile: Story {{storyId}} - {{storyTitle}}
+
+    **Story**: {{storyId}}
+    **Date**: {{date}}
+    **Overall Risk Level**: {{overallRiskLevel}} (LOW/MEDIUM/HIGH/CRITICAL)
+
+    ## Risk Summary
+    - Total Risks Identified: {{totalRisks}}
+    - Critical Risks: {{criticalRisks}}
+    - High Risks: {{highRisks}}
+    - Medium Risks: {{mediumRisks}}
+    - Low Risks: {{lowRisks}}
+
+    ## Risk Matrix (Probability × Impact)
+
+    | P/I | 1-Rare | 2-Unlikely | 3-Possible | 4-Likely | 5-Certain |
+    |-----|--------|------------|------------|----------|-----------|
+    | 5-Catastrophic | {{r5_1}} | {{r5_2}} | {{r5_3}} | {{r5_4}} | {{r5_5}} |
+    | 4-Major | {{r4_1}} | {{r4_2}} | {{r4_3}} | {{r4_4}} | {{r4_5}} |
+    | 3-Moderate | {{r3_1}} | {{r3_2}} | {{r3_3}} | {{r3_4}} | {{r3_5}} |
+    | 2-Minor | {{r2_1}} | {{r2_2}} | {{r2_3}} | {{r2_4}} | {{r2_5}} |
+    | 1-Negligible | {{r1_1}} | {{r1_2}} | {{r1_3}} | {{r1_4}} | {{r1_5}} |
+
+    ## Risk Categories
+
+    {{#riskCategories}}
+    ### {{categoryName}} Risks
+
+    {{#risks}}
+    #### {{riskId}}: {{riskTitle}}
+    - **Probability**: {{probability}}/5 ({{probabilityLabel}})
+    - **Impact**: {{impact}}/5 ({{impactLabel}})
+    - **Risk Score**: {{riskScore}} ({{riskLevel}})
+    - **Description**: {{description}}
+    - **Affected Components**: {{affectedComponents}}
+    - **Mitigation**: {{mitigation}}
+    {{/risks}}
+    {{/riskCategories}}
+
+    ## Priority Risks (Score ≥ 15)
+    {{#priorityRisks}}
+    - **{{riskId}}**: {{riskTitle}} (Score: {{riskScore}})
+    {{/priorityRisks}}
+
+    ## Mitigation Plan
+    {{mitigationPlan}}
+    ```
+
+  risk_scoring_methodology: |
+    **Probability Scale (1-5)**:
+    - 1 = Rare (0-10% chance)
+    - 2 = Unlikely (10-30%)
+    - 3 = Possible (30-50%)
+    - 4 = Likely (50-80%)
+    - 5 = Certain (80-100%)
+
+    **Impact Scale (1-5)**:
+    - 1 = Negligible (minimal impact)
+    - 2 = Minor (localized impact)
+    - 3 = Moderate (significant but contained)
+    - 4 = Major (widespread impact)
+    - 5 = Catastrophic (critical system failure)
+
+    **Risk Score**: Probability × Impact (1-25)
+    - 1-5 = LOW
+    - 6-12 = MEDIUM
+    - 13-19 = HIGH
+    - 20-25 = CRITICAL
+
+  files_to_create:
+    - ".aios-core/templates/risk-profile-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/risk-profile.md"
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

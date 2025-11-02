@@ -1,0 +1,576 @@
+---
+id: "2.9"
+title: "Phase 4 - Tools & Utils Analysis"
+epic: "2-aios-development-infrastructure"
+phase: "Phase 2: Architecture Mapping & Integrity Audit"
+status: "done"
+priority: "high"
+estimated_hours: 10
+actual_hours: 0
+created_by: "Sarah (@po)"
+validated_by: ["Sarah (@po)"]
+approval_date: "2025-10-23"
+completed_date: null
+completed_by: null
+blocks: ["2.11"]
+blocked_by: ["2.5"]
+
+# Story Context
+context: |
+  **PHASE 4 OF ARCHITECTURE AUDIT**: This story analyzes the tooling and utility layer of AIOS-FullStack,
+  mapping 8 MCP server integrations, CLI tools (gh, railway, supabase), and 70+ utility scripts that form
+  the operational backbone of the framework.
+
+  **Scope**: Analyze approximately 70+ utility scripts in `.aios-core/utils/`, 8 MCP server definitions in
+  `.aios-core/tools/mcp/`, and CLI tool configurations in `.aios-core/tools/cli/`.
+
+  **Dependency Analysis**: Special focus on inter-utility dependencies, as many utils call other utils,
+  creating complex dependency chains that need mapping for refactoring safety.
+
+  **Dependencies**: Requires Story 2.5 (Foundation) for taxonomy, schemas, and analysis framework.
+  Can run in parallel with Stories 2.6-2.8 (all in Phase 2).
+
+  **Blocks**: Story 2.11 (Synthesis & Integration) requires completion of all Phase 2 stories (2.6-2.10).
+
+# User Story
+story: |
+  **As a** AIOS framework maintainer,
+  **I want** comprehensive analysis of all tool integrations and utility scripts,
+  **so that** I can understand tool dependencies, identify redundancies, and ensure safe refactoring.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-2.9.1"
+      description: "MCP server analysis - 8 integrations"
+      servers:
+        - "21st-dev-magic (UI component generation)"
+        - "browser (automation)"
+        - "clickup (project management)"
+        - "context7 (documentation search)"
+        - "exa (web research)"
+        - "google-workspace (Drive, Docs, Sheets, Calendar)"
+        - "n8n (workflow automation)"
+        - "supabase (backend-as-a-service)"
+      analysis:
+        - "Extract server configuration (command, args, env)"
+        - "Map available tools per server"
+        - "Identify agent dependencies on MCP tools"
+        - "Detect unused/orphaned MCP servers"
+      validation: "8 MCP server JSON files in outputs/architecture-map/tools/"
+
+    - id: "TR-2.9.2"
+      description: "CLI tools analysis - 3 integrations"
+      tools:
+        - "GitHub CLI (gh)"
+        - "Railway CLI"
+        - "Supabase CLI"
+      analysis:
+        - "Extract configuration from .aios-core/tools/cli/"
+        - "Map usage in tasks and workflows"
+        - "Identify authentication requirements"
+      validation: "CLI tools analysis in outputs/architecture-map/tools/cli-tools.json"
+
+    - id: "TR-2.9.3"
+      description: "Utility scripts analysis - 70+ scripts"
+      scripts_categories:
+        - "AIOS validators (aios-validator.js, yaml-validator.js, etc.)"
+        - "Story management (story-manager.js, story-update-hook.js)"
+        - "Tool helpers (tool-resolver.js, tool-helper-executor.js)"
+        - "ClickUp integration (clickup-helpers.js, status-mapper.js)"
+        - "Test utilities (test-generator.js, test-updater.js, etc.)"
+        - "Code quality (code-quality-improver.js, refactoring-suggester.js)"
+        - "Migration tools (migration-generator.js, migration-rollback.js)"
+        - "Git utilities (git-wrapper.js, branch-manager.js, conflict-resolver.js)"
+        - "Documentation (documentation-synchronizer.js)"
+        - "Architecture analysis (dependency-analyzer.js, framework-analyzer.js)"
+      analysis:
+        - "Parse exports and imports from each utility"
+        - "Map inter-utility dependencies (util A calls util B)"
+        - "Identify entry points (utils called by agents/tasks)"
+        - "Detect circular dependencies"
+        - "Find orphaned utilities (defined but never imported)"
+      validation: "70+ utility JSON files in outputs/architecture-map/utils/"
+
+    - id: "TR-2.9.4"
+      description: "Cross-reference mapping"
+      relationships:
+        - "Agent → MCP Tool (USES_MCP_TOOL)"
+        - "Task → CLI Tool (USES_CLI_TOOL)"
+        - "Util → Util (IMPORTS/CALLS)"
+        - "Agent → Util (USES_UTIL)"
+        - "Task → Util (USES_UTIL)"
+      validation: "Relationship edges created in architecture graph"
+
+    - id: "TR-2.9.5"
+      description: "Gap detection - tools layer"
+      categories:
+        - "Orphaned MCP servers (defined but never used)"
+        - "Missing tool definitions (referenced but not configured)"
+        - "Broken tool imports (import path doesn't exist)"
+        - "Circular dependencies in utils"
+        - "Redundant utilities (duplicate functionality)"
+      validation: "Gap report: outputs/architecture-map/gaps/tools-gaps.json"
+
+    - id: "TR-2.9.6"
+      description: "Dependency graph visualization"
+      outputs:
+        - "Utility dependency graph (Mermaid diagram)"
+        - "MCP tool usage matrix (JSON)"
+        - "CLI tool integration map (JSON)"
+      validation: "Visualizations in outputs/architecture-map/diagrams/"
+
+    - id: "TR-2.9.7"
+      description: "Export integration"
+      formats:
+        - "Neo4j: CREATE statements for tool/util nodes + relationships"
+        - "Mermaid: Tool/util nodes with distinct colors (green for MCP, blue for CLI, yellow for utils)"
+        - "JSON-LD: Tool/util nodes with @type annotations"
+      validation: "Tools/utils integrated into all 3 export formats"
+
+  functional_requirements:
+    - id: "FR-2.9.1"
+      description: "MCP server parser script"
+      deliverable: "outputs/architecture-map/schemas/parse-mcp-servers.js"
+      functionality:
+        - "Parse YAML MCP server definitions"
+        - "Extract server metadata (command, args, env, tools)"
+        - "Validate against taxonomy schema"
+      validation: "Parser processes 8 MCP servers without errors"
+
+    - id: "FR-2.9.2"
+      description: "Utility script parser"
+      deliverable: "outputs/architecture-map/schemas/parse-utils.js"
+      functionality:
+        - "Parse JavaScript utility files"
+        - "Extract exports (functions, classes, constants)"
+        - "Extract imports (local and npm)"
+        - "Detect inter-util dependencies"
+        - "Identify circular dependencies"
+      validation: "Parser processes 70+ utils with dependency graph"
+
+    - id: "FR-2.9.3"
+      description: "CLI tool analyzer"
+      deliverable: "outputs/architecture-map/schemas/parse-cli-tools.js"
+      functionality:
+        - "Parse CLI tool configurations"
+        - "Extract authentication methods"
+        - "Map CLI usage in tasks/workflows"
+      validation: "Analyzer processes 3 CLI tools successfully"
+
+    - id: "FR-2.9.4"
+      description: "Tool gap detector"
+      deliverable: "outputs/architecture-map/schemas/detect-tool-gaps.js"
+      functionality:
+        - "Detect orphaned MCP servers"
+        - "Find missing tool definitions"
+        - "Identify circular util dependencies"
+        - "Flag redundant utilities"
+      validation: "Gap report generated with severity classification"
+
+  business_requirements:
+    - id: "BR-2.9.1"
+      description: "Success metrics tracking"
+      metrics:
+        delivery: "10 hours estimated (track actual variance)"
+        coverage: "100% of MCP servers, CLI tools, and utils analyzed"
+        gaps_identified: "Track count and severity distribution"
+      validation: "Metrics logged in outputs/architecture-map/metrics.json"
+
+    - id: "BR-2.9.2"
+      description: "ROI contribution"
+      value:
+        - "Identify redundant utilities for removal (reduce maintenance)"
+        - "Map tool dependencies for safe refactoring"
+        - "Detect unused MCP servers (reduce complexity)"
+      validation: "ROI impact documented in completion notes"
+
+  process_requirements:
+    - id: "PR-2.9.1"
+      description: "QA gate before Story 2.11"
+      gate_file: "docs/qa/gates/2.9-tools-utils-analysis.yml"
+      validation: "QA gate passes with @qa sign-off"
+
+    - id: "PR-2.9.2"
+      description: "Phase 2 progress tracking"
+      update: "Story 2.9: 📋 PLANNED → 🔄 IN PROGRESS → ✅ COMPLETE"
+      validation: "Epic 2 file updated with progress"
+
+# Implementation Plan
+implementation_steps:
+  - step: 1
+    title: "Create parser for MCP servers"
+    estimated_minutes: 90
+    tasks:
+      - "Implement parse-mcp-servers.js"
+      - "Parse 8 YAML files from .aios-core/tools/mcp/"
+      - "Extract server metadata (command, args, env, tools list)"
+      - "Generate outputs/architecture-map/tools/*.json (one per server)"
+      - "Validate against taxonomy schema"
+    dependencies: []
+
+  - step: 2
+    title: "Build utility script analyzer"
+    estimated_minutes: 180
+    tasks:
+      - "Implement parse-utils.js"
+      - "Parse 70+ JavaScript files from .aios-core/utils/"
+      - "Extract exports (module.exports, export default)"
+      - "Extract imports (require, import statements)"
+      - "Build dependency graph (util A → util B)"
+      - "Detect circular dependencies using cycle detection"
+      - "Generate outputs/architecture-map/utils/*.json"
+    dependencies: []
+
+  - step: 3
+    title: "Analyze CLI tools"
+    estimated_minutes: 60
+    tasks:
+      - "Implement parse-cli-tools.js"
+      - "Parse configurations from .aios-core/tools/cli/"
+      - "Extract authentication requirements"
+      - "Map CLI usage in tasks/workflows (grep for gh, railway, supabase commands)"
+      - "Generate outputs/architecture-map/tools/cli-tools.json"
+    dependencies: []
+
+  - step: 4
+    title: "Cross-reference mapping"
+    estimated_minutes: 90
+    tasks:
+      - "Map Agent → MCP Tool relationships (scan agent files for MCP tool mentions)"
+      - "Map Task → CLI Tool relationships (scan task files for CLI commands)"
+      - "Map Util → Util relationships (from dependency graph)"
+      - "Map Agent/Task → Util relationships (scan for util imports)"
+      - "Add relationship edges to architecture graph"
+    dependencies: ["step-1", "step-2", "step-3"]
+
+  - step: 5
+    title: "Gap detection"
+    estimated_minutes: 90
+    tasks:
+      - "Implement detect-tool-gaps.js"
+      - "Detect orphaned MCP servers (defined but no agent uses them)"
+      - "Find missing tool definitions (referenced but config missing)"
+      - "Identify circular util dependencies (from graph analysis)"
+      - "Flag redundant utilities (similar exports/functionality)"
+      - "Generate outputs/architecture-map/gaps/tools-gaps.json"
+      - "Classify gaps by severity (critical, high, medium, low)"
+    dependencies: ["step-4"]
+
+  - step: 6
+    title: "Dependency graph visualization"
+    estimated_minutes: 60
+    tasks:
+      - "Generate utility dependency graph (Mermaid diagram)"
+      - "Create MCP tool usage matrix (agents × tools)"
+      - "Create CLI tool integration map"
+      - "Output to outputs/architecture-map/diagrams/"
+    dependencies: ["step-4"]
+
+  - step: 7
+    title: "Export integration"
+    estimated_minutes: 60
+    tasks:
+      - "Update export-neo4j.js to include tool/util nodes"
+      - "Update export-mermaid.js with tool/util styling (green MCP, blue CLI, yellow utils)"
+      - "Update export-jsonld.js with tool/util @type annotations"
+      - "Test exports with sample tool/util data"
+    dependencies: ["step-5"]
+
+  - step: 8
+    title: "Testing and validation"
+    estimated_minutes: 90
+    tasks:
+      - "Run all parsers on full dataset"
+      - "Verify 8 MCP server JSON files created"
+      - "Verify 70+ utility JSON files created"
+      - "Verify CLI tools analysis complete"
+      - "Verify gap report generated with valid severity classification"
+      - "Verify exports include tool/util nodes"
+      - "Check for parsing errors and fix"
+      - "Validate against all 7 acceptance criteria"
+    dependencies: ["step-7"]
+
+  - step: 9
+    title: "Create QA gate and update Epic"
+    estimated_minutes: 30
+    tasks:
+      - "Write QA gate YAML (docs/qa/gates/2.9-tools-utils-analysis.yml)"
+      - "Update Epic 2 Story 2.9 status to COMPLETE"
+      - "Document completion notes"
+      - "Log metrics (actual vs estimated hours)"
+    dependencies: ["step-8"]
+
+# Testing Strategy
+testing:
+  unit_tests:
+    - "parse-mcp-servers.js: Parse valid/invalid MCP YAML"
+    - "parse-utils.js: Parse JS utils with various export patterns"
+    - "parse-cli-tools.js: Parse CLI configurations"
+    - "detect-tool-gaps.js: Gap detection logic"
+    - "Circular dependency detection algorithm"
+
+  integration_tests:
+    - "End-to-end: Parse all tools/utils → Neo4j → Query"
+    - "Cross-reference mapping: Agent → MCP Tool relationships"
+    - "Dependency graph: Util → Util traversal"
+    - "Export test: Tools/utils in all 3 formats"
+
+  validation_tests:
+    - "Schema validation: 8 MCP servers + 70+ utils validate"
+    - "Gap detection: Orphaned servers/utils correctly identified"
+    - "Circular dependency: Cycles detected and reported"
+    - "Export format: Neo4j/Mermaid/JSON-LD include tool/util nodes"
+
+# Dev Notes
+dev_notes:
+  source_tree: |
+    Relevant files for this story:
+
+    .aios-core/
+    ├── tools/
+    │   ├── mcp/                          # 8 MCP server definitions (YAML)
+    │   │   ├── 21st-dev-magic.yaml
+    │   │   ├── browser.yaml
+    │   │   ├── clickup.yaml
+    │   │   ├── context7.yaml
+    │   │   ├── exa.yaml
+    │   │   ├── google-workspace.yaml
+    │   │   ├── n8n.yaml
+    │   │   └── supabase.yaml
+    │   ├── cli/                          # CLI tool configurations
+    │   │   ├── gh-config.yaml
+    │   │   ├── railway-config.yaml
+    │   │   └── supabase-config.yaml
+    │   └── local/                        # Local tool configs (FFmpeg, etc.)
+    └── utils/                            # 70+ utility scripts (JavaScript)
+        ├── aios-validator.js
+        ├── story-manager.js
+        ├── tool-resolver.js
+        ├── clickup-helpers.js
+        ├── test-generator.js
+        ├── code-quality-improver.js
+        ├── migration-generator.js
+        ├── git-wrapper.js
+        ├── dependency-analyzer.js
+        ├── framework-analyzer.js
+        └── ... (60+ more utilities)
+
+    outputs/architecture-map/
+    ├── schemas/                          # Parsers (create these)
+    │   ├── parse-mcp-servers.js         # NEW - MCP server parser
+    │   ├── parse-utils.js               # NEW - Utility script analyzer
+    │   ├── parse-cli-tools.js           # NEW - CLI tool analyzer
+    │   └── detect-tool-gaps.js          # NEW - Gap detector
+    ├── tools/                            # MCP server analysis (create)
+    │   ├── 21st-dev-magic.json
+    │   ├── browser.json
+    │   ├── clickup.json
+    │   ├── context7.json
+    │   ├── exa.json
+    │   ├── google-workspace.json
+    │   ├── n8n.json
+    │   ├── supabase.json
+    │   └── cli-tools.json
+    ├── utils/                            # Utility analysis (create)
+    │   ├── aios-validator.json
+    │   ├── story-manager.json
+    │   └── ... (70+ files)
+    ├── gaps/                             # Gap reports
+    │   └── tools-gaps.json              # NEW - Tools/utils gap report
+    └── diagrams/                         # Visualizations
+        ├── utility-dependencies.mmd     # NEW - Util dependency graph
+        ├── mcp-tool-usage-matrix.json   # NEW - MCP usage matrix
+        └── cli-tool-map.json            # NEW - CLI integration map
+
+  patterns_from_story_2_5: |
+    Follow these established patterns from Story 2.5:
+
+    1. **Parser Structure**:
+       - Main function: parseEntities()
+       - Error handling: try/catch with detailed error messages
+       - Validation: against taxonomy schema
+       - Output: One JSON file per entity
+
+    2. **Gap Detection**:
+       - Severity classification: critical, high, medium, low
+       - Actionable recommendations
+       - Count totals by severity
+
+    3. **Export Integration**:
+       - Neo4j: CREATE statements for nodes + relationships
+       - Mermaid: Color-coded nodes (green MCP, blue CLI, yellow utils)
+       - JSON-LD: @type annotations for semantic graph
+
+    4. **File Naming**:
+       - Parsers: parse-{entity-type}.js
+       - Gap detectors: detect-{category}-gaps.js
+       - Outputs: {entity-id}.json
+
+    5. **Documentation**:
+       - JSDoc comments for all functions
+       - Usage examples in file headers
+       - Error messages reference entity IDs
+
+  utility_parser_considerations: |
+    **Parsing JavaScript Utilities**:
+
+    1. **Export Patterns to Handle**:
+       - CommonJS: `module.exports = {...}`
+       - ES6: `export default ...`, `export const ...`
+       - Mixed: Files using both patterns
+
+    2. **Import Patterns to Detect**:
+       - CommonJS: `require('./util')`
+       - ES6: `import util from './util'`
+       - Dynamic: `await import('./util')`
+
+    3. **Dependency Graph Algorithm**:
+       - Build adjacency list: util → [dependencies]
+       - Detect cycles using DFS (depth-first search)
+       - Report circular dependencies with paths
+
+    4. **Entry Points**:
+       - Utils imported by agents (scan .aios-core/agents/)
+       - Utils imported by tasks (scan .aios-core/tasks/)
+       - Utils referenced in workflows
+
+    5. **Orphan Detection**:
+       - Files in .aios-core/utils/ never imported
+       - Exclude test files (*.test.js, *.spec.js)
+       - Report with file paths and recommendations
+
+  mcp_server_considerations: |
+    **MCP Server Analysis**:
+
+    1. **YAML Structure**:
+       - Server name (key in .claude.json)
+       - Command execution (npx, python, etc.)
+       - Arguments array
+       - Environment variables
+       - Tool list (optional, inferred from server docs)
+
+    2. **Agent Integration**:
+       - Scan agent files for MCP tool references
+       - Map agent → tool relationships
+       - Identify required vs optional tools
+
+    3. **Gap Detection**:
+       - Servers defined but never used by agents
+       - Tools referenced but server not configured
+       - Authentication issues (missing API keys)
+
+  performance_considerations: |
+    **Expected Performance**:
+    - Parse 8 MCP servers: <5 seconds
+    - Parse 70+ utilities: <15 seconds
+    - Build dependency graph: <10 seconds
+    - Detect circular dependencies: <5 seconds
+    - Generate gap report: <5 seconds
+    - **Total end-to-end**: <45 seconds
+
+    **Optimization Strategies**:
+    - Parallel file parsing where possible
+    - Cache parsed results to avoid re-parsing
+    - Use efficient graph algorithms (DFS for cycles)
+    - Stream large file outputs
+
+  testing_standards: |
+    **Test Requirements**:
+
+    1. **Unit Tests Location**: `outputs/architecture-map/test-parsers.js`
+
+    2. **Test Coverage**:
+       - parse-mcp-servers.js: 10 tests minimum
+       - parse-utils.js: 15 tests minimum (complex logic)
+       - parse-cli-tools.js: 8 tests minimum
+       - detect-tool-gaps.js: 12 tests minimum
+
+    3. **Test Patterns** (from Story 2.7):
+       - Valid input parsing
+       - Invalid input error handling
+       - Edge cases (empty files, malformed YAML)
+       - Dependency graph correctness
+       - Circular dependency detection
+       - Gap detection accuracy
+
+    4. **Test Execution**:
+       ```bash
+       npm test -- outputs/architecture-map/test-parsers.js
+       ```
+
+    5. **Performance Tests**:
+       - Measure end-to-end processing time
+       - Verify <45s total processing
+       - Log performance metrics
+
+# Change Log
+change_log:
+  - date: "2025-10-23"
+    version: "1.0"
+    description: "Story approved after validation - Ready for implementation"
+    author: "Sarah (@po)"
+  - date: "2025-10-23"
+    version: "0.1"
+    description: "Initial story draft created by @po (Sarah)"
+    author: "Sarah (@po)"
+
+# Dev Agent Record
+dev_agent_record:
+  agent_model: null
+  debug_log_references: []
+  completion_notes: []
+  file_list: []
+
+# QA Results
+qa_results:
+  gate_status: "pass_with_conditions"
+  quality_score: 95
+  reviewer: "Quinn (Test Architect & Quality Advisor)"
+  date_reviewed: "2025-10-24"
+  issues:
+    - id: "SEC-2.9-01"
+      severity: "HIGH"
+      category: "security"
+      description: "Supabase MCP server missing environment variables"
+      affected_component: ".aios-core/tools/mcp/supabase.yaml"
+      details: "Missing SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ACCESS_TOKEN"
+      mitigation: "Server currently orphaned (not referenced). Must add env vars before activation."
+      priority: "P1"
+      blocking: false
+
+    - id: "SEC-2.9-02"
+      severity: "HIGH"
+      category: "security"
+      description: "Context7 MCP server missing CONTEXT7_API_KEY"
+      affected_component: ".aios-core/tools/mcp/context7.yaml"
+      details: "Documentation search service lacks authentication configuration"
+      mitigation: "Server currently orphaned. Must add API key before activation."
+      priority: "P1"
+      blocking: false
+
+    - id: "SEC-2.9-03"
+      severity: "HIGH"
+      category: "security"
+      description: "Magic UI MCP server missing MAGIC_UI_API_KEY"
+      affected_component: ".aios-core/tools/mcp/magic-ui.yaml"
+      details: "UI component generation service lacks API credentials"
+      mitigation: "Server currently orphaned. Can waive if UI work not planned; P2 otherwise."
+      priority: "P2"
+      blocking: false
+
+  recommendations:
+    immediate:
+      - "Document 3 security gaps in story YAML (✅ completed in this QA review)"
+      - "Create .env.example file with required MCP server credentials"
+      - "Update tool documentation with configuration instructions"
+    pre_production:
+      - "Fix P1 security gaps: Add environment variables for Supabase MCP server"
+      - "Fix P1 security gaps: Add environment variables for Context7 MCP server"
+      - "Implement startup validation to check for missing credentials"
+    phase_5:
+      - "Implement lazy loading for orphaned MCP servers (7 servers)"
+      - "Review and classify 47 orphaned utilities (70.1% orphan rate)"
+      - "Schedule quarterly orphaned code reviews"
+
+  gate_file: "docs/qa/gates/2.9-tools-utils-analysis.yml"

@@ -1,0 +1,124 @@
+id: '3.32'
+title: Update Quarterly Audit for 1MCP Metrics
+epic: "3a-infrastructure"
+phase: 'Epic 3: Architecture Gap Remediation - Prevention Track Updates'
+status: Merged into Story 3.25
+priority: low
+estimated_hours: 0.5
+merged_into: '3.25'
+merged_date: '2025-10-28'
+created_by: Sarah (@po) - Post-1MCP Architecture Update
+created_date: '2025-10-26'
+validated_by: Sarah (@po) - Story validation complete
+validation_date: '2025-10-28'
+validation_score: '2.0/10 (NO-GO - blocked dependency)'
+blocks: []
+blocked_by:
+  - '3.26'
+  - '3.25'
+context: |
+  **ARCHITECTURE CHANGE**: Story 3.26 introduces 1MCP proxy layer.
+
+  **VALIDATION FINDING (2025-10-28):** Story BLOCKED by fatal dependency issue
+
+  **Problem:**
+  - Story 3.25 (Quarterly Audit Automation) is DRAFT (not implemented)
+  - Story 3.25 creates the audit script that Story 3.32 needs to update
+  - Cannot update script that doesn't exist yet!
+
+  **Verified:** No quarterly audit files exist (searched entire outputs directory)
+
+  **Correct Implementation Sequence:**
+  1. Story 3.25: Create quarterly audit automation (3h)
+  2. Story 3.32: Add 1MCP metrics to that audit (0.5h)
+
+  **Strategic Recommendation:** MERGE Story 3.32 into Story 3.25
+  - More efficient to include 1MCP metrics in initial implementation
+  - Avoids dependency chain complexity
+  - Saves separate story overhead
+  - Story 3.25 should include 1MCP metrics from day 1
+
+  **Impact on Story 3.25 (Quarterly Audit):**
+  - Audit reports should show: "X tools via 1MCP, Y tools direct"
+  - Track migration progress: "80% of tools using 1MCP"
+  - Token savings metrics: "240k tokens freed via 1MCP"
+
+  **This Story (if kept separate):** Add 1MCP-specific metrics to quarterly audit report.
+story: |
+  **As a** framework maintainer,
+  **I want** quarterly audit to include 1MCP adoption metrics,
+  **so that** I can track migration progress and token savings.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.32.1
+      description: 1MCP adoption metrics
+      requirements:
+        - 'Report: X tools via 1MCP, Y tools direct'
+        - 'Report: 1MCP adoption rate (percentage)'
+        - 'Report: Token savings estimate (if 1MCP active)'
+      validation: Audit includes 1MCP metrics section
+tasks:
+  - task: Add 1MCP metrics to audit report
+    estimated_hours: 0.5
+    subtasks:
+      - Detect if 1MCP active in audit script
+      - Count tools in 1MCP vs direct
+      - Calculate adoption percentage
+      - Estimate token savings
+      - Add metrics section to report template
+dev_notes:
+  metrics_example: |
+    **Example Audit Report (with 1MCP):**
+
+    ## MCP Infrastructure Metrics
+
+    **1MCP Adoption:**
+    - Tools via 1MCP: 8 (100%)
+    - Tools direct: 0 (0%)
+    - Migration status: ✅ Complete
+
+    **Token Optimization:**
+    - Baseline (direct MCPs): 323.5k tokens
+    - Current (1MCP): 65k tokens
+    - Savings: 258.5k tokens (80% reduction)
+change_log:
+  - date: '2025-10-26'
+    version: 1.0.0
+    description: Story created to add 1MCP metrics to quarterly audit
+    author: Sarah (@po)
+  
+  - date: '2025-10-28'
+    version: 1.1.0
+    description: Story validation complete - NO-GO (fatal dependency)
+    author: Sarah (@po)
+    changes:
+      - 'Validation Score: 2.0/10 (NO-GO - blocked dependency)'
+      - 'CRITICAL FINDING: Story 3.25 (Quarterly Audit) is DRAFT - script does not exist!'
+      - 'VERIFIED: No quarterly audit files found in outputs directory'
+      - 'FIXED: Added Story 3.25 to blocked_by (was missing)'
+      - 'FIXED: Removed Story 3.25 from blocks (dependency backwards)'
+      - 'IDENTIFIED: Cannot update non-existent script'
+      - 'IDENTIFIED: Dev notes inadequate (example only, no implementation)'
+      - 'IDENTIFIED: No validation section'
+  
+  - date: '2025-10-28'
+    version: 2.0.0
+    description: Story merged into Story 3.25 for efficiency
+    author: Sarah (@po)
+    changes:
+      - 'STRATEGIC DECISION: Merge into Story 3.25 (Quarterly Audit Automation)'
+      - 'RATIONALE: More efficient to include 1MCP metrics in initial implementation'
+      - 'RATIONALE: Avoids dependency complexity (3.32 blocked by 3.25)'
+      - 'RATIONALE: Same files modified (generate-trend-report.js)'
+      - 'IMPACT: Story 3.25 scope increased 3h → 3.5h'
+      - 'REQUIREMENTS: Transferred TR-3.32.1 to Story 3.25 as TR-3.25.4'
+      - 'SUBTASKS: Transferred to Story 3.25 Task 2'
+      - 'DEV NOTES: 1MCP metrics examples provided to Story 3.25'
+      - 'DELIVERABLE: Story 3.25 will include 1MCP metrics from day 1'
+      - 'Status: Blocked → Merged into Story 3.25'
+      - 'IDENTIFIED: No file paths specified'
+      - 'STRATEGIC RECOMMENDATION: Merge Story 3.32 into Story 3.25'
+      - 'RATIONALE: More efficient to include 1MCP metrics in initial audit implementation'
+      - 'ALTERNATIVE: Wait for Story 3.25, then expand dev notes based on actual script'
+      - 'Status: Draft → Blocked - Waiting for Story 3.25'
+      - 'Validation Report created: 3.32-VALIDATION-REPORT.md'

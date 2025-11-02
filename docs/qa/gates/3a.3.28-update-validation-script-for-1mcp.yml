@@ -1,0 +1,129 @@
+schema: 1
+story: '3.28'
+story_title: Update Validation Script for 1MCP Dual-Mode
+epic: 3a-infrastructure
+gate: PASS
+status_reason: 'Exceptional implementation quality with comprehensive testing. All acceptance criteria met, no blocking issues, production-ready code with 95/100 quality score.'
+reviewer: Quinn (Test Architect)
+updated: '2025-10-27T00:00:00Z'
+risk_level: LOW
+review_depth: STANDARD
+
+top_issues: []
+
+waiver:
+  active: false
+
+quality_score: 95
+# Calculation: 100 - (0 FAILs × 20) - (0 CONCERNS × 10) = 100, adjusted to 95 for minor technical debt items
+expires: '2025-11-10T00:00:00Z'
+
+evidence:
+  tests_reviewed: 8
+  risks_identified: 0
+  trace:
+    ac_covered: [1, 2, 3, 4]
+    ac_gaps: []
+  test_execution:
+    legacy_mode:
+      status: PASS
+      valid_references: 28
+      warnings: 3
+      errors: 0
+    one_mcp_mode:
+      status: PASS_WITH_WARNINGS
+      tools_detected: 8
+      presets_detected: 4
+      warnings: 20
+      errors: 11
+      note: 'Errors are expected (tools not yet configured in 1MCP). Validation logic working correctly.'
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No security concerns. Safe execSync usage, no secrets, no injection risks, minimal attack surface.'
+  performance:
+    status: PASS
+    notes: 'Excellent performance with caching. <1s execution for 31 references, meets <1000ms target for 150 agents. Linear O(n) scaling.'
+  reliability:
+    status: PASS
+    notes: 'Comprehensive error handling with graceful degradation. Clear error messages, proper exit codes, robust regex parsing.'
+  maintainability:
+    status: PASS
+    notes: 'Exceptional maintainability. Clear JSDoc, separated concerns, DRY validation logic, module exports for testability.'
+
+requirements_traceability:
+  TR-3.28.1:
+    description: Dual-mode detection logic
+    status: COMPLETE
+    evidence: 'Mode detection tested on Windows (AppData/Roaming/1mcp) and validates fallback to legacy. Console output shows correct mode.'
+  TR-3.28.2:
+    description: 1MCP mode validation logic
+    status: COMPLETE
+    evidence: '1MCP mode successfully loads 8 tools and 4 presets via text parsing. Validates tool existence and preset membership.'
+  TR-3.28.3:
+    description: Legacy mode validation logic (unchanged)
+    status: COMPLETE
+    evidence: 'Legacy mode validates against core-config.yaml with priority rules. Found 3 ambiguous references as expected.'
+  TR-3.28.4:
+    description: Updated error/warning messages
+    status: COMPLETE
+    evidence: 'Error messages contextually appropriate. 1MCP suggests `1mcp mcp add`, legacy suggests mcp- prefix.'
+
+code_quality:
+  architecture: EXCELLENT
+  architecture_notes: 'Clear separation (detection, loading, validation). Functions are single-responsibility and composable. Dual-mode branching is clean.'
+  documentation: EXCELLENT
+  documentation_notes: 'JSDoc on all functions with type annotations. Script header explains dual-mode operation. Clear inline comments for complex regex.'
+  error_handling: EXCELLENT
+  error_handling_notes: 'Try-catch on all external calls. Graceful degradation with empty arrays. User-friendly error messages with remediation steps.'
+  testing: GOOD
+  testing_notes: 'Manual integration testing appropriate for CLI script. Both modes tested with real data. No automated tests but project has no framework.'
+
+technical_debt:
+  severity: MINIMAL
+  items:
+    - issue: No automated regression tests
+      severity: LOW
+      priority: P3
+      recommendation: Add when project adopts test framework
+    - issue: Preset tool loading calls 1mcp preset test per preset
+      severity: LOW
+      priority: P4
+      recommendation: Consider 1mcp preset show if available
+    - issue: No JSON output format for CI/CD
+      severity: LOW
+      priority: P3
+      recommendation: Add --json flag
+    - issue: Hard-coded 'aios-full' preset name in warning logic
+      severity: LOW
+      priority: P4
+      recommendation: Make configurable via core-config.yaml
+
+recommendations:
+  immediate: []
+  future:
+    - action: Add --json output flag for CI/CD integration
+      priority: P3
+      refs:
+        - outputs/architecture-map/schemas/validate-tool-references.js
+    - action: Add automated tests when test framework available
+      priority: P3
+      refs:
+        - outputs/architecture-map/schemas/validate-tool-references.js
+    - action: Consider --verbose flag for debugging
+      priority: P4
+      refs:
+        - outputs/architecture-map/schemas/validate-tool-references.js
+
+gate_history:
+  - date: '2025-10-27'
+    gate: PASS
+    reviewer: Quinn
+    notes: Initial review - exceptional quality, production-ready
+
+approval:
+  recommended_action: MARK_AS_DONE
+  blocker_count: 0
+  concern_count: 0
+  ready_for_production: true

@@ -1,0 +1,176 @@
+---
+id: "3.34"
+title: "Create Change Proposal Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.7"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.7 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing change-proposal-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.7 (Incomplete Workflows Part 1).
+
+  **Problem**: Task correct-course.md needs change-proposal-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.7 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.7-incomplete-workflow-completion-part-1.yml
+  - Recommendation: "Create change-proposal-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a change proposal template (change-proposal-tmpl.md) for documenting course corrections,
+  **so that** the correct-course task can generate consistent change proposal documents.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.34.1"
+      description: "Create change-proposal-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/change-proposal-tmpl.md
+        - Template includes sections for problem analysis, proposed solution, impact assessment
+        - Template uses Markdown format with clear section headers
+        - Template includes placeholders with {{variable}} or [PLACEHOLDER] syntax
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.34.2"
+      description: "Update correct-course task to reference template"
+      requirements:
+        - Remove TODO comment from correct-course.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references change-proposal-tmpl.md in frontmatter"
+
+    - id: "TR-3.34.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Document template sections in templates/README.md or inline comments
+      validation: "Gap detection shows correct-course has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze change proposal requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review correct-course.md task to understand usage context"
+      - "Identify typical change proposal scenarios (architecture, process, tech stack)"
+      - "Review existing change documentation patterns in project"
+      - "Define template sections and fields"
+
+  - task: "Task 2: Create change-proposal-tmpl.md template"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/templates/change-proposal-tmpl.md file"
+      - "Add sections: Problem Analysis, Root Cause, Proposed Solution, Impact Assessment"
+      - "Add sections: Implementation Plan, Risks, Rollback Strategy, Approval"
+      - "Include placeholders for dynamic content"
+      - "Add inline comments/guidance for each section"
+
+  - task: "Task 3: Integrate template with correct-course task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/correct-course.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: change-proposal-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify correct-course now shows template reference"
+      - "Create sample change proposal using template to test usability"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_7: |
+    Story 3.7 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/correct-course.md
+    ```yaml
+    ---
+    # TODO: Create change-proposal-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - change-proposal-tmpl.md  # Template doesn't exist yet
+    ---
+    ```
+
+  template_sections: |
+    Change Proposal template should include:
+
+    ## Problem Analysis
+    - Current state description
+    - Problem statement
+    - Impact of not addressing
+
+    ## Root Cause Analysis
+    - What caused this issue
+    - Why it wasn't caught earlier
+
+    ## Proposed Solution
+    - Detailed solution description
+    - Alternative approaches considered
+    - Rationale for chosen approach
+
+    ## Impact Assessment
+    - Affected components/systems
+    - Breaking changes (if any)
+    - Performance impact
+    - Security implications
+
+    ## Implementation Plan
+    - Step-by-step approach
+    - Estimated effort
+    - Timeline
+
+    ## Risk Assessment
+    - Risks and mitigation strategies
+    - Rollback strategy
+
+    ## Approval
+    - Stakeholder sign-offs
+    - Pre-requisites for implementation
+
+  reference_patterns: |
+    Use markdown templates from:
+    - .aios-core/templates/prd-tmpl.md (if exists)
+    - docs/stories/ (for markdown structure patterns)
+
+  files_to_create:
+    - ".aios-core/templates/change-proposal-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/correct-course.md"
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.7 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

@@ -1,0 +1,230 @@
+---
+id: "3.39"
+title: "Create Test Design Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 4
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing test-design-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task test-design.md needs test-design-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create test-design-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a test design template (test-design-tmpl.md),
+  **so that** the test-design task can create comprehensive test scenarios with proper test level recommendations.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.39.1"
+      description: "Create test-design-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/test-design-tmpl.md
+        - Template includes test scenario structure with test levels (unit/integration/e2e)
+        - Template uses Markdown format with clear test priority classification (P0/P1/P2/P3)
+        - Template includes placeholders for test scenarios, justifications, and risk mitigation
+        - Template supports mapping from acceptance criteria to test scenarios
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.39.2"
+      description: "Update test-design task to reference template"
+      requirements:
+        - Remove TODO comment from test-design.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references test-design-tmpl.md in frontmatter"
+
+    - id: "TR-3.39.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template with sample test design
+        - Document template placeholders and test level selection criteria
+      validation: "Gap detection shows test-design has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze test design requirements"
+    estimated_hours: 1
+    subtasks:
+      - "Review test-design.md task to understand test scenario workflow"
+      - "Review test-levels-framework.md for test level criteria"
+      - "Review test-priorities-matrix.md for priority classification"
+      - "Identify template structure: AC mapping, test scenarios, priorities"
+      - "Define template sections and placeholders"
+
+  - task: "Task 2: Create test-design-tmpl.md template"
+    estimated_hours: 2
+    subtasks:
+      - "Create .aios-core/templates/test-design-tmpl.md file"
+      - "Add header: # Test Design: Story {{storyId}}"
+      - "Add Test Strategy Overview section"
+      - "Add AC to Test Mapping section"
+      - "Add Test Scenarios by Level section (Unit/Integration/E2E)"
+      - "Add Test Scenario template with ID, requirement, priority, level, description, justification"
+      - "Add Coverage Summary section"
+      - "Add Risk Mitigation Mapping section"
+      - "Include inline comments explaining test level selection"
+
+  - task: "Task 3: Integrate template with test-design task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/test-design.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: test-design-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify test-design now shows template reference"
+      - "Generate sample test design using template with test data"
+      - "Validate test level assignments follow test-levels-framework"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/test-design.md
+    ```yaml
+    ---
+    # TODO: Create test-design-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - test-design-tmpl.md  # Template doesn't exist yet
+    data:
+      - test-levels-framework.md  # Test level decision criteria
+      - test-priorities-matrix.md  # Priority classification
+    ---
+    ```
+
+  template_structure: |
+    Test Design template should include:
+
+    ```markdown
+    # Test Design: Story {{storyId}} - {{storyTitle}}
+
+    **Story**: {{storyId}}
+    **Date**: {{date}}
+    **Test Architect**: {{architect}}
+
+    ## Test Strategy Overview
+    {{testStrategy}}
+
+    ## Acceptance Criteria to Test Mapping
+
+    {{#acceptanceCriteria}}
+    ### AC{{acId}}: {{acDescription}}
+    - **Test Scenarios**: {{testScenarioCount}}
+    - **Coverage Level**: {{coverageLevel}}
+    {{/acceptanceCriteria}}
+
+    ## Test Scenarios
+
+    ### Unit Tests
+    {{#unitTests}}
+    #### {{testId}}: {{testDescription}}
+    - **Requirement**: {{requirement}} (AC{{acId}})
+    - **Priority**: {{priority}} (P0/P1/P2/P3)
+    - **Description**: {{description}}
+    - **Justification**: {{justification}}
+    - **Mitigates Risks**: {{risks}}
+    {{/unitTests}}
+
+    ### Integration Tests
+    {{#integrationTests}}
+    #### {{testId}}: {{testDescription}}
+    - **Requirement**: {{requirement}} (AC{{acId}})
+    - **Priority**: {{priority}}
+    - **Description**: {{description}}
+    - **Justification**: {{justification}}
+    - **Mitigates Risks**: {{risks}}
+    {{/integrationTests}}
+
+    ### End-to-End Tests
+    {{#e2eTests}}
+    #### {{testId}}: {{testDescription}}
+    - **Requirement**: {{requirement}} (AC{{acId}})
+    - **Priority**: {{priority}}
+    - **Description**: {{description}}
+    - **Justification**: {{justification}}
+    - **Mitigates Risks**: {{risks}}
+    {{/e2eTests}}
+
+    ## Coverage Summary
+    - **Total Test Scenarios**: {{totalScenarios}}
+    - **Unit Tests**: {{unitCount}}
+    - **Integration Tests**: {{integrationCount}}
+    - **E2E Tests**: {{e2eCount}}
+    - **P0 Tests**: {{p0Count}}
+    - **P1 Tests**: {{p1Count}}
+    - **ACs Covered**: {{acsCovered}}/{{totalACs}}
+
+    ## Risk Mitigation Mapping
+    {{#riskMitigations}}
+    - **{{riskId}}**: Mitigated by {{testIds}}
+    {{/riskMitigations}}
+
+    ## Test Level Selection Rationale
+    {{testLevelRationale}}
+    ```
+
+  test_level_criteria: |
+    Reference test-levels-framework.md for:
+    - **Unit**: Pure logic, algorithms, calculations
+    - **Integration**: Component interactions, DB operations
+    - **E2E**: Critical user journeys, compliance
+
+  priority_criteria: |
+    Reference test-priorities-matrix.md for:
+    - **P0**: Revenue-critical, security, compliance
+    - **P1**: Core user journeys, frequently used
+    - **P2**: Secondary features, admin functions
+    - **P3**: Nice-to-have, rarely used
+
+  files_to_create:
+    - ".aios-core/templates/test-design-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/test-design.md"
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

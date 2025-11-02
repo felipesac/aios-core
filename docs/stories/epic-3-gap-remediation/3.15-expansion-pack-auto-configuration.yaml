@@ -1,0 +1,206 @@
+id: '3.15'
+title: Expansion Pack Auto-Configuration - IDE Integration Automation
+epic: "3c-remediation"
+phase: 'Epic 3 Phase 2: Strategic Enhancements'
+status: Draft
+priority: medium
+estimated_hours: 8
+actual_hours: 0
+created_by: Sarah (@po) via Strategic Planning
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by:
+  - '2.13'
+context: |
+  **USABILITY ENHANCEMENT**: Automate IDE integration for expansion packs to eliminate
+  manual configuration errors and improve portability across development environments.
+
+  **Problem**: Expansion packs (like hybrid-ops) require manual IDE configuration:
+  - Developers must manually create command wrappers in .claude/commands/
+  - Agent registration is error-prone and inconsistent
+  - No validation that expansion is properly installed
+  - Poor developer experience for expansion pack users
+
+  **Solution**: Create automated configuration task that:
+  1. Detects IDE environment (Claude Code, Cursor, Windsurf)
+  2. Generates IDE-specific command wrappers for expansion agents
+  3. Registers expansion in core-config.yaml
+  4. Validates installation with test commands
+
+  **Benefits**:
+  • One-command expansion pack installation
+  • Eliminates manual configuration errors
+  • Portable across IDE environments
+  • Better UX for expansion pack creators and users
+story: |
+  **As an** expansion pack creator or user,
+  **I want** automated IDE integration when installing expansion packs,
+  **so that** I can use expansion agents immediately without manual configuration
+  and avoid installation errors.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.15.1
+      description: Create configure-expansion.md task
+      requirements:
+        - 'Scan expansion pack for agents, tasks, workflows'
+        - Extract metadata from expansion manifest
+        - Validate expansion structure before configuration
+        - User-friendly error messages for malformed expansions
+      validation: Task successfully reads hybrid-ops expansion metadata
+    - id: TR-3.15.2
+      description: Implement IDE detection logic
+      requirements:
+        - Detect Claude Code (.claude directory)
+        - Detect Cursor (.cursor directory)
+        - Detect Windsurf (.windsurf directory)
+        - Fallback to generic configuration if IDE unknown
+      validation: Correctly identifies current IDE environment
+    - id: TR-3.15.3
+      description: Generate IDE-specific configurations
+      requirements:
+        - Create command wrappers in .claude/commands/ (Claude Code)
+        - Create settings updates for Cursor/Windsurf
+        - Preserve existing IDE configurations
+        - Use templates from .aios-core/templates/ide-rules/
+      validation: Expansion agents accessible via /command syntax
+    - id: TR-3.15.4
+      description: Update core-config.yaml registry
+      requirements:
+        - Add expansion to expansionPacks section
+        - Register all expansion agents
+        - Track expansion location and metadata
+        - Preserve existing core-config.yaml structure
+      validation: Expansion appears in core-config.yaml registry
+    - id: TR-3.15.5
+      description: Implement installation validation
+      requirements:
+        - Test expansion agent activation
+        - Verify command discovery
+        - Check all dependencies available
+        - Generate installation report
+      validation: Validation confirms expansion ready to use
+    - id: TR-3.15.6
+      description: Add to @expansion-creator agent
+      requirements:
+        - Add *configure-expansion command
+        - Update agent help documentation
+        - Include in expansion creation workflow
+      validation: '@expansion-creator *configure-expansion runs successfully'
+    - id: TR-3.15.7
+      description: Respect installation mode when configuring expansions
+      requirements:
+        - Read .aios-installation-config.yaml before configuration (if exists)
+        - 'Detect installation mode: framework-development vs project-development'
+        - 'In framework-dev: expansions are source code (committed to git)'
+        - 'In project-dev: expansions are dependencies (user choice to commit or gitignore)'
+        - Validate expansion location matches installation mode expectations
+        - Fallback to current installer behavior if .aios-installation-config.yaml missing
+      validation: Expansion configuration adapts correctly to installation mode
+tasks:
+  - task: Create configure-expansion.md task
+    subtasks:
+      - Design expansion metadata scanning logic
+      - Create IDE detection utilities
+      - Write task workflow with elicitation points
+      - Add error handling for edge cases
+  - task: Implement IDE configuration generators
+    subtasks:
+      - Claude Code command wrapper template
+      - Cursor settings integration template
+      - Windsurf configuration template
+      - Generic fallback template
+  - task: Build core-config.yaml integration
+    subtasks:
+      - Parse existing core-config.yaml safely
+      - Add expansion registration logic
+      - Validate YAML syntax after changes
+      - Create backup before modifications
+  - task: Create validation suite
+    subtasks:
+      - Agent activation test
+      - Command discovery verification
+      - Dependency availability check
+      - Installation report generator
+  - task: Update @expansion-creator agent
+    subtasks:
+      - Add *configure-expansion command
+      - Update agent definition file
+      - Integrate into expansion creation workflow
+      - Update documentation
+  - task: Test with hybrid-ops expansion
+    subtasks:
+      - Run configure-expansion on hybrid-ops
+      - Verify all PV-specialized agents accessible
+      - Test in multiple IDE environments (if available)
+      - Document any edge cases found
+dev_notes:
+  leveraged_orphans:
+    - util-component-metadata.js - Extract expansion metadata
+    - util-template-engine.js - Generate IDE configurations
+    - util-yaml-validator.js - Validate core-config.yaml changes
+  technical_approach: |
+    **File**: .aios-core/tasks/configure-expansion.md
+
+    **Workflow**:
+    1. Scan expansion-packs/{name}/ directory
+    2. Parse manifest for metadata
+    3. Detect IDE environment
+    4. Generate IDE-specific configurations
+    5. Update core-config.yaml
+    6. Validate installation
+    7. Generate report
+  ide_detection_logic: |
+    ```javascript
+    function detectIDE() {
+      const fs = require('fs');
+      if (fs.existsSync('.claude')) return 'claude-code';
+      if (fs.existsSync('.cursor')) return 'cursor';
+      if (fs.existsSync('.windsurf')) return 'windsurf';
+      return 'generic';
+    }
+    ```
+  expansion_registration_example: |
+    ```yaml
+    # Added to core-config.yaml
+    expansionPacks:
+      hybrid-ops:
+        enabled: true
+        location: expansion-packs/hybrid-ops
+        version: "1.0.0"
+        agents:
+          - clickup-engineer-pv
+          - process-architect-pv
+        installed_date: "2025-10-25"
+    ```
+  installation_mode_integration: "**Integration with Story 3.14 (GitHub DevOps Agent)**:\n\nThis story (3.15) builds on the installation mode concept from Story 3.14.\n\n**Current State (RC.10)**:\n- Installer: `npx aios-fullstack@rc install`\n- No .aios-installation-config.yaml yet (Story 3.14 feature)\n- Expansion packs installed to .aios-core/expansion-packs/ or project root\n\n**After Story 3.14 Implementation**:\n- New command: `aios init` (creates .aios-installation-config.yaml)\n- Installer: `npx aios-fullstack@rc install` (respects config if exists)\n- Expansion configuration: Respects installation mode\n\n**TR-3.15.7 Implementation Strategy**:\n```javascript\n// In configure-expansion.md task\nasync function detectInstallationMode() {\n  const configPath = path.join(process.cwd(), '.aios-installation-config.yaml');\n\n  if (fs.existsSync(configPath)) {\n    // Story 3.14 implemented - use explicit config\n    const config = yaml.parse(fs.readFileSync(configPath, 'utf8'));\n    return config.installation.mode; // 'framework-development' or 'project-development'\n  } else {\n    // Fallback: Use current installer behavior\n    // Check if we're in aios-fullstack repo itself\n    const packageJson = require(path.join(process.cwd(), 'package.json'));\n    if (packageJson.name === '@aios/fullstack' || packageJson.name === 'aios-fullstack') {\n      return 'framework-development';\n    } else {\n      return 'project-development';\n    }\n  }\n}\n\nasync function configureExpansion(expansionName, mode) {\n  if (mode === 'framework-development') {\n    console.log('\U0001F4E6 Framework Dev Mode: Expansion as source code');\n    // Install to aios-core/expansion-packs/ (committed)\n    // No gitignore changes\n  } else {\n    console.log('\U0001F4E6 Project Dev Mode: Expansion as dependency');\n    // Install to expansion-packs/ or .expansion-packs/\n    // Ask user: commit or gitignore?\n  }\n}\n```\n"
+  backward_compatibility_note: |
+    **IMPORTANT**: TR-3.15.7 must work BEFORE and AFTER Story 3.14 implementation.
+
+    **Phase 1** (Current - RC.10, no Story 3.14):
+    - No .aios-installation-config.yaml exists
+    - Fallback to heuristic detection (package.json name check)
+    - Default behavior: treat as project-development
+
+    **Phase 2** (After Story 3.14):
+    - .aios-installation-config.yaml exists
+    - Read explicit mode from config
+    - Respect user's mode choice
+
+    This ensures Story 3.15 can be implemented BEFORE Story 3.14 if needed.
+change_log:
+  - date: '2025-10-25'
+    version: 1.1.0
+    description: Added TR-3.15.7 for installation mode awareness and backward compatibility
+    author: Sarah (@po)
+    changes:
+      - 'Added TR-3.15.7: Respect installation mode when configuring expansions'
+      - Added installation_mode_integration dev notes
+      - Added backward_compatibility_note for pre/post Story 3.14
+      - Ensures Story 3.15 can be implemented before or after Story 3.14
+  - date: '2025-10-25'
+    version: 1.0.0
+    description: Strategic enhancement for expansion pack usability
+    author: Sarah (@po)

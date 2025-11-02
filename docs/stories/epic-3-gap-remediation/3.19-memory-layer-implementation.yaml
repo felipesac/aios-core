@@ -1,0 +1,244 @@
+id: '3.19'
+title: Memory Layer Implementation - Agent Session Memory (CONDITIONAL)
+epic: "3c-remediation"
+phase: 'Epic 3 Phase 2: Strategic Enhancements'
+status: Draft
+priority: medium
+estimated_hours: 16
+actual_hours: 0
+created_by: Sarah (@po) via Strategic Planning
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by:
+  - '3.17'
+context: |
+  **CONDITIONAL STORY**: This story is ONLY activated if Story 3.17 audit determines
+  that memory-layer.js is FIXABLE with <20h effort and core functionality is 60%+ complete.
+
+  **Activation Criteria**:
+  - ✅ Audit classifies memory-layer.js as FIXABLE (not DEPRECATED)
+  - ✅ Core memory storage/retrieval logic exists and works
+  - ✅ Fix effort estimated <20 hours
+  - ✅ Product Owner approves value justification
+
+  **Concept**: Agent session memory across conversations
+  - Agents remember previous decisions
+  - Context persists between sessions
+  - Prevents re-asking same questions
+  - Enables long-term learning
+
+  **Current State** (estimated):
+  - ~60% complete (core storage/retrieval works)
+  - Missing: MCP integration for persistence
+  - Missing: Agent integration hooks
+  - Missing: Memory query/search functionality
+  - Missing: Memory cleanup/expiration policies
+
+  **Solution**: Complete memory-layer implementation
+  - Add MCP server for persistent storage
+  - Integrate with agent activation workflows
+  - Implement memory query API
+  - Add memory management (cleanup, expiration)
+  - Test with @dev and @po agents
+story: |
+  **As a** developer using AIOS agents repeatedly,
+  **I want** agents to remember previous decisions and context,
+  **so that** I don't have to re-explain project details and can maintain
+  continuity across multiple sessions.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.19.1
+      description: Fix memory-layer.js core functionality
+      requirements:
+        - Debug and fix existing storage/retrieval code
+        - Add missing dependencies to package.json
+        - Implement error handling for storage failures
+        - Add TypeScript types (if applicable)
+      validation: memory-layer.js loads without errors and passes basic tests
+    - id: TR-3.19.2
+      description: Implement MCP persistence integration
+      requirements:
+        - Create or integrate with MCP server for storage (filesystem or DB)
+        - 'Implement memory.save(key, value, metadata)'
+        - Implement memory.retrieve(key)
+        - Implement memory.search(query)
+        - Add memory expiration policies
+      validation: Memory persists across Node.js process restarts
+    - id: TR-3.19.3
+      description: Create agent integration hooks
+      requirements:
+        - Add memory initialization to agent activation
+        - Create memory context injection for agent prompts
+        - Add memory.remember() helper for agents
+        - Add memory.recall() helper for agents
+      validation: Agent can save and retrieve memories within session
+    - id: TR-3.19.4
+      description: Implement memory management
+      requirements:
+        - Memory cleanup for expired entries
+        - Memory size limits per agent
+        - Memory export/import for backup
+        - Memory visualization (optional dashboard)
+      validation: Memory system doesn't grow unbounded
+    - id: TR-3.19.5
+      description: Test with pilot agents
+      requirements:
+        - Integrate with @dev agent
+        - Integrate with @po agent
+        - Test memory persistence across sessions
+        - Validate memory improves workflow efficiency
+      validation: Agents successfully use memory in real scenarios
+    - id: TR-3.19.6
+      description: Documentation and examples
+      requirements:
+        - Usage guide for memory layer
+        - Agent integration examples
+        - Memory API reference
+        - Best practices for memory usage
+      validation: Developers can integrate memory into new agents
+tasks:
+  - task: Analyze memory-layer.js current state
+    subtasks:
+      - Read audit findings from Story 3.17
+      - Test existing functionality
+      - Identify missing components
+      - Create fix plan with effort estimates
+  - task: Fix core memory-layer.js
+    subtasks:
+      - Fix any syntax or logic errors
+      - Add missing dependencies
+      - Implement error handling
+      - Add unit tests
+  - task: Implement MCP persistence
+    subtasks:
+      - Research MCP storage options (filesystem vs database)
+      - Create/integrate MCP server for memory
+      - Implement save/retrieve/search operations
+      - Add memory expiration policies
+  - task: Create agent integration
+    subtasks:
+      - Add memory hooks to agent activation
+      - Create memory helper functions
+      - Test with @dev agent
+      - Test with @po agent
+  - task: Implement memory management
+    subtasks:
+      - Memory cleanup cron job
+      - Size limit enforcement
+      - Export/import functionality
+      - 'Optional: memory dashboard'
+  - task: Documentation
+    subtasks:
+      - Write usage guide
+      - Create integration examples
+      - Document API reference
+      - Add best practices
+dev_notes:
+  activation_decision: |
+    **PO Review Required Before Starting**:
+
+    This story should ONLY be started if Story 3.17 audit shows:
+    1. memory-layer.js is FIXABLE (not DEPRECATED)
+    2. Core functionality is 60%+ complete
+    3. Fix effort is <20 hours
+    4. Value justifies the effort
+
+    **If audit shows effort >20h or core is <60% complete**:
+    → Defer this story or mark as DEPRECATED
+  memory_layer_concept: |
+    **What is Memory Layer?**
+
+    Allows agents to:
+    - Remember user preferences (e.g., "always use TypeScript")
+    - Recall project decisions (e.g., "we use Supabase for auth")
+    - Maintain context across sessions (e.g., "last working on Story 2.13")
+    - Learn patterns (e.g., "user prefers YOLO mode for simple stories")
+
+    **Example Usage**:
+    ```javascript
+    // In agent activation
+    const memory = await MemoryLayer.init('dev-agent', userId);
+
+    // Save memory
+    await memory.remember('preference-language', 'TypeScript');
+    await memory.remember('current-story', '2.13');
+
+    // Recall memory
+    const lang = await memory.recall('preference-language'); // 'TypeScript'
+    const story = await memory.recall('current-story'); // '2.13'
+
+    // Search memories
+    const prefs = await memory.search('preference-*');
+    ```
+  mcp_storage_options: |
+    **Option 1: Filesystem MCP**
+    - Store memories as JSON files
+    - Simple, no external dependencies
+    - Good for small-scale usage
+    - Path: ~/.aios/memories/{agent}/{user}/
+
+    **Option 2: Database MCP (Supabase)**
+    - Use Supabase MCP for storage
+    - Better for multi-user scenarios
+    - Enables advanced querying
+    - Requires Supabase setup
+
+    **Recommendation**: Start with filesystem, add DB later if needed
+  agent_integration_approach: |
+    **Modify Agent Activation Flow**:
+
+    ```markdown
+    # In .aios-core/agents/dev.md
+    activation-instructions:
+      - STEP 1: Initialize memory layer
+        ```javascript
+        const memory = await MemoryLayer.init('dev', userId);
+        const context = await memory.recallRecent(5);
+        // Inject context into agent prompt
+        ```
+      - STEP 2: Adopt persona (with memory context)
+      - STEP 3: Greet user
+    ```
+  memory_expiration_policies: |
+    **Expiration Rules**:
+    - User preferences: Never expire
+    - Project decisions: Expire after 90 days inactive
+    - Session context: Expire after 7 days
+    - Temporary notes: Expire after 1 day
+
+    **Cleanup Job**:
+    - Run daily at midnight
+    - Remove expired memories
+    - Archive instead of delete (for restore)
+  expected_value: |
+    **Efficiency Gains**:
+    - Reduce repeated questions: 30% time savings
+    - Maintain long-term context: Better decision quality
+    - Learn user patterns: Personalized agent behavior
+
+    **Use Cases**:
+    - Remember user's preferred libraries/frameworks
+    - Recall why past decisions were made
+    - Track long-running project context
+    - Enable "resume where I left off" functionality
+  conditional_approval_note: |
+    ⚠️ **IMPORTANT**: This story is in Draft status with CONDITIONAL priority.
+
+    **Before starting development**:
+    1. Complete Story 3.17 (Utilities Audit)
+    2. Review audit findings for memory-layer.js
+    3. PO approves activation based on audit results
+    4. Update story status to "Ready" (or "Deprecated" if audit fails criteria)
+
+    **If audit shows memory-layer is DEPRECATED**:
+    - Mark this story as Deprecated
+    - Remove from Epic 3 backlog
+    - Consider fresh implementation in future epic
+change_log:
+  - date: '2025-10-25'
+    version: 1.0.0
+    description: CONDITIONAL story - activate only if audit shows memory-layer is FIXABLE
+    author: Sarah (@po)

@@ -1,0 +1,184 @@
+# ⚠️ DEPRECATED - DO NOT USE ⚠️
+# This version (v1.0.0) has been deprecated in favor of v2.0.2
+# Canonical version: 3.14-github-devops-agent.yaml
+# Reason: v2.0.2 is repository-agnostic, already implemented, tested, and QA approved (98/100)
+# Resolution: See STORY-3.14-DUPLICATION-RESOLUTION.md
+# Date Deprecated: 2025-10-26
+# Deprecated By: Sarah (@po)
+
+id: '3.14'
+title: GitHub DevOps Agent - Repository Integrity Guardian [DEPRECATED v1.0.0]
+epic: "3c-remediation"
+phase: 'Epic 3 Phase 2: Strategic Enhancements'
+status: Deprecated
+priority: critical
+estimated_hours: 16
+actual_hours: 0
+created_by: Quinn (@qa) via Strategic Analysis
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by:
+  - '2.13'
+context: |
+  **CRITICAL ENHANCEMENT**: Create centralized GitHub repository management to prevent chaos,
+  enforce quality gates, and manage versioning systematically.
+
+  **Problem**: Currently ANY agent could push to GitHub, no version control governance,
+  no automated quality gates, chaotic branch management.
+
+  **Solution**: Create @github-devops agent as the ONLY agent authorized to push to GitHub.
+  Implements pre-push quality gates, version management, CI/CD orchestration.
+
+  **Repository**: https://github.com/Pedrovaleriolopez/aios-fullstack
+
+  **Critical Rule**: NO other agent can execute git push. All must go through @github-devops.
+story: |
+  **As a** framework architect,
+  **I want** centralized repository management with automated quality gates,
+  **so that** I can maintain repository integrity, prevent broken commits,
+  and ensure systematic versioning.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.14.1
+      description: Create @github-devops agent
+      requirements:
+        - Agent definition with GitHub CLI as primary tool
+        - 'Commands: version-check, pre-push, create-pr, configure-ci, cleanup, release'
+        - Exclusive authorization for git push operations
+      validation: Agent activates and responds to *help
+    - id: TR-3.14.2
+      description: Implement version management
+      requirements:
+        - Semantic versioning detection (MAJOR.MINOR.PATCH)
+        - Changelog generation from commit history
+        - Version bump recommendation logic
+        - User confirmation before version changes
+      validation: Correctly identifies v4.31.0 → v4.32.0 vs v5.0.0
+    - id: TR-3.14.3
+      description: Implement pre-push quality gate
+      requirements:
+        - Run npm run lint (must PASS)
+        - Run npm test (must PASS)
+        - Run npm run typecheck (must PASS)
+        - Run npm run build (must PASS)
+        - Verify story status = Done
+        - Check no uncommitted changes
+        - Present summary to user for approval
+      validation: Quality gate catches failing tests before push
+    - id: TR-3.14.4
+      description: Implement GitHub PR automation
+      requirements:
+        - 'Create feature branch from story (feature/{story-id}-{slug})'
+        - Generate PR description from story context
+        - Link PR to story in description
+        - Assign reviewers based on story type
+      validation: PR created with proper description and links
+    - id: TR-3.14.5
+      description: Configure GitHub Actions
+      requirements:
+        - 'CI workflow: test on PR'
+        - 'CD workflow: deploy on merge to main'
+        - 'Quality gate workflow: lint + test + build'
+        - Templates in .github/workflows/
+      validation: GitHub Actions run on PR creation
+    - id: TR-3.14.6
+      description: Implement repository cleanup
+      requirements:
+        - 'Identify stale branches (>30 days, merged)'
+        - 'List temporary files (node_modules, .DS_Store, etc.)'
+        - Suggest cleanup with user confirmation
+      validation: 'Cleanup suggestions accurate, no active branches flagged'
+tasks:
+  - task: Create @github-devops agent
+    subtasks:
+      - Define agent in .aios-core/agents/github-devops.md
+      - Configure GitHub CLI tool integration
+      - Add commands and dependencies
+  - task: Implement version-management.md task
+    subtasks:
+      - Semantic version parsing
+      - Change analysis (MAJOR vs MINOR vs PATCH)
+      - Changelog generation logic
+      - Version bump automation
+  - task: Implement pre-push-quality-gate.md task
+    subtasks:
+      - 'Integrate with npm scripts (lint, test, typecheck, build)'
+      - Story status validation
+      - 'Git status checks (uncommitted, conflicts)'
+      - User approval flow
+  - task: Implement github-pr-automation.md task
+    subtasks:
+      - Branch naming from story context
+      - PR description template generation
+      - GitHub CLI pr create integration
+      - Reviewer assignment logic
+  - task: Create GitHub Actions workflows
+    subtasks:
+      - .github/workflows/ci.yml (test on PR)
+      - .github/workflows/cd.yml (deploy on merge)
+      - .github/workflows/quality-gate.yml
+  - task: Implement repository-cleanup.md task
+    subtasks:
+      - Stale branch detection
+      - Temporary file identification
+      - Cleanup automation with confirmation
+  - task: Update other agents - REMOVE git push capability
+    subtasks:
+      - Audit all agent definitions
+      - Remove git/github-cli from non-devops agents
+      - Update documentation
+  - task: Create comprehensive documentation
+    subtasks:
+      - GitHub workflow guide
+      - Version management strategy
+      - PR creation process
+      - Quality gate requirements
+dev_notes:
+  leveraged_orphans:
+    - util-branch-manager.js - Branch management logic
+    - util-commit-message-generator.js - Commit message templates
+    - util-version-tracker.js - Version history tracking
+  repository_url: 'https://github.com/Pedrovaleriolopez/aios-fullstack'
+  version_logic: |
+    **Semantic Versioning Rules**:
+    - MAJOR (v4 → v5): Breaking changes, API redesign
+    - MINOR (v4.31 → v4.32): New features, backward compatible
+    - PATCH (v4.31.0 → v4.31.1): Bug fixes only
+
+    **Detection**:
+    - Analyze git diff since last tag
+    - Check for breaking changes keywords
+    - Count new features vs fixes
+    - User confirms final decision
+  github_actions_templates: |
+    **CI Workflow** (.github/workflows/ci.yml):
+    ```yaml
+    name: CI
+    on: [pull_request]
+    jobs:
+      quality-gate:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - uses: actions/setup-node@v3
+          - run: npm install
+          - run: npm run lint
+          - run: npm test
+          - run: npm run typecheck
+          - run: npm run build
+    ```
+  security_note: |
+    **CRITICAL**: Only @github-devops can push to GitHub.
+    This prevents:
+    - Untested code reaching repository
+    - Version conflicts
+    - Broken builds in main branch
+    - Unauthorized releases
+change_log:
+  - date: '2025-10-25'
+    version: 1.0.0
+    description: Critical enhancement for repository integrity
+    author: Quinn (@qa)

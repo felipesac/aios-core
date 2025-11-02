@@ -1,0 +1,156 @@
+---
+id: "3.33"
+title: "Create Epic Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 4
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.7"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.7 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing epic-tmpl.yaml template
+
+  This story addresses technical debt identified during Story 3.7 (Incomplete Workflows Part 1).
+
+  **Problem**: Task brownfield-create-epic.md needs epic-tmpl.yaml template but it doesn't exist.
+
+  **Reference**: Story 3.7 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.7-incomplete-workflow-completion-part-1.yml
+  - Recommendation: "Create epic-tmpl.yaml template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** an epic template (epic-tmpl.yaml) for creating brownfield epics,
+  **so that** the brownfield-create-epic task can generate consistent epic documents.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.33.1"
+      description: "Create epic-tmpl.yaml template file"
+      requirements:
+        - Template created at .aios-core/templates/epic-tmpl.yaml
+        - Template includes all standard epic fields (id, title, phase, goals, stories, etc.)
+        - Template uses YAML format with clear comments
+        - Template follows existing template patterns (story-tmpl.yaml, prd-tmpl.yaml)
+      validation: "Template file exists and is valid YAML"
+
+    - id: "TR-3.33.2"
+      description: "Update brownfield-create-epic task to reference template"
+      requirements:
+        - Remove TODO comment from brownfield-create-epic.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references epic-tmpl.yaml in frontmatter"
+
+    - id: "TR-3.33.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template rendering with sample data
+        - Document template fields in templates/README.md or inline comments
+      validation: "Gap detection shows brownfield-create-epic has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze epic requirements and existing patterns"
+    estimated_hours: 1
+    subtasks:
+      - "Review existing epic documents in docs/epics/ for common patterns"
+      - "Review story-tmpl.yaml and prd-tmpl.yaml for template structure patterns"
+      - "Identify all required fields for epic template (id, title, phase, goals, etc.)"
+      - "Review brownfield-create-epic.md task to understand usage context"
+
+  - task: "Task 2: Create epic-tmpl.yaml template"
+    estimated_hours: 2
+    subtasks:
+      - "Create .aios-core/templates/epic-tmpl.yaml file"
+      - "Add standard epic fields with {{placeholder}} syntax"
+      - "Add inline comments explaining each field"
+      - "Include examples of typical values where helpful"
+      - "Ensure YAML syntax is valid (test with yaml parser)"
+
+  - task: "Task 3: Integrate template with brownfield-create-epic task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/brownfield-create-epic.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: epic-tmpl.yaml"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify brownfield-create-epic now shows template reference"
+      - "Test template rendering with sample data (if template-engine available)"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_7: |
+    Story 3.7 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/brownfield-create-epic.md
+    ```yaml
+    ---
+    # TODO: Create epic-tmpl.yaml or epic-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - epic-tmpl.yaml  # Template doesn't exist yet
+    tools:
+      - github-cli  # For repository analysis
+    ---
+    ```
+
+  template_requirements: |
+    Epic template should include:
+    - Metadata: id, title, epic_code, phase, status, priority
+    - Planning: goals, success_criteria, scope, out_of_scope
+    - Structure: stories (list), dependencies, timeline
+    - Context: business_value, technical_rationale, risks
+    - Tracking: estimated_effort, actual_effort, completion_criteria
+
+  reference_templates: |
+    Use these existing templates as patterns:
+    - .aios-core/templates/story-tmpl.yaml (YAML structure, placeholders)
+    - .aios-core/templates/prd-tmpl.yaml (comprehensive fields, comments)
+
+  files_to_create:
+    - ".aios-core/templates/epic-tmpl.yaml"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/brownfield-create-epic.md"
+
+  validation_approach: |
+    1. Validate YAML syntax: `node -e "require('yaml').parse(require('fs').readFileSync('epic-tmpl.yaml', 'utf8'))"`
+    2. Run gap detection to confirm template is discoverable
+    3. Manually test template with brownfield-create-epic task if possible
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.7 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

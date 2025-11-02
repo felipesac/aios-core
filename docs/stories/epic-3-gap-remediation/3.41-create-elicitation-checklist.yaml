@@ -1,0 +1,220 @@
+---
+id: "3.41"
+title: "Create Elicitation Checklist"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing checklist"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing elicitation-checklist.md checklist
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task advanced-elicitation.md needs elicitation-checklist.md checklist but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create elicitation-checklist.md checklist" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** an elicitation checklist (elicitation-checklist.md),
+  **so that** the advanced-elicitation task can guide structured elicitation workflows.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.41.1"
+      description: "Create elicitation-checklist.md checklist file"
+      requirements:
+        - Checklist created at .aios-core/checklists/elicitation-checklist.md
+        - Checklist includes structured elicitation workflow steps
+        - Checklist uses Markdown format with checkbox items
+        - Checklist includes validation criteria for each elicitation phase
+        - Checklist supports multiple elicitation methods (Tree of Thoughts, Meta-Prompting, etc.)
+      validation: "Checklist file exists and is valid Markdown"
+
+    - id: "TR-3.41.2"
+      description: "Update advanced-elicitation task to reference checklist"
+      requirements:
+        - Remove TODO comment from advanced-elicitation.md
+        - Uncomment checklist reference in task YAML frontmatter
+        - Update task documentation to explain checklist usage
+      validation: "Task file references elicitation-checklist.md in frontmatter"
+
+    - id: "TR-3.41.3"
+      description: "Validate checklist integration"
+      requirements:
+        - Run gap detection to verify checklist is discoverable
+        - Test checklist with sample elicitation workflow
+        - Document checklist usage with elicitation-methods.md
+      validation: "Gap detection shows advanced-elicitation has checklist reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze elicitation workflow requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review advanced-elicitation.md task to understand elicitation workflow"
+      - "Review elicitation-methods.md for available elicitation techniques"
+      - "Identify checklist phases: preparation, execution, validation"
+      - "Define checklist items and validation criteria"
+
+  - task: "Task 2: Create elicitation-checklist.md checklist"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/checklists/elicitation-checklist.md file"
+      - "Add header: # Advanced Elicitation Checklist"
+      - "Add Preparation Phase section with pre-elicitation checks"
+      - "Add Method Selection section with elicitation method criteria"
+      - "Add Execution Phase section with elicitation steps"
+      - "Add Validation Phase section with quality checks"
+      - "Add Documentation Phase section with capture requirements"
+      - "Include inline comments explaining each phase"
+
+  - task: "Task 3: Integrate checklist with advanced-elicitation task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/advanced-elicitation.md"
+      - "Remove TODO comment about missing checklist"
+      - "Uncomment checklist reference: elicitation-checklist.md"
+      - "Update task documentation to reference the new checklist"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify advanced-elicitation now shows checklist reference"
+      - "Test checklist with sample elicitation session"
+      - "Validate checklist covers all elicitation phases"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing checklist and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/advanced-elicitation.md
+    ```yaml
+    ---
+    # TODO: Create elicitation-checklist.md (follow-up story needed)
+    # checklists:
+    #   - elicitation-checklist.md  # Checklist doesn't exist yet
+    data:
+      - elicitation-methods.md  # Elicitation technique reference
+      - brainstorming-techniques.md  # Brainstorming methods
+    ---
+    ```
+
+  checklist_structure: |
+    Elicitation Checklist should include:
+
+    ```markdown
+    # Advanced Elicitation Checklist
+
+    Use this checklist to guide structured elicitation workflows for requirements gathering,
+    problem exploration, and solution design.
+
+    ## Preparation Phase
+
+    - [ ] Define elicitation objective clearly
+    - [ ] Identify stakeholders and subject matter experts
+    - [ ] Review existing documentation and context
+    - [ ] Select appropriate elicitation method(s) from elicitation-methods.md
+    - [ ] Prepare elicitation materials (templates, prompts, frameworks)
+    - [ ] Establish success criteria for elicitation session
+
+    ## Method Selection
+
+    - [ ] Assess complexity level (simple/moderate/complex)
+    - [ ] Determine content type (technical/user-facing/creative/strategic)
+    - [ ] Select 3-4 core elicitation methods
+    - [ ] Select 4-5 context-specific methods
+    - [ ] Verify selected methods align with objective
+
+    ## Execution Phase
+
+    - [ ] Present context summary to participants
+    - [ ] Explain elicitation process and method options
+    - [ ] Execute selected elicitation method(s)
+    - [ ] Capture responses and insights in structured format
+    - [ ] Allow iterative refinement through multiple methods
+    - [ ] Document participant decisions and rationale
+
+    ## Validation Phase
+
+    - [ ] Review completeness of elicited information
+    - [ ] Validate consistency across responses
+    - [ ] Identify gaps or ambiguities
+    - [ ] Confirm alignment with original objective
+    - [ ] Obtain participant confirmation of captured information
+
+    ## Documentation Phase
+
+    - [ ] Structure elicited information into clear document
+    - [ ] Include method selection rationale
+    - [ ] Document key decisions and trade-offs
+    - [ ] Capture follow-up items or open questions
+    - [ ] Store session artifacts for future reference
+    - [ ] Update related documentation with findings
+
+    ## Quality Checks
+
+    - [ ] All elicitation objectives addressed
+    - [ ] Information is clear and actionable
+    - [ ] No critical ambiguities remain
+    - [ ] Stakeholder buy-in obtained
+    - [ ] Documentation follows project standards
+    ```
+
+  elicitation_methods_reference: |
+    Common elicitation methods from elicitation-methods.md:
+    - Tree of Thoughts: For complex reasoning chains
+    - Meta-Prompting: For specialized expertise simulation
+    - ReWOO: For multi-step problem solving
+    - Agile Team Perspective: For collaborative scenarios
+    - Red Team vs Blue Team: For critical analysis
+    - Innovation Tournament: For creative solutions
+
+  files_to_create:
+    - ".aios-core/checklists/elicitation-checklist.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/advanced-elicitation.md"
+
+  validation_approach: |
+    1. Execute checklist with sample elicitation session
+    2. Verify all phases covered systematically
+    3. Validate checklist items are clear and actionable
+    4. Confirm integration with elicitation-methods.md
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

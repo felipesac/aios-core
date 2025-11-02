@@ -1,0 +1,145 @@
+id: '3.12'
+title: Deprecation Cleanup
+epic: "3c-remediation"
+phase: 'Epic 3: Architecture Gap Remediation'
+status: Draft
+priority: low
+estimated_hours: 9
+actual_hours: 0
+created_by: James (@dev) via Story 2.13
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by:
+  - '2.13'
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Remove deprecated files and clean up obsolete components
+
+  This story addresses 2 gaps identified during the Architecture Audit (Story 2.11-2.13).
+  All gaps in this story fall under the "Orphaned Deprecated" category.
+
+  **Gap Reference**: See outputs/architecture-map/reports/gap-backlog.csv rows for:
+      - agent-generate-course-v1-backup: Deprecated entity 'generate-course-v1-backup' is unreferenced and can be safely removed
+      - util-backup-manager: Deprecated entity 'util-backup-manager' is unreferenced and can be safely removed
+story: |
+  **As an** AIOS framework developer,
+  **I want** to remediate 2 deprecation cleanup gaps,
+  **so that** all framework components are properly integrated and discoverable.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.12.1
+      description: Remediate all 2 gaps in this story
+      requirements:
+        - 'Process entities: agent-generate-course-v1-backup, util-backup-manager'
+        - Apply appropriate remediation strategy per gap-backlog.csv
+        - Verify all gaps resolved via gap detection re-run
+      validation: Gap detection shows 0 gaps for these entities
+    - id: TR-3.12.2
+      description: Review Story 3.18 archived utilities for restoration potential
+      requirements:
+        - 'Review batch-creator.js from utils-archive/ for public API value'
+        - 'Review component-search.js from utils-archive/ for public API value'
+        - Make GO/NO-GO decision for each utility restoration
+        - Document decision rationale
+      validation: Decision documented with clear rationale for each utility
+    - id: TR-3.12.3
+      description: Restore and refactor batch-creator.js (conditional on TR-3.12.2 GO decision)
+      requirements:
+        - 'Move batch-creator.js from utils-archive/ back to utils/'
+        - Refactor for modern batch processing use cases
+        - Create public API documentation
+        - Add comprehensive unit tests
+        - Update core-config.yaml utils registry
+      validation: Utility works, documented, tested, and registered
+    - id: TR-3.12.4
+      description: Restore and refactor component-search.js (conditional on TR-3.12.2 GO decision)
+      requirements:
+        - 'Move component-search.js from utils-archive/ back to utils/'
+        - Implement search index or integrate with existing tool
+        - Create public API documentation
+        - Add comprehensive unit tests
+        - Update core-config.yaml utils registry
+      validation: Utility works, documented, tested, and registered
+tasks:
+  - task: Review gap details from gap-backlog.csv
+    subtasks:
+      - Load gap-backlog.csv and filter for this story's entities
+      - Understand remediation approach for each gap
+  - task: Apply remediations systematically
+    subtasks:
+      - 'For each gap, apply the mitigation strategy'
+      - 'Update related files (agents, tasks, templates, core-config, etc.)'
+      - Document changes in change log
+  - task: Review Story 3.18 archived utilities for potential restoration
+    subtasks:
+      - Read batch-creator.js from .aios-core/utils-archive/
+      - Analyze public API potential for batch processing
+      - Read component-search.js from .aios-core/utils-archive/
+      - Analyze public API potential for component search
+      - 'Make GO/NO-GO decision for each utility (consider: use cases, maintenance, alternatives)'
+      - Document decision rationale in story
+  - task: Restore and refactor batch-creator.js (if GO decision)
+    subtasks:
+      - Move batch-creator.js from utils-archive/ back to utils/
+      - Refactor code for modern batch processing patterns
+      - Create public API documentation
+      - Add unit tests with examples
+      - Update core-config.yaml utils count
+      - Test with real batch processing scenario
+  - task: Restore and refactor component-search.js (if GO decision)
+    subtasks:
+      - Move component-search.js from utils-archive/ back to utils/
+      - Implement search index OR integrate with existing search tool
+      - Create public API documentation
+      - Add unit tests with component search examples
+      - Update core-config.yaml utils count
+      - Test with real component search scenario
+  - task: Validate all fixes
+    subtasks:
+      - 'Re-run gap detection: node outputs/architecture-map/schemas/detect-gaps.js'
+      - Verify 0 gaps remain for this story's entities
+      - Test restored utilities (if any) in framework
+      - Update master relationship map if needed
+dev_notes:
+  gap_details: |
+    See gap-backlog.csv for full details on each gap.
+    Use gap-categorization.json for remediation strategy context.
+  files_to_modify:
+    - .aios-core/agents/* (if agent dependencies need updating)
+    - .aios-core/tasks/* (if task files need updates)
+    - .aios-core/core-config.yaml (for registrations)
+    - outputs/architecture-map/MASTER-RELATIONSHIP-MAP.json (regenerate after fixes)
+change_log:
+  - date: '2025-10-31'
+    version: 1.1.0
+    description: Added public API utility restoration from Story 3.18 recommendations
+    author: Quinn (@qa)
+    changes:
+      - 'Added TR-3.12.2: Review Story 3.18 archived utilities for restoration potential'
+      - 'Added TR-3.12.3: Restore and refactor batch-creator.js (conditional)'
+      - 'Added TR-3.12.4: Restore and refactor component-search.js (conditional)'
+      - 'Added task: Review Story 3.18 archived utilities for potential restoration'
+      - 'Added task: Restore and refactor batch-creator.js (if GO decision)'
+      - 'Added task: Restore and refactor component-search.js (if GO decision)'
+      - Updated estimated_hours from 1 to 9
+    rationale: |
+      Story 3.18 QA review identified batch-creator.js and component-search.js
+      as potentially valuable public APIs if refactored. Story 3.12 (Deprecation Cleanup)
+      is the natural place to review and potentially restore these utilities.
+
+      Reference: docs/stories/epic-3-gap-remediation/3.18-RECOMMENDATIONS-PLACEMENT-ANALYSIS.md
+  - date: '2025-10-25'
+    version: 1.0.0
+    description: Story generated by Story 2.13 remediation planning
+    author: James (@dev)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

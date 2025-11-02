@@ -1,0 +1,199 @@
+---
+id: "3.37"
+title: "Create Modification Proposal Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing modification-proposal-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task propose-modification.md needs modification-proposal-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create modification-proposal-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a modification proposal template (modification-proposal-tmpl.md),
+  **so that** the propose-modification task can create consistent modification proposals.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.37.1"
+      description: "Create modification-proposal-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/modification-proposal-tmpl.md
+        - Template includes standard proposal structure (objective, implementation, benefits, risks)
+        - Template uses Markdown format with clear section headers
+        - Template includes placeholders for component details, modification type, and impact assessment
+        - Template supports all modification types (modify, refactor, deprecate, enhance)
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.37.2"
+      description: "Update propose-modification task to reference template"
+      requirements:
+        - Remove TODO comment from propose-modification.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references modification-proposal-tmpl.md in frontmatter"
+
+    - id: "TR-3.37.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template with sample modification proposal
+        - Document template placeholders and usage patterns
+      validation: "Gap detection shows propose-modification has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze modification proposal requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review propose-modification.md task to understand proposal workflow"
+      - "Identify proposal structure: objective, implementation details, benefits, risks, timeline"
+      - "Review existing modification proposals (if any) for structure reference"
+      - "Define template sections and placeholders"
+
+  - task: "Task 2: Create modification-proposal-tmpl.md template"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/templates/modification-proposal-tmpl.md file"
+      - "Add header: # Modification Proposal: {{componentName}}"
+      - "Add Objective section with {{objective}} placeholder"
+      - "Add Implementation Details section with {{implementation}} placeholder"
+      - "Add Benefits section with {{benefits}} placeholder list"
+      - "Add Risks & Mitigation section with {{risks}} placeholder"
+      - "Add Timeline section with {{timeline}} placeholder"
+      - "Add Approval section with {{approvers}} placeholder"
+      - "Include inline comments explaining template structure"
+
+  - task: "Task 3: Integrate template with propose-modification task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/propose-modification.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: modification-proposal-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify propose-modification now shows template reference"
+      - "Generate sample proposal using template with test data"
+      - "Validate generated proposal follows expected structure"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/propose-modification.md
+    ```yaml
+    ---
+    # TODO: Create modification-proposal-tmpl.md template (follow-up story needed)
+    # templates:
+    #   - modification-proposal-tmpl.md  # Template doesn't exist yet
+    ---
+    ```
+
+  template_structure: |
+    Modification Proposal template should include:
+
+    ```markdown
+    # Modification Proposal: {{componentName}}
+
+    ## Proposal Details
+    - **Component**: {{componentPath}}
+    - **Modification Type**: {{modificationType}} (modify/refactor/deprecate/enhance)
+    - **Priority**: {{priority}}
+    - **Proposed By**: {{proposer}}
+    - **Date**: {{date}}
+
+    ## Objective
+    {{objective}}
+
+    ## Current State
+    {{currentState}}
+
+    ## Proposed Changes
+    {{proposedChanges}}
+
+    ## Implementation Details
+    {{implementationDetails}}
+
+    ## Benefits
+    {{#benefits}}
+    - {{benefit}}
+    {{/benefits}}
+
+    ## Risks & Mitigation
+    {{#risks}}
+    ### Risk: {{riskTitle}}
+    - **Severity**: {{severity}}
+    - **Mitigation**: {{mitigation}}
+    {{/risks}}
+
+    ## Impact Assessment
+    - **Affected Components**: {{affectedComponents}}
+    - **Breaking Changes**: {{breakingChanges}}
+    - **Migration Path**: {{migrationPath}}
+
+    ## Timeline
+    {{timeline}}
+
+    ## Approval
+    - **Reviewers**: {{reviewers}}
+    - **Approved By**: {{approvedBy}}
+    - **Approval Date**: {{approvalDate}}
+    ```
+
+  files_to_create:
+    - ".aios-core/templates/modification-proposal-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/propose-modification.md"
+
+  validation_approach: |
+    1. Render template with sample modification data
+    2. Verify output includes all required sections
+    3. Validate placeholders render correctly
+    4. Confirm template supports all modification types
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

@@ -1,0 +1,501 @@
+id: '3.27'
+title: MCP Context Optimization - POC IBM Context Forge (Parallel to 3.26)
+epic: "3a-infrastructure"
+phase: 'Epic 3: Architecture Gap Remediation'
+status: Deferred
+priority: medium
+estimated_hours: 16
+actual_hours: 4
+created_by: Winston (@architect) - 2025-10-26
+validated_by:
+  - Pedro Valério (@po) - 2025-10-27
+approval_date: 2025-10-26
+completed_date: 2025-10-27
+completed_by: Winston (@architect) - Research Only
+deferred_reason: Research conclusively shows 1MCP is sufficient for current needs
+revisit_date: Q1 2026 (or if triggers occur)
+blocks: []
+blocked_by:
+  - '3.26'
+parallel_to: '3.26'
+context: |
+  **PROOF OF CONCEPT**: Evaluate IBM Context Forge as enterprise alternative to 1MCP
+
+  This story runs **IN PARALLEL** with Story 3.26 (1MCP implementation) to provide
+  a **data-driven comparison** between the two solutions before committing to
+  long-term architecture.
+
+  **Context Forge Advantages (vs 1MCP)**:
+  - 11x more stars (2,737 vs 245) - stronger community
+  - IBM-maintained (enterprise support)
+  - REST → MCP conversion (virtualize n8n, Railway APIs)
+  - gRPC → MCP translation (auto-reflection)
+  - OpenTelemetry observability (production-grade)
+  - OAuth 2.0 + RBAC (multi-tenant)
+  - Protocol conversion (stdio ↔ HTTP ↔ SSE ↔ WebSocket)
+  - Redis federation (multi-cluster, fail-over)
+  - Admin UI (web dashboard)
+
+  **Context Forge Challenges (vs 1MCP)**:
+  - Python stack (vs TypeScript for AIOS)
+  - More complex setup (Docker/PyPI vs npm)
+  - Potentially overkill for current needs
+
+  **Decision Framework**:
+  After POC completion, compare 1MCP vs Context Forge on:
+  1. Token reduction (target: same ~75-85%)
+  2. Installation complexity (time + steps)
+  3. Developer experience (config management, debugging)
+  4. Enterprise features value (OAuth, observability, REST conversion)
+  5. Stack alignment (TypeScript vs Python)
+  6. Maintenance burden (updates, troubleshooting)
+
+  **Outcome**: Go/No-Go decision on migrating from 1MCP to Context Forge
+story: |
+  **As a** Technical Architect,
+  **I want** to validate IBM Context Forge in a POC environment,
+  **so that** we can make a data-driven decision between 1MCP and Context Forge,
+  **and** potentially unlock enterprise features (REST conversion, observability, multi-tenant).
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.27.1
+      description: Context Forge installation and configuration
+      requirements:
+        - Context Forge installed (Docker or PyPI)
+        - 'Gateway accessible at http://127.0.0.1:8000'
+        - 'Admin UI accessible at http://127.0.0.1:8000/admin'
+        - 'Health endpoint responding at http://127.0.0.1:8000/health'
+        - Configuration file created and validated
+      validation: Health endpoint returns 200 OK with gateway status
+    - id: TR-3.27.2
+      description: MCP server integration (sample subset)
+      requirements:
+        - 'Migrate 3 MCPs for POC: context7, clickup, exa'
+        - Verify tools discoverable via Context Forge registry
+        - Test tool execution through gateway
+        - Validate proxy transparency (same behavior as direct connection)
+      validation: Execute 1 tool from each of 3 MCPs successfully
+    - id: TR-3.27.3
+      description: REST API virtualization test
+      requirements:
+        - 'Virtualize 1 REST API as MCP (e.g., n8n webhook or Railway API)'
+        - JSON Schema auto-extraction working
+        - Tool callable from Claude Code via Context Forge
+        - Compare effort vs native MCP server implementation
+      validation: 'REST API accessible as MCP tool, executes correctly'
+    - id: TR-3.27.4
+      description: Observability and monitoring
+      requirements:
+        - OpenTelemetry configured (Phoenix or Jaeger backend)
+        - Distributed tracing visible for tool calls
+        - 'Metrics exported (token usage, latency, errors)'
+        - Admin UI shows real-time logs and metrics
+      validation: Tool execution trace visible in observability backend
+    - id: TR-3.27.5
+      description: Token reduction validation
+      requirements:
+        - Connect Claude Code to Context Forge gateway
+        - Measure token consumption via `/context`
+        - Compare to 1MCP results from Story 3.26
+        - Document actual reduction achieved
+      validation: Token reduction ≥ 75% (comparable to 1MCP)
+  decision_criteria:
+    - id: DC-3.27.1
+      description: Installation complexity comparison
+      metric: Time to install and configure (minutes)
+      target: Context Forge time ≤ 2x 1MCP time
+      measurement: Timed installation from scratch
+    - id: DC-3.27.2
+      description: Developer experience comparison
+      metric: DX rating (1-10 scale)
+      criteria:
+        - Configuration management (YAML vs CLI)
+        - 'Debugging ease (logs, error messages)'
+        - Hot-reload capability
+        - Documentation quality
+      target: Context Forge DX ≥ 7/10 (vs 1MCP DX score)
+    - id: DC-3.27.3
+      description: Enterprise features value assessment
+      metric: Feature utilization score
+      evaluation:
+        - 'REST conversion: High value (n8n, Railway) = +3 points'
+        - 'OpenTelemetry: Medium value (nice-to-have) = +2 points'
+        - 'OAuth/RBAC: Low value (single-user now) = +1 point'
+        - 'Redis federation: Low value (no multi-cluster) = +1 point'
+        - 'Admin UI: Medium value (debugging help) = +2 points'
+      target: Total score ≥ 7/9 points for migration justification
+    - id: DC-3.27.4
+      description: Stack alignment assessment
+      metric: Maintenance burden score
+      evaluation:
+        - Python dependency in Node.js project = -2 points
+        - Docker complexity vs npm = -1 point
+        - IBM maintenance (pro) = +2 points
+        - 'Community size (2,737 stars) = +1 point'
+      target: Net score ≥ 0 for migration
+tasks:
+  - task: 'Task 1: Environment setup and installation'
+    estimated_hours: 3
+    subtasks:
+      - 'Choose installation method: Docker (recommended) or PyPI'
+      - 'Docker path:'
+      - '  - Pull image: `docker pull ghcr.io/ibm/mcp-context-forge:latest`'
+      - '  - Create config directory: `mkdir -p ~/context-forge/config`'
+      - '  - Create docker-compose.yml with gateway config'
+      - '  - Start: `docker-compose up -d`'
+      - 'PyPI path (alternative):'
+      - '  - Create venv: `python -m venv ~/.venvs/context-forge`'
+      - '  - Activate: `source ~/.venvs/context-forge/bin/activate`'
+      - '  - Install: `pip install mcp-contextforge-gateway`'
+      - '  - Create config: `~/.config/context-forge/config.yaml`'
+      - 'Verify installation: `curl http://127.0.0.1:8000/health`'
+      - 'Access Admin UI: http://127.0.0.1:8000/admin'
+      - Document installation time and steps
+  - task: 'Task 2: Configure MCP servers (3 for POC)'
+    estimated_hours: 2
+    subtasks:
+      - 'Create gateway config file (config.yaml):'
+      - '  servers:'
+      - '    - name: context7'
+      - '      command: npx -y @upstash/context7-mcp'
+      - '      transport: stdio'
+      - '    - name: clickup'
+      - '      command: npx -y @anthropic-ai/mcp-server-clickup'
+      - '      transport: stdio'
+      - '    - name: exa'
+      - '      command: npx -y exa-mcp-server'
+      - '      transport: stdio'
+      - 'Restart gateway: `docker-compose restart` or `systemctl restart context-forge`'
+      - 'Verify servers: Check Admin UI → Servers tab'
+      - 'Test discovery: `curl http://127.0.0.1:8000/registry`'
+  - task: 'Task 3: REST API virtualization experiment'
+    estimated_hours: 4
+    subtasks:
+      - 'Choose REST API to virtualize: n8n webhook or Railway API'
+      - 'Option A: n8n webhook virtualization:'
+      - '  - Create test n8n workflow with webhook trigger'
+      - '  - Add to config.yaml:'
+      - '    rest_apis:'
+      - '      - name: n8n-test'
+      - '        url: https://your-n8n.app/webhook/test'
+      - '        method: POST'
+      - '        auth: { type: ''bearer'', token: ''${N8N_TOKEN}'' }'
+      - 'Option B: Railway API virtualization:'
+      - '  - Get Railway API endpoint (e.g., /projects)'
+      - '  - Add to config.yaml with auto-schema extraction'
+      - Restart gateway to apply config
+      - 'Test via Claude Code: Call virtualized API as MCP tool'
+      - 'Document: Effort vs building native MCP server'
+      - 'Evaluate: Is REST conversion valuable for AIOS use cases?'
+  - task: 'Task 4: Observability setup and validation'
+    estimated_hours: 3
+    subtasks:
+      - 'Choose observability backend: Phoenix (easiest) or Jaeger'
+      - 'Phoenix setup (recommended):'
+      - '  - Add to docker-compose.yml: Phoenix container'
+      - '  - Configure Context Forge env: OTEL_EXPORTER_OTLP_ENDPOINT=http://phoenix:4317'
+      - '  - Start: `docker-compose up -d phoenix`'
+      - '  - Access Phoenix UI: http://127.0.0.1:6060'
+      - 'Jaeger setup (alternative):'
+      - '  - Run Jaeger: `docker run -d -p 16686:16686 jaegertracing/all-in-one`'
+      - '  - Configure Context Forge: OTEL_EXPORTER=jaeger'
+      - 'Test tracing:'
+      - '  - Execute tool via Claude Code (e.g., context7 search)'
+      - '  - View trace in Phoenix/Jaeger UI'
+      - '  - Verify: Request → Gateway → MCP Server → Response chain visible'
+      - 'Evaluate metrics:'
+      - '  - Token usage per request'
+      - '  - Latency (gateway overhead)'
+      - '  - Error rates'
+      - 'Document: Value of observability for AIOS debugging'
+  - task: 'Task 5: Claude Code integration and token measurement'
+    estimated_hours: 2
+    subtasks:
+      - 'Configure Claude Code to use Context Forge:'
+      - '  `claude mcp add -t http context-forge ''http://127.0.0.1:8000/mcp?app=claude-code''`'
+      - Restart Claude Code
+      - 'Measure token consumption: `/context`'
+      - Compare to baseline (323.5k) and 1MCP result (from Story 3.26)
+      - 'Test tool execution:'
+      - '  - context7: Search for ''MCP protocol spec'''
+      - '  - clickup: List tasks'
+      - '  - exa: Web search'
+      - '  - (if virtualized) n8n/Railway: Execute REST API call'
+      - 'Validate: All tools functional, token reduction ≥ 75%'
+      - Document any issues or differences vs 1MCP
+  - task: 'Task 6: Comparative analysis and decision documentation'
+    estimated_hours: 2
+    subtasks:
+      - 'Create comparison matrix: docs/architecture/mcp-solution-comparison.md'
+      - 'Populate metrics from both POCs (1MCP vs Context Forge):'
+      - '  - Installation time (minutes)'
+      - '  - Token reduction (%)'
+      - '  - DX rating (1-10)'
+      - '  - Enterprise features score (0-9)'
+      - '  - Stack alignment score (-3 to +4)'
+      - '  - Maintenance burden (qualitative)'
+      - 'Calculate weighted decision score:'
+      - '  - Token reduction: 30% weight'
+      - '  - DX: 25% weight'
+      - '  - Enterprise features: 20% weight'
+      - '  - Stack alignment: 15% weight'
+      - '  - Installation simplicity: 10% weight'
+      - 'Generate recommendation: Stay with 1MCP or Migrate to Context Forge'
+      - Document in completion_notes with clear rationale
+      - Present to team for final decision
+dev_notes:
+  docker_compose_template: |
+    **Docker Compose for Context Forge POC**:
+
+    ```yaml
+    version: '3.8'
+    services:
+      context-forge:
+        image: ghcr.io/ibm/mcp-context-forge:latest
+        ports:
+          - "8000:8000"
+        volumes:
+          - ./config:/app/config
+          - ./data:/app/data
+        environment:
+          - CONFIG_PATH=/app/config/config.yaml
+          - OTEL_EXPORTER_OTLP_ENDPOINT=http://phoenix:4317
+          - LOG_LEVEL=debug
+        depends_on:
+          - phoenix
+
+      phoenix:
+        image: arizeai/phoenix:latest
+        ports:
+          - "6060:6060"
+          - "4317:4317"
+        environment:
+          - PHOENIX_SQL_DATABASE_URL=sqlite:////data/phoenix.db
+        volumes:
+          - ./phoenix-data:/data
+    ```
+  config_yaml_template: |
+    **Context Forge config.yaml (POC)**:
+
+    ```yaml
+    gateway:
+      name: aios-context-forge-poc
+      host: 0.0.0.0
+      port: 8000
+      cors_enabled: true
+
+    servers:
+      - name: context7
+        command: npx
+        args: ["-y", "@upstash/context7-mcp"]
+        transport: stdio
+        tags: [research, documentation]
+
+      - name: clickup
+        command: npx
+        args: ["-y", "@anthropic-ai/mcp-server-clickup"]
+        transport: stdio
+        env:
+          CLICKUP_API_KEY: ${CLICKUP_API_KEY}
+        tags: [pm, tasks]
+
+      - name: exa
+        command: npx
+        args: ["-y", "exa-mcp-server", "--tools=web_search_exa"]
+        transport: stdio
+        env:
+          EXA_API_KEY: ${EXA_API_KEY}
+        tags: [research, web]
+
+    rest_apis:
+      - name: n8n-test-workflow
+        url: ${N8N_WEBHOOK_URL}
+        method: POST
+        auth:
+          type: bearer
+          token: ${N8N_TOKEN}
+        schema_extraction: auto
+        tags: [automation, workflows]
+
+    observability:
+      opentelemetry:
+        enabled: true
+        exporter: otlp
+        endpoint: http://phoenix:4317
+        service_name: aios-mcp-gateway
+
+    security:
+      oauth:
+        enabled: false  # Not needed for POC
+      rate_limiting:
+        enabled: true
+        requests_per_minute: 60
+    ```
+  windows_compatibility_notes: |
+    **Windows-specific considerations**:
+    - Docker Desktop required for Docker path
+    - WSL2 backend recommended for better performance
+    - Alternative: PyPI installation in Windows Python environment
+    - npx-wrapper.cmd may need integration in config.yaml commands
+  rest_api_virtualization_examples: |
+    **Value Proposition: Wrap existing REST APIs as MCP tools**
+
+    **Example 1: n8n Workflow Execution**
+    ```yaml
+    rest_apis:
+      - name: trigger-deployment
+        url: https://n8n.allfluence.com/webhook/deploy
+        method: POST
+        schema:
+          input:
+            type: object
+            properties:
+              environment: { type: string, enum: [staging, production] }
+              branch: { type: string }
+        tags: [devops, automation]
+    ```
+    → Claude can now: "Deploy main branch to staging" (calls n8n via MCP)
+
+    **Example 2: Railway API**
+    ```yaml
+    rest_apis:
+      - name: railway-deploy-status
+        url: https://api.railway.app/graphql
+        method: POST
+        auth:
+          type: bearer
+          token: ${RAILWAY_TOKEN}
+        tags: [devops, infrastructure]
+    ```
+    → Claude can now: "Check Railway deployment status" (GraphQL via MCP)
+  decision_framework_details: |
+    **Weighted Decision Matrix**:
+
+    | Criterion | Weight | 1MCP Score | Context Forge Score | Weighted |
+    |-----------|--------|------------|---------------------|----------|
+    | Token Reduction | 30% | [TBD] | [TBD] | [Calc] |
+    | Developer Experience | 25% | [TBD] | [TBD] | [Calc] |
+    | Enterprise Features | 20% | [TBD] | [TBD] | [Calc] |
+    | Stack Alignment | 15% | [TBD] | [TBD] | [Calc] |
+    | Installation Ease | 10% | [TBD] | [TBD] | [Calc] |
+    | **TOTAL** | 100% | [Sum] | [Sum] | **WINNER** |
+
+    **Scoring Guidelines**:
+    - Token Reduction: 10 = 90%+, 8 = 75-89%, 6 = 60-74%, <6 = fail
+    - DX: 10 = excellent CLI/UI, 8 = good, 6 = acceptable, <6 = poor
+    - Enterprise Features: Score = actual points earned (0-9)
+    - Stack Alignment: Score = stack alignment score (-3 to +4, normalized to 0-10)
+    - Installation Ease: 10 = <15min, 8 = 15-30min, 6 = 30-60min, <6 = >60min
+
+    **Decision Threshold**:
+    - If Context Forge total score > 1MCP score + 10%: **MIGRATE**
+    - If scores within 10%: **STAY with 1MCP** (avoid unnecessary migration)
+    - If 1MCP clearly wins: **STAY with 1MCP**
+dependencies:
+  external:
+    - Docker Desktop (for Docker installation path)
+    - Python 3.9+ (for PyPI installation path)
+    - 'IBM Context Forge: ghcr.io/ibm/mcp-context-forge'
+    - 'Phoenix (observability): arizeai/phoenix or Jaeger'
+  internal:
+    - Story 3.26 results (1MCP baseline for comparison)
+    - 'Existing MCP configurations (context7, clickup, exa)'
+  optional:
+    - n8n instance (for REST virtualization test)
+    - Railway account (alternative REST virtualization)
+file_changes:
+  created:
+    - docs/architecture/mcp-solution-comparison.md (decision matrix)
+    - ~/context-forge/config/config.yaml (gateway config)
+    - ~/context-forge/docker-compose.yml (if Docker path)
+    - docs/architecture/context-forge-poc-report.md (POC findings)
+  modified:
+    - .aios-core/core-config.yaml (if migration approved)
+    - .claude/CLAUDE.md (if migration approved)
+  temporary:
+    - '~/context-forge/* (POC environment, can be deleted if not migrating)'
+qa_validation:
+  gate_id: 3.27-context-forge-poc
+  validation_type: POC Validation + Comparative Analysis
+  poc_tests:
+    - test: Gateway installation and health
+      steps:
+        - Install Context Forge (Docker or PyPI)
+        - Start gateway service
+        - 'Health check: `curl http://127.0.0.1:8000/health`'
+      pass_criteria: 'Health endpoint returns 200 OK, Admin UI accessible'
+    - test: MCP server integration (3 servers)
+      steps:
+        - 'Configure context7, clickup, exa in config.yaml'
+        - Restart gateway
+        - Execute 1 tool from each server via Claude Code
+      pass_criteria: 'All 3 tools execute successfully, same results as direct connection'
+    - test: REST API virtualization
+      steps:
+        - Configure n8n or Railway REST API in config.yaml
+        - Restart gateway
+        - Call virtualized API from Claude Code as MCP tool
+      pass_criteria: 'REST API executes successfully, returns expected data'
+    - test: Observability validation
+      steps:
+        - Configure OpenTelemetry with Phoenix/Jaeger
+        - Execute tool via Claude Code
+        - View trace in observability UI
+      pass_criteria: 'Complete trace visible, token usage metrics collected'
+    - test: Token reduction measurement
+      steps:
+        - Connect Claude Code to Context Forge
+        - Run `/context` command
+        - Compare to baseline (323.5k) and 1MCP result
+      pass_criteria: Token reduction ≥ 75% (comparable to 1MCP)
+  comparative_analysis:
+    - analysis: Installation complexity
+      data_collected:
+        - 1MCP installation time (from Story 3.26)
+        - Context Forge installation time (from Task 1)
+        - Number of steps (1MCP vs Context Forge)
+      output: Installation complexity score (1-10)
+    - analysis: Developer experience
+      data_collected:
+        - Configuration method (CLI vs YAML)
+        - 'Debugging tools (logs, UI, healthcheck)'
+        - Documentation quality (1MCP vs Context Forge)
+        - Hot-reload capability
+      output: DX rating (1-10)
+    - analysis: Enterprise features value
+      evaluation:
+        - 'REST conversion: Needed? (yes = +3, maybe = +1, no = 0)'
+        - 'OpenTelemetry: Valuable? (yes = +2, maybe = +1, no = 0)'
+        - 'OAuth/RBAC: Needed now? (yes = +1, no = 0)'
+        - 'Admin UI: Helpful? (yes = +2, maybe = +1, no = 0)'
+      output: Enterprise features score (0-9)
+completion_notes: null
+metadata:
+  story_type: Proof of Concept (POC)
+  complexity: Medium-High
+  risk_level: Low (isolated POC environment)
+  architectural_impact: High (if migration approved)
+  user_impact: High (if migration approved)
+  related_stories:
+    - 3.26 (1MCP implementation - runs in parallel)
+    - TBD (Full Context Forge migration - if approved)
+  references:
+    - 'IBM Context Forge: https://github.com/IBM/mcp-context-forge'
+    - 'Context Forge Docs: https://github.com/IBM/mcp-context-forge/tree/main/docs'
+    - 'Comparison Research: docs/architecture/mcp-context-optimization-research.md'
+  tags:
+    - mcp
+    - context-optimization
+    - poc
+    - enterprise-features
+    - decision-analysis
+decision:
+  decision_pending: true
+  decision_date: null
+  decision_maker: Team (PO + Architect + Dev Lead)
+  decision_criteria: Weighted decision matrix score (see dev_notes)
+  possible_outcomes:
+    - 'Stay with 1MCP: Continue with Story 3.26 implementation'
+    - 'Migrate to Context Forge: Create Story 3.28 (full migration)'
+    - 'Hybrid: Use 1MCP for most, Context Forge for REST virtualization only'
+  decision_documentation: docs/architecture/mcp-solution-comparison.md

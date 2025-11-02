@@ -1,0 +1,115 @@
+id: '3.31'
+title: Update Synthesis for 1MCP Proxy Relationships
+epic: "3a-infrastructure"
+phase: 'Epic 3: Architecture Gap Remediation - Prevention Track Updates'
+status: Deferred
+priority: medium
+estimated_hours: 1
+deferred_to: v1.1.0
+deferred_reason: 'Enhancement, not blocker for v1.0.0 - pre-commit hook works in legacy mode'
+created_by: Sarah (@po) - Post-1MCP Architecture Update
+created_date: '2025-10-26'
+validated_by: Sarah (@po) - Story validation complete
+validation_date: '2025-10-28'
+validation_score: '3.5/10 (NO-GO - critical issues)'
+blocks: []
+blocked_by:
+  - '3.26'
+context: |
+  **ARCHITECTURE CHANGE**: Story 3.26 introduces proxy layer via 1MCP.
+
+  **Before:** agent → tool (direct relationship)
+  **After:** agent → 1mcp-preset → tool (proxy relationship)
+
+  **INVESTIGATION RESULTS (2025-10-28):**
+  - ✅ Story IS NEEDED: synthesize-relationships.js has NO 1MCP/preset support (verified)
+  - ⚠️ Story 3.22 (Pre-Commit Hook) already Done without this enhancement
+  - ⚠️ Current hook works in legacy mode only
+  - 📝 This story enhances existing functionality (not a blocker)
+
+  **Impact on Story 3.22 (Pre-Commit Hook):**
+  - Hook validates relationships via synthesize-relationships.js
+  - Synthesis script currently only handles legacy mode (direct agent→tool)
+  - In 1MCP mode, hook won't create preset relationships correctly
+  - Not a blocker (validation still works), but incomplete for 1MCP users
+
+  **This Story:** Update synthesize-relationships.js to detect 1MCP mode and create appropriate relationship types (agent→preset→tool).
+story: |
+  **As a** framework developer,
+  **I want** relationship synthesis updated to handle 1MCP proxy relationships,
+  **so that** pre-commit hook correctly validates tool connections via presets.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.31.1
+      description: 1MCP mode detection in synthesis
+      requirements:
+        - Detect if 1MCP active during relationship synthesis
+        - 'If 1MCP: Create agent → preset → tool relationships'
+        - 'If legacy: Create agent → tool relationships (existing)'
+      validation: Synthesis creates correct relationship types per mode
+    - id: TR-3.31.2
+      description: Preset-based relationship extraction
+      requirements:
+        - 'Load 1MCP presets: `1mcp preset list --json`'
+        - 'For each agent tool reference, find containing preset(s)'
+        - 'Create relationship: agent → preset (USES_PRESET)'
+        - 'Create relationship: preset → tool (CONTAINS_TOOL)'
+      validation: Relationship graph includes preset layer
+tasks:
+  - task: Update synthesize-relationships.js for 1MCP
+    estimated_hours: 1
+    subtasks:
+      - Add 1MCP mode detection
+      - Add preset loading function
+      - Create USES_PRESET and CONTAINS_TOOL relationship types
+      - Update agent tool relationship extraction for dual-mode
+      - Test with 1MCP configuration
+dev_notes:
+  relationship_types: |
+    **New Relationship Types:**
+    - USES_PRESET: agent → 1mcp-preset
+    - CONTAINS_TOOL: 1mcp-preset → tool
+
+    **Example:**
+    ```
+    agent-dev → uses_preset → aios-dev-preset
+    aios-dev-preset → contains_tool → github
+    aios-dev-preset → contains_tool → supabase
+    ```
+change_log:
+  - date: '2025-10-26'
+    version: 1.0.0
+    description: Story created to update synthesis for 1MCP proxy relationships
+    author: Sarah (@po)
+  
+  - date: '2025-10-28'
+    version: 1.1.0
+    description: Story validation complete - NO-GO (critical issues found)
+    author: Sarah (@po)
+    changes:
+      - 'Validation Score: 3.5/10 (NO-GO - critical issues)'
+      - 'INVESTIGATED: Verified synthesize-relationships.js has NO 1MCP support (story needed)'
+      - 'INVESTIGATED: Story 3.22 is Done but works legacy mode only'
+      - 'FIXED: Removed 3.22 from blocks (cannot block completed story)'
+      - 'IDENTIFIED: Dev notes critically inadequate (10 lines vs 200-300 needed)'
+      - 'IDENTIFIED: Missing validation section (no testing guidance)'
+      - 'IDENTIFIED: Subtasks too generic (not actionable)'
+      - 'IDENTIFIED: No current file structure or implementation examples'
+      - 'REQUIRED FIXES: Expand dev notes with code examples, add validation, make subtasks actionable'
+      - 'ESTIMATED FIX TIME: 2-3 hours to properly prepare story'
+      - 'Validation Status: NO-GO - Story blocked until critical issues resolved'
+      - 'Validation Report created: 3.31-VALIDATION-REPORT.md'
+
+  - date: '2025-10-31'
+    version: 1.2.0
+    description: Story deferred to v1.1.0 - strategic release decision
+    author: Sarah (@po)
+    changes:
+      - 'Status: Draft → Deferred'
+      - 'Deferred to: v1.1.0'
+      - 'Reason: Enhancement, not blocker for v1.0.0 release'
+      - 'Pre-commit hook (Story 3.22) works in legacy mode - sufficient for v1.0.0'
+      - 'Story requires 3h of preparation work - not critical path'
+      - 'v1.0.0 Release Priority: README + Neo4j validation (1.5h faster path)'
+      - 'Validation Score (final): 5.0/10 - improved but still requires work'
+      - 'Next Action: Complete dev notes expansion for v1.1.0 implementation'

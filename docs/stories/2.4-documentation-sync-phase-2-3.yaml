@@ -1,0 +1,411 @@
+# Story 2.4: Documentation Sync - Phase 2 & 3 (Contextual Docs & Validation)
+# Product Owner: Sarah
+# Created: 2025-10-22
+
+schema: 1
+id: "2.4"
+title: "Documentation Sync - Contextual Documentation & Validation"
+epic: "2-aios-development-infrastructure"
+epic_title: "AIOS Development Infrastructure"
+priority: high
+status: ready
+estimated_hours: 4
+
+owner:
+  created_by: "Sarah (Product Owner)"
+  assigned_to: "James (Dev)"
+  reviewed_by: "Quinn (Test Architect)"
+
+context:
+  summary: |
+    Complete Phases 2 and 3 of the critical documentation synchronization initiative.
+    Phase 1 (commit 8b4beaf) updated core configuration and primary instruction files.
+    This story covers contextual documentation for expansion packs, mind system, and
+    MCP integrations, plus validation testing to ensure agent resource discovery works.
+
+  background: |
+    - Trigger: User identified critical documentation drift impacting agent behavior
+    - Analysis: Comprehensive gaps analysis completed (docs/analysis/DOCUMENTATION-GAPS-ANALYSIS.md)
+    - Phase 1 (P0): ✅ COMPLETED (commit 8b4beaf)
+      - Updated .claude/CLAUDE.md with complete structure (11 folders vs 6)
+      - Updated core-config.yaml with resource locations and PV context
+      - Created .aios-core/tools/README.md (12 tool integrations)
+      - Created .aios-core/utils/README.md (68 utility scripts)
+    - Phase 2 (P1): Contextual documentation for expansion packs and Mind system
+    - Phase 3 (P1): Validation testing to ensure everything works
+
+  references:
+    - "docs/analysis/DOCUMENTATION-GAPS-ANALYSIS.md (comprehensive audit)"
+    - "docs/analysis/DOCUMENTATION-UPDATE-ACTION-PLAN.md (3-phase remediation plan)"
+    - ".claude/CLAUDE.md (Phase 1 update - commit 8b4beaf)"
+    - ".aios-core/core-config.yaml (Phase 1 update - commit 8b4beaf)"
+
+dependencies:
+  blocks: []
+  blocked_by: []
+  related: ["Phase 1 Documentation Sync (commit 8b4beaf)"]
+
+acceptance_criteria:
+  - id: AC1
+    description: "Pedro Valério Mind system documented with README"
+    verification: |
+      1. outputs/minds/pedro_valerio/README.md exists
+      2. Documents Mind system purpose and usage
+      3. Lists all 15+ cognitive artifacts
+      4. Explains how PV agents access this context
+      5. Includes usage examples for hybrid-ops agents
+
+  - id: AC2
+    description: "Hybrid-ops expansion pack fully documented"
+    verification: |
+      1. expansion-packs/hybrid-ops/README.md exists
+      2. Documents expansion pack purpose and methodology
+      3. Lists all PV-specialized agents
+      4. Explains when to use PV agents vs core agents
+      5. Documents integration with Mind system
+      6. Includes activation instructions
+
+  - id: AC3
+    description: "MCP integrations individually documented"
+    verification: |
+      1. .aios-core/tools/mcp/README.md exists
+      2. Documents all 8 MCP servers individually
+      3. Provides connection instructions per MCP
+      4. Documents authentication setup per MCP
+      5. Includes troubleshooting guide per MCP
+      6. Shows usage examples
+
+  - id: AC4
+    description: "tool-resolver.js successfully discovers all tools"
+    verification: |
+      1. Run: node .aios-core/utils/tool-resolver.js
+      2. Verify all 12 tools detected (3 CLI + 1 local + 8 MCP)
+      3. Validate categories (cli, local, mcp)
+      4. Confirm availability detection works
+      5. Test category filtering
+
+  - id: AC5
+    description: "core-config.yaml loads correctly with new fields"
+    verification: |
+      1. Parse core-config.yaml with YAML parser
+      2. Verify all new fields accessible:
+         - toolsLocation
+         - utilsLocation
+         - dataLocation
+         - elicitationLocation
+         - expansionPacksLocation
+         - mindsLocation
+         - pvMindContext section
+         - expansionPacks section
+      3. Test that paths resolve correctly
+
+  - id: AC6
+    description: "Agent resource discovery validated end-to-end"
+    verification: |
+      1. Verify agents can access .aios-core/tools/
+      2. Verify agents can access .aios-core/utils/
+      3. Test PV agents load pvMindContext correctly
+      4. Validate expansion pack discovery
+      5. Confirm devLoadAlwaysFiles loads all 6 architecture docs
+
+implementation_plan:
+  phases:
+    - phase: 2
+      name: "Contextual Documentation (P1)"
+      duration: "3h"
+      tasks:
+        - "Task 2.1: Create outputs/minds/pedro_valerio/README.md (1h)"
+        - "Task 2.2: Create/update expansion-packs/hybrid-ops/README.md (1h)"
+        - "Task 2.3: Create .aios-core/tools/mcp/README.md (1h)"
+      deliverables:
+        - "outputs/minds/pedro_valerio/README.md"
+        - "expansion-packs/hybrid-ops/README.md"
+        - ".aios-core/tools/mcp/README.md"
+
+    - phase: 3
+      name: "Validation Testing (P1)"
+      duration: "1h"
+      tasks:
+        - "Task 3.1: Test tool-resolver.js discovery (20min)"
+        - "Task 3.2: Validate core-config.yaml loading (20min)"
+        - "Task 3.3: Test agent resource discovery (20min)"
+      deliverables:
+        - "Validation test results documented"
+        - "Any issues identified and resolved"
+
+technical_notes:
+  architecture: |
+    Documentation Sync Architecture:
+
+    Phase 1 (✅ COMPLETED - commit 8b4beaf):
+    - Core Configuration Layer
+      - .claude/CLAUDE.md: Primary agent instructions
+      - .aios-core/core-config.yaml: Resource locations and context
+    - Resource Catalog Layer
+      - .aios-core/tools/README.md: Tool integrations catalog
+      - .aios-core/utils/README.md: Utility scripts catalog
+
+    Phase 2 (This Story):
+    - Contextual Documentation Layer
+      - outputs/minds/pedro_valerio/README.md: Mind system guide
+      - expansion-packs/hybrid-ops/README.md: Expansion pack guide
+      - .aios-core/tools/mcp/README.md: MCP integration details
+
+    Phase 3 (This Story):
+    - Validation Layer
+      - Tool resolver testing
+      - Config loading testing
+      - Agent discovery testing
+
+    Integration Points:
+    1. core-config.yaml → pvMindContext → outputs/minds/pedro_valerio/
+    2. core-config.yaml → expansionPacks → expansion-packs/hybrid-ops/
+    3. .claude/CLAUDE.md → references all documentation
+    4. Agents → tool-resolver.js → .aios-core/tools/
+    5. Agents → core-config.yaml → .aios-core/utils/
+
+  implementation_details: |
+    Task 2.1: outputs/minds/pedro_valerio/README.md
+    ```markdown
+    # Pedro Valério - Cognitive Mind Extraction
+
+    ## Purpose
+    This directory contains the cognitive profile extraction of Pedro Valério Lopez,
+    used to train PV-specialized agents in the hybrid-ops expansion pack.
+
+    ## Artifacts (15+ documents)
+
+    ### Core Cognitive Profiles
+    - 5H_EXTRAÇÃO_COGNITIVA_COMPLETA_PEDRO_VALÉRIO_LOPEZ.md (5H methodology)
+    - ANALISE_COGNITIVA.md (cognitive analysis)
+    - DNA_Narrativo_Camadas.md (narrative DNA layers)
+    - BIOGRAFIA.md (biographical context)
+
+    ### Specialized Analysis
+    - ANÁLISE_COMPARATIVA_REVISADA_PEDRO_VALÉRIO_LOPEZ.md
+    - ANÁLISE_LINGUÍSTICA_CARIOCA_PEDRO_VALÉRIO_LOPEZ.md
+    - ANÁLISE_PSICOMÉTRICA_DEFINITIVA_PEDRO_VALÉRIO_LOPEZ.md
+    - Assinatura_Linguistica.md
+
+    ### Interview Transcripts
+    - Entrevista_de_2h.md
+    - Entrevista_de_3h.md
+
+    ## Usage with Hybrid-Ops Agents
+
+    PV-specialized agents automatically load priority artifacts:
+
+    ```yaml
+    # From core-config.yaml
+    pvMindContext:
+      enabled: true
+      location: outputs/minds/pedro_valerio
+      priorityArtifacts:
+        - artifacts/5H_EXTRAÇÃO_COGNITIVA_COMPLETA_PEDRO_VALÉRIO_LOPEZ.md
+        - artifacts/ANALISE_COGNITIVA.md
+        - artifacts/DNA_Narrativo_Camadas.md
+        - artifacts/BIOGRAFIA.md
+      loadForAgents:
+        - clickup-engineer-pv
+        - process-architect-pv
+        - documentation-writer-pv
+    ```
+
+    ## Accessing Mind Context
+
+    Agents configured in loadForAgents automatically receive PV context.
+    To use in custom agents, reference in agent YAML:
+
+    ```yaml
+    context_sources:
+      - type: mind
+        location: outputs/minds/pedro_valerio
+        artifacts:
+          - artifacts/ANALISE_COGNITIVA.md
+    ```
+    ```
+
+    Task 2.2: expansion-packs/hybrid-ops/README.md
+    ```markdown
+    # Hybrid-Ops Expansion Pack
+
+    ## Overview
+    The Hybrid-Ops expansion pack implements the Pedro Valério methodology for
+    human-agent collaboration in software development.
+
+    ## PV-Specialized Agents
+
+    Located in `agents/`:
+    - **clickup-engineer-pv**: ClickUp integration with PV context
+    - **process-architect-pv**: System architecture with PV methodology
+    - **documentation-writer-pv**: Documentation with PV style
+
+    ## When to Use
+
+    Use PV agents when:
+    - Requiring PV-style architecture and planning
+    - Need human-agent collaboration workflows
+    - Project benefits from PV cognitive profile insights
+
+    Use core agents when:
+    - Standard development workflows sufficient
+    - No PV-specific methodology needed
+
+    ## Activation
+
+    ```bash
+    # Instead of core agents:
+    @clickup-engineer-pv  # not @sm
+    @process-architect-pv # not @architect
+    ```
+
+    ## Integration with Mind System
+
+    PV agents automatically load Pedro Valério cognitive context from
+    `outputs/minds/pedro_valerio/`. See Mind README for details.
+
+    ## Configuration
+
+    Configured in `.aios-core/core-config.yaml`:
+
+    ```yaml
+    expansionPacks:
+      hybridOps:
+        enabled: true
+        location: expansion-packs/hybrid-ops
+        readme: expansion-packs/hybrid-ops/README.md
+        agentsLocation: expansion-packs/hybrid-ops/agents
+    ```
+    ```
+
+    Task 2.3: .aios-core/tools/mcp/README.md
+    ```markdown
+    # MCP Server Integrations
+
+    AIOS-FULLSTACK integrates with 8 Model Context Protocol (MCP) servers.
+
+    ## Available MCP Servers
+
+    ### 21st-dev-magic.yaml
+    **Purpose**: UI component generation and design patterns
+    **Connection**: SSE to mcp.21st.dev
+    **Authentication**: API key required
+    **Usage**:
+    ```javascript
+    const component = await mcp.generate({
+      type: 'react',
+      component: 'UserProfile'
+    });
+    ```
+
+    ### browser.yaml
+    **Purpose**: Browser automation for testing and scraping
+    **Connection**: Local WebSocket
+    **Authentication**: None
+    **Usage**:
+    ```javascript
+    const result = await mcp.browser.navigate('https://example.com');
+    ```
+
+    ### clickup.yaml
+    **Purpose**: Project management and task tracking
+    **Connection**: REST API
+    **Authentication**: ClickUp API token
+    **Usage**:
+    ```javascript
+    const tasks = await mcp.clickup.getTasks(listId);
+    ```
+
+    [... continue for all 8 MCPs ...]
+
+    ## Troubleshooting
+
+    ### Connection Failures
+    - Verify MCP server is running
+    - Check network connectivity
+    - Review authentication tokens
+
+    ### Authentication Issues
+    - Verify API keys in environment variables
+    - Check token expiration
+    - Validate permissions
+    ```
+
+  tools:
+    - "Node.js fs/path modules (for tool-resolver testing)"
+    - "YAML parser (for core-config validation)"
+    - "Markdown (documentation format)"
+
+  risks:
+    - risk: "Mind system documentation may expose sensitive PV data"
+      mitigation: "Review with PO before commit, redact if needed"
+
+    - risk: "tool-resolver.js may fail on Windows paths"
+      mitigation: "Test on actual Windows environment, fix path handling"
+
+  constraints:
+    - "Must not modify any code files - documentation only"
+    - "All documentation must be in English or Portuguese as appropriate"
+    - "Must maintain consistency with Phase 1 documentation"
+
+testing_strategy:
+  validation_tests:
+    - "Execute tool-resolver.js and verify 12 tools detected"
+    - "Parse core-config.yaml and validate all new fields"
+    - "Test agent can access utils and tools directories"
+    - "Verify PV agents can load mind context"
+
+  documentation_review:
+    - "All README files have clear structure"
+    - "Usage examples are accurate and testable"
+    - "Cross-references between docs are valid"
+    - "No broken links or missing files referenced"
+
+definition_of_done:
+  documentation:
+    - "[ ] outputs/minds/pedro_valerio/README.md created"
+    - "[ ] expansion-packs/hybrid-ops/README.md created"
+    - "[ ] .aios-core/tools/mcp/README.md created"
+    - "[ ] All 3 README files reviewed for accuracy"
+    - "[ ] Cross-references validated"
+
+  validation:
+    - "[ ] tool-resolver.js detects all 12 tools"
+    - "[ ] core-config.yaml parses successfully"
+    - "[ ] All new config fields accessible"
+    - "[ ] Agent resource discovery validated"
+    - "[ ] PV mind context loading tested"
+
+  quality:
+    - "[ ] No broken links in documentation"
+    - "[ ] Usage examples tested and working"
+    - "[ ] Consistent formatting across all READMEs"
+    - "[ ] No sensitive data exposed"
+
+  deployment:
+    - "[ ] All files committed to Git"
+    - "[ ] Commit message references this story"
+    - "[ ] Phase 2 & 3 marked complete in action plan"
+
+notes:
+  - "Depends on Phase 1 (commit 8b4beaf) - ✅ COMPLETE"
+  - "Completes P0 and P1 priorities from gaps analysis"
+  - "P2 and P3 priorities deferred to future stories"
+  - "Documentation-only story - no code changes"
+  - "Focus on enabling agent resource discovery"
+  - "Mind system documentation requires PO review for sensitivity"
+
+metadata:
+  created_at: "2025-10-22T00:00:00Z"
+  updated_at: "2025-10-22T00:00:00Z"
+  version: "1.0"
+  tags: ["documentation", "infrastructure", "agent-discovery", "expansion-packs", "mind-system"]
+  changelog:
+    - version: "1.0"
+      date: "2025-10-22T00:00:00Z"
+      author: "Sarah (Product Owner)"
+      changes:
+        - "Initial story creation for Phase 2 & 3 documentation sync"
+        - "Structured as continuation of Phase 1 (commit 8b4beaf)"
+        - "Focuses on contextual documentation and validation"
+        - "Estimated 4 hours total (3h Phase 2 + 1h Phase 3)"

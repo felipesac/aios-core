@@ -1,0 +1,329 @@
+id: '3.17'
+title: Framework Utilities Audit - Inventory & Classification
+epic: "3c-remediation"
+phase: 'Epic 3 Phase 2: Strategic Enhancements'
+status: Done
+priority: high
+estimated_hours: 10
+actual_hours: 8
+created_by: Sarah (@po) via Strategic Planning
+validated_by: ['Sarah (@po) - 2025-10-30 Round 1', 'Sarah (@po) - 2025-10-30 Round 2']
+validation_status: 'GO - All blocking issues resolved'
+validation_score: 9
+validation_report: 'docs/stories/epic-3-gap-remediation/3.17-VALIDATION-REPORT.md'
+approval_date: '2025-10-30'
+completed_date: '2025-10-30'
+completed_by: 'James (@dev)'
+blocks:
+  - '3.18'
+  - '3.19'
+blocked_by:
+  - '2.13'
+context: "**CRITICAL MAINTENANCE**: 81 utilities in .aios-core/utils/ with unknown functional status\ncreates confusion, maintenance burden, and developer frustration.\n\n**Problem**: Many framework utilities are:\n- ❌ Non-functional (missing dependencies, broken code)\n- ❌ Partially implemented (60-80% complete but not integrated)\n- ❌ Undocumented (usage unclear)\n- ❌ Not integrated with agents (orphaned)\n- ❌ No test coverage (unknown if working)\n\n**Verified Utility Examples**:\n- security-checker.js - Scanning logic exists, no agent uses it\n- performance-optimizer.js - Analysis tools present, incomplete workflow\n- story-manager.js - Story lifecycle logic, integration status unknown\n- clickup-helpers.js - ClickUp integration utilities, integration unclear\n\n**Solution**: Systematic audit to classify every utility:\n- ✅ **WORKING**: Functional, documented, integrated with agents\n- \U0001F527 **FIXABLE**: Nearly working, needs <4h fixes\n- \U0001F5D1️ **DEPRECATED**: Non-functional, not worth fixing, remove\n\n**Outcome**:\n- Clear inventory of working utilities\n- Prioritized fix list for FIXABLE utilities\n- Cleanup list for DEPRECATED utilities\n- Reduced developer confusion and maintenance burden\n"
+story: |
+  **As a** framework maintainer or developer,
+  **I want** to know which utilities are functional and which are broken,
+  **so that** I can confidently use working utilities and avoid wasting time
+  on non-functional ones.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.17.1
+      description: Create audit-utilities.md task
+      requirements:
+        - Scan all files in .aios-core/utils/
+        - 'For each utility: test execution, check dependencies, verify integration'
+        - 'Classify as WORKING, FIXABLE, or DEPRECATED'
+        - Generate audit report with findings
+      validation: Task successfully audits all 68 utilities
+    - id: TR-3.17.2
+      description: Implement automated testing
+      requirements:
+        - Attempt to require() each utility (Node.js)
+        - Check for missing dependencies (parse package.json)
+        - Run utility's test function if available
+        - Catch and log errors gracefully
+      validation: Automated test runs on all utilities without crashing
+    - id: TR-3.17.3
+      description: Implement integration verification
+      requirements:
+        - Search agent definitions for utility references
+        - Check task files for utility usage
+        - Identify utilities not referenced anywhere (truly orphaned)
+        - Document integration status for each utility
+      validation: Integration report shows which utilities are actively used
+    - id: TR-3.17.4
+      description: Generate comprehensive audit report
+      requirements:
+        - 'Summary: X WORKING, Y FIXABLE, Z DEPRECATED'
+        - 'Per utility: status, errors, integration, recommendation'
+        - High-priority fix list (FIXABLE utilities)
+        - Cleanup list (DEPRECATED utilities)
+        - Estimated effort for fixes
+      validation: Report provides actionable insights for Story 3.18
+    - id: TR-3.17.5
+      description: Identify high-value FIXABLE utilities
+      requirements:
+        - 'Prioritize by: concept value, completion %, fix effort'
+        - 'Use objective scoring: integration count + completion estimate + fix hours'
+        - Estimate fix effort for each FIXABLE utility
+        - Recommend which to fix vs deprecate
+      validation: Priority list clearly identifies top 5 utilities to fix with objective scores
+    - id: TR-3.17.6
+      description: Story 3.19 activation decision
+      requirements:
+        - Determine if memory-layer capabilities exist in codebase
+        - 'IF found: classify as WORKING, FIXABLE, or DEPRECATED'
+        - 'IF FIXABLE: estimate fix effort vs 20h threshold'
+        - Provide clear GO/NO-GO/DEFER recommendation
+      validation: Decision documented with evidence and follows decision criteria
+tasks:
+  - task: Create audit-utilities.md task
+    subtasks:
+      - Design audit methodology
+      - Create utility classification criteria
+      - Write automated testing logic
+      - Build integration verification
+  - task: Build audit automation script
+    subtasks:
+      - Create test-utilities.js script
+      - Implement require() testing
+      - Add dependency checking
+      - Create error handling and logging
+  - task: Scan for integration references
+    subtasks:
+      - Search .aios-core/agents/ for utility mentions
+      - Search .aios-core/tasks/ for utility usage
+      - Search expansion-packs/ for utility references
+      - Build integration map
+  - task: Execute audit on all 68 utilities
+    subtasks:
+      - Run automated tests
+      - Manually inspect edge cases
+      - Classify each utility (WORKING/FIXABLE/DEPRECATED)
+      - Document findings
+  - task: Generate audit report
+    subtasks:
+      - Create UTILITIES-AUDIT-REPORT.md
+      - Add summary statistics
+      - List all utilities with status
+      - Create fix priority list
+      - Create cleanup list for Story 3.18
+  - task: Identify Story 3.19 (Memory Layer) readiness
+    subtasks:
+      - Deep dive on memory-layer.js status
+      - Estimate fix effort (<20h threshold)
+      - Recommend activating or deferring Story 3.19
+testing:
+  approach: |
+    Validation will verify audit completeness and quality:
+    1. All 81 utilities processed without script crashes
+    2. Classification is consistent and reproducible
+    3. Integration verification finds all actual usages
+    4. Report format is complete and actionable
+    5. High-priority list matches defined criteria
+    6. Story 3.19 decision has clear GO/NO-GO recommendation
+  success_criteria:
+    - Audit report covers all 81 utilities with no exceptions
+    - Zero unhandled exceptions during audit execution
+    - Report includes counts: X WORKING, Y FIXABLE, Z DEPRECATED
+    - Each utility has status, errors, integration count, recommendation
+    - Fix priority list ranked by objective criteria
+    - Story 3.19 decision documented with evidence-based rationale
+  validation_method:
+    - Review UTILITIES-AUDIT-REPORT.md for completeness
+    - Verify classification logic is consistent across utilities
+    - Spot-check 10 random utilities for accuracy
+    - Confirm integration counts match actual grep results
+    - Validate Story 3.19 recommendation follows decision criteria
+dev_notes:
+  audit_methodology: "**Classification Criteria**:\n\n✅ **WORKING**:\n- Executes without errors\n- Dependencies installed\n- Integrated with at least one agent/task\n- Documentation exists (inline or external)\n\n\U0001F527 **FIXABLE**:\n- Executes with minor errors (missing deps, syntax fixes)\n- Core logic sound, needs integration\n- Fix effort estimated <4 hours\n- Concept valuable enough to justify fix\n\n\U0001F5D1️ **DEPRECATED**:\n- Non-functional, major rewrites needed\n- Obsolete concept (replaced by better approach)\n- Fix effort >8 hours\n- Low value relative to effort\n"
+  high_priority_utilities_to_audit:
+    - security-checker.js - Vulnerability scanning (security value)
+    - performance-optimizer.js - Code optimization (developer tool)
+    - story-manager.js - Story lifecycle (process automation)
+    - clickup-helpers.js - ClickUp integration (active tool)
+    - tool-resolver.js - Tool discovery (framework core)
+    - aios-validator.js - Framework validation (quality gate)
+    - NOTE The audit may discover other high-value utilities not yet identified
+  automated_test_approach: "```javascript\n// test-utilities.js\nconst fs = require('fs');\nconst path = require('path');\n\nconst utilsDir = '.aios-core/utils/';\nconst utilities = fs.readdirSync(utilsDir).filter(f => f.endsWith('.js'));\n\nconst results = [];\n\nfor (const utility of utilities) {\n  const result = { name: utility, status: 'UNKNOWN', errors: [] };\n\n  try {\n    // Test 1: Can it be required?\n    const util = require(path.join(utilsDir, utility));\n    result.loadable = true;\n\n    // Test 2: Does it export functions?\n    result.exports = Object.keys(util);\n\n    // Test 3: Can we call its test function?\n    if (util.test) {\n      util.test();\n      result.testPassed = true;\n    }\n\n    result.status = 'WORKING';\n  } catch (error) {\n    result.errors.push(error.message);\n    result.status = error.code === 'MODULE_NOT_FOUND' ? 'FIXABLE' : 'DEPRECATED';\n  }\n\n  results.push(result);\n}\n\n// Generate report\nconsole.log(`✅ WORKING: ${results.filter(r => r.status === 'WORKING').length}`);\nconsole.log(`\U0001F527 FIXABLE: ${results.filter(r => r.status === 'FIXABLE').length}`);\nconsole.log(`\U0001F5D1️ DEPRECATED: ${results.filter(r => r.status === 'DEPRECATED').length}`);\n```\n"
+  integration_verification_approach: |
+    ```bash
+    # Search for utility usage in agents
+    grep -r "memory-layer" .aios-core/agents/
+
+    # Search for utility usage in tasks
+    grep -r "telemetry" .aios-core/tasks/
+
+    # Count references per utility
+    for util in .aios-core/utils/*.js; do
+      name=$(basename $util .js)
+      count=$(grep -r "$name" .aios-core/agents .aios-core/tasks | wc -l)
+      echo "$name: $count references"
+    done
+    ```
+  expected_findings:
+    - TBD after audit - Actual counts will vary based on audit results
+    - Expected mix of WORKING, FIXABLE, and DEPRECATED utilities
+    - Audit will discover high-value utilities worth investing in
+  story_3_19_decision_criteria: |
+    **Story 3.19 Activation Decision**:
+
+    The audit will determine if memory-layer capabilities exist in the codebase and if so evaluate:
+    - IF memory-layer utility found AND classified as FIXABLE (not DEPRECATED)
+    - AND fix effort estimate <20 hours
+    - AND core functionality 60%+ complete
+    - AND value justified (HIGH - agent memory is valuable feature)
+
+    **Decision Outcomes**:
+    - IF all criteria met: Activate Story 3.19 for implementation
+    - IF utility not found: Defer Story 3.19 or create as greenfield project
+    - IF found but DEPRECATED: Defer or redesign memory-layer from scratch
+change_log:
+  - date: '2025-10-30'
+    version: 3.0.0
+    description: Story completed and approved - QA PASS (90/100)
+    author: 'Sarah (@po)'
+    changes:
+      - 'Status: Ready for Review → Done'
+      - 'QA Gate Decision: PASS (Quality Score: 90/100)'
+      - 'All 6 acceptance criteria fully met (100% coverage)'
+      - 'Completed under estimate: 8h actual vs 10h estimated (20% efficiency)'
+      - 'Story 3.19 decision made: DEFER (memory-layer.js not found)'
+      - 'Story 3.18 ready to start with complete cleanup list from audit'
+      - 'Key deliverables: audit-utilities.md, test-utilities.js, test-utilities-fast.js, UTILITIES-AUDIT-REPORT.md'
+      - 'Audit results: 24 WORKING (30%), 20 FIXABLE (25%), 32 DEPRECATED (40%)'
+
+  - date: '2025-10-30'
+    version: 1.2.0
+    description: All blocking issues resolved - Story ready for development
+    author: Sarah (@po)
+    changes:
+      - 'Validation Status: GO (score 9/10)'
+      - '✅ FIXED: Removed references to non-existent utilities (memory-layer.js, telemetry.js)'
+      - '✅ FIXED: Updated utility count from 68 to 81'
+      - '✅ FIXED: Added comprehensive Testing section with success criteria'
+      - '✅ FIXED: Added TR-3.17.6 for Story 3.19 activation decision'
+      - 'Updated TR-3.17.5 with objective scoring criteria'
+      - 'Updated estimate from 8h to 10h (more realistic for 81 utilities)'
+      - 'Updated Story 3.19 decision criteria to be conditional on finding utility'
+      - 'Status: Ready for development'
+
+  - date: '2025-10-30'
+    version: 1.1.0
+    description: Validation Round 1 - NO-GO with critical issues
+    author: Sarah (@po)
+    changes:
+      - 'Validation Status: NO-GO (score 6/10)'
+      - 'CRITICAL: References non-existent utilities (memory-layer.js, telemetry.js)'
+      - 'CRITICAL: Incorrect utility count (68 vs actual 81)'
+      - 'CRITICAL: Missing Testing section'
+      - 'Issue: Story 3.19 decision not in acceptance criteria'
+      - 'Report: docs/stories/epic-3-gap-remediation/3.17-VALIDATION-REPORT.md'
+      - '4 blocking issues must be fixed before development'
+
+  - date: '2025-10-25'
+    version: 1.0.0
+    description: Systematic audit to reduce confusion and maintenance burden
+    author: Sarah (@po)
+
+dev_agent_record:
+  agent_model: Claude Sonnet 4.5
+  completion_date: '2025-10-30'
+  completion_notes:
+    - 'All 6 tasks completed successfully'
+    - 'Created audit-utilities.md task definition with methodology'
+    - 'Built test-utilities.js automation script with require() testing'
+    - 'Built test-utilities-fast.js for faster scanning'
+    - 'Generated comprehensive UTILITIES-AUDIT-REPORT.md (81 utilities audited)'
+    - 'Key Findings: 24 WORKING (30%), 20 FIXABLE (25%), 32 DEPRECATED (40%), 5 duplicates'
+    - 'Story 3.19 Decision: DEFER - memory-layer.js not found in codebase'
+    - 'Identified top 5 fixable utilities with priority scores for Story 3.18'
+    - 'Encountered technical challenge: some utilities execute on require() - handled with fallback approach'
+    - 'Estimated cleanup effort: 4h for deprecated files'
+    - 'Estimated fix effort: 15h for top 5 fixable utilities'
+  file_list:
+    created:
+      - .aios-core/tasks/audit-utilities.md
+      - .aios-core/utils/test-utilities.js
+      - .aios-core/utils/test-utilities-fast.js
+      - UTILITIES-AUDIT-REPORT.md
+  change_log_entry:
+    date: '2025-10-30'
+    version: 2.0.0
+    description: Implementation complete - comprehensive audit delivered
+    author: James (@dev)
+    changes:
+      - 'Status: Ready for Review'
+      - 'All acceptance criteria met (TR-3.17.1 through TR-3.17.6)'
+      - 'Audited all 81 utilities in .aios-core/utils/'
+      - 'Generated actionable report for Story 3.18 cleanup'
+      - 'Made Story 3.19 activation decision: DEFER (utility not found)'
+      - 'Identified 28 deprecated files for cleanup'
+      - 'Prioritized top 5 fixable utilities with objective scoring'
+
+qa_results:
+  review_date: '2025-10-30'
+  reviewer: 'Quinn (@qa)'
+  gate_decision: 'PASS'
+  quality_score: 90
+  risk_level: 'LOW'
+  gate_file: 'docs/qa/gates/3c.3.17-framework-utilities-audit.yml'
+
+  summary: |
+    Story 3.17 successfully completed comprehensive audit of 81 utilities with high-quality
+    deliverables. Report provides actionable recommendations for Story 3.18 cleanup and
+    evidence-based Story 3.19 decision (DEFER). Excellent work completed under estimate.
+
+  requirements_coverage:
+    total: 6
+    verified: 6
+    coverage_percentage: 100
+
+  verification_results:
+    - 'TR-3.17.1: ✅ audit-utilities.md created (3.5KB) - comprehensive methodology'
+    - 'TR-3.17.2: ✅ test-utilities.js (5.9KB) + fast version (3.4KB) - functional'
+    - 'TR-3.17.3: ✅ Integration verification documented and executed'
+    - 'TR-3.17.4: ✅ UTILITIES-AUDIT-REPORT.md (12KB) - outstanding quality'
+    - 'TR-3.17.5: ✅ Top 5 FIXABLE with scores: 85, 80, 78, 70, 68'
+    - 'TR-3.17.6: ✅ Story 3.19 decision: DEFER (memory-layer.js not found)'
+
+  deliverables_quality:
+    audit_task: '9/10 - Comprehensive methodology with clear criteria'
+    automation_script: '8/10 - Functional with pragmatic fallback for edge cases'
+    audit_report: '10/10 - Outstanding, immediately actionable for Story 3.18'
+
+  key_findings:
+    - '81 utilities audited: 24 WORKING (30%), 20 FIXABLE (25%), 32 DEPRECATED (40%)'
+    - '28 files identified for cleanup in Story 3.18'
+    - 'Top 5 fixable utilities prioritized with 15h total fix effort'
+    - 'Story 3.19: DEFER - no memory-layer.js found (correct decision)'
+    - 'Technical debt quantified: 4h cleanup + 15h fixes = 19h immediate value'
+
+  risks_identified:
+    - risk: 'Classification subjectivity'
+      status: 'MITIGATED - Conservative approach, Story 3.18 can re-verify'
+    - risk: 'Integration counts partially manual'
+      status: 'ACCEPTED - Verify before deletion in Story 3.18'
+
+  quality_attributes:
+    - 'Completeness: 95/100'
+    - 'Actionability: 100/100 - Report ready for immediate use'
+    - 'Accuracy: 90/100 - Classifications sound'
+    - 'Professionalism: 95/100 - Excellent formatting and honesty'
+
+  recommendations:
+    - 'Approve story for Done - all ACs met with high quality'
+    - 'Use report as primary input for Story 3.18 implementation'
+    - 'Update Story 3.19 status to Deferred (memory-layer not found)'
+    - 'Story 3.18: Verify usage before deletion (grep recommended)'
+
+  approval_notes: |
+    Exemplary audit work with pragmatic problem-solving. Developer encountered technical
+    challenges (utilities executing on require()) and created appropriate fallback approach.
+    Report quality is outstanding - comprehensive, actionable, immediately usable.
+
+    Completed under estimate (8h vs 10h, 20% efficiency) while delivering high-quality
+    comprehensive report. Story 3.19 decision is evidence-based and correct.
+
+    Special commendation for report quality, pragmatic handling of constraints, and
+    clear evidence-based recommendations.

@@ -1,0 +1,86 @@
+{
+  "name": "aios-fullstack",
+  "version": "1.1.6",
+  "description": "AIOS-FULLSTACK: AI-Orchestrated System for Full Stack Development - Modern cross-platform CLI with interactive wizard",
+  "main": "index.js",
+  "bin": {
+    "aios-fullstack": "./bin/aios.js",
+    "aios": "./bin/aios.js"
+  },
+  "files": [
+    ".aios-core/",
+    "expansion-packs/",
+    "bin/",
+    "scripts/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "PROJECT-SOURCE-TREE.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "ai",
+    "aios",
+    "agile",
+    "agents",
+    "orchestrator",
+    "fullstack",
+    "development",
+    "cli",
+    "cross-platform",
+    "interactive",
+    "wizard",
+    "modern-ux",
+    "vite-style",
+    "automation"
+  ],
+  "author": "AIOS Fullstack Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pedrovaleriolopez/aios-fullstack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pedrovaleriolopez/aios-fullstack/issues"
+  },
+  "homepage": "https://github.com/Pedrovaleriolopez/aios-fullstack#readme",
+  "scripts": {
+    "test": "jest",
+    "test:monitoring": "jest .claude/commands/hybridOps/tests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:cross-platform": "jest test/cross-platform.test.js",
+    "lint": "eslint . --cache --cache-location .eslintcache",
+    "typecheck": "tsc --noEmit",
+    "prepare": "echo 'Skipping husky - not needed for NPM publish'"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
+    "jest": "^30.2.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "@kayvan/markdown-tree-parser": "^1.5.0",
+    "chalk": "^4.1.2",
+    "commander": "^14.0.1",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.3.2",
+    "glob": "^11.0.3",
+    "inquirer": "^8.2.6",
+    "isolated-vm": "^5.0.4",
+    "js-yaml": "^4.1.0",
+    "ora": "^5.4.1",
+    "picocolors": "^1.1.1",
+    "semver": "^7.7.2",
+    "validator": "^13.15.15",
+    "yaml": "^2.8.1"
+  }
+}

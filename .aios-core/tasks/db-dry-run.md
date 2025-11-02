@@ -1,0 +1,110 @@
+# Task: Migration Dry-Run
+
+**Purpose**: Execute migration inside BEGIN…ROLLBACK to catch syntax/ordering errors
+
+**Elicit**: true
+
+---
+
+## Inputs
+
+- `path` (string): Path to SQL migration file
+
+---
+
+## Process
+
+### 1. Confirm Migration File
+
+Ask user to confirm:
+- Migration file path: `{path}`
+- Purpose of this migration
+- Expected changes (tables, functions, etc)
+
+### 2. Execute Dry-Run
+
+Run migration in transaction that will be rolled back:
+
+```bash
+psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 <<'
+## Configuration Dependencies
+
+This task requires the following configuration keys from `core-config.yaml`:
+
+- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
+
+**Loading Config:**
+```javascript
+const yaml = require('js-yaml');
+const fs = require('fs');
+const path = require('path');
+
+const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
+const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+
+const qaLocation = config.qa?.qaLocation || 'docs/qa';
+```
+
+SQL'
+BEGIN;
+\echo 'Starting dry-run...'
+\i {path}
+\echo 'Dry-run completed successfully - rolling back...'
+ROLLBACK;
+SQL
+```
+
+### 3. Report Results
+
+**If successful:**
+```
+✓ Dry-run completed without errors
+✓ Migration syntax is valid
+✓ No dependency or ordering issues detected
+```
+
+**If failed:**
+```
+❌ Dry-run failed
+Error: [error message]
+Line: [line number if available]
+Fix the migration and try again
+```
+
+---
+
+## What This Validates
+
+- ✅ SQL syntax correctness
+- ✅ Object dependencies exist
+- ✅ Execution order is valid
+- ✅ No constraint violations
+- ❌ Does NOT validate data correctness
+- ❌ Does NOT check performance
+
+---
+
+## Next Steps After Success
+
+1. Review migration one more time
+2. Take snapshot: `*snapshot pre_migration`
+3. Apply migration: `*apply-migration {path}`
+4. Run smoke tests: `*smoke-test`
+
+---
+
+## Error Handling
+
+Common errors and fixes:
+
+**"relation does not exist"**
+- Missing table/view dependency
+- Check if you need to create dependent objects first
+
+**"function does not exist"**
+- Function called before creation
+- Reorder: tables → functions → triggers
+
+**"syntax error"**
+- Check SQL syntax
+- Verify PostgreSQL version compatibility

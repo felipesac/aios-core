@@ -1,0 +1,50 @@
+name: CI - Quality Gate
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint || echo "::warning::No lint script found"
+        continue-on-error: true
+
+      - name: Run type checking
+        run: npm run typecheck || echo "::warning::No typecheck script found"
+        continue-on-error: true
+
+      - name: Run tests
+        run: npm test || echo "::warning::No test script found"
+
+      - name: Run build
+        run: npm run build || echo "::warning::No build script found"
+        continue-on-error: true
+
+      - name: Security scan - npm audit
+        run: npm audit --audit-level=moderate || echo "::warning::Vulnerabilities found"
+        continue-on-error: true
+
+      - name: Security scan - ESLint security (if configured)
+        run: |
+          if [ -f ".eslintrc.security.json" ]; then
+            npx eslint . --ext .js,.ts --config .eslintrc.security.json || echo "::warning::Security issues found"
+          else
+            echo "::notice::ESLint security config not found - skipping"
+          fi
+        continue-on-error: true

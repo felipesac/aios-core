@@ -1,0 +1,102 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Claude Code MCP Environment (contains API keys)
+.claude-env
+**/.claude-env
+
+# But commit the template
+!.claude-env.example
+!**/.claude-env.example
+
+# Logs
+*.log
+logs/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+nul
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# DISABLED: Expansion packs ARE part of the framework distribution
+# (These were incorrectly ignored before - they should be in expansion-packs/ folder)
+# .claude/commands/mmosMapper/
+# .claude/commands/innerlens/
+# .claude/commands/etl/
+# .claude/commands/creator/
+
+# MMOS investigation repository (temporary)
+mmos-investigation/
+
+# AI Minds outputs (local-only, not for aios-fullstack repo)
+# 34 cloned minds including Pedro Valério, Steve Jobs, Alex Hormozi, etc.
+outputs/minds/
+
+# Validation cache files
+.eslintcache
+.tsbuildinfo
+coverage/
+
+# Architecture mapping outputs (track schemas, ignore raw data)
+outputs/architecture-map/raw/
+!outputs/architecture-map/schemas/
+!outputs/architecture-map/neo4j/
+!outputs/architecture-map/json-ld/
+!outputs/architecture-map/mermaid/
+
+# IDE directories (generated locally by installer, but templates in .aios-core/templates/ide-rules/)
+# DISABLED: The .cursor/ folder in the repo contains example rules
+# .cursor/
+# .trae/
+# .windsurf/
+
+# Local expansion creator (tool directory, not content)
+.expansion-creator/
+
+# Backups and temporary directories
+.backups/
+.consolidation-backup-*/
+
+# DB-Sage (migrated to .aios-core)
+db-sage/
+
+# Outputs directory - ONLY ignore temp/generated, not examples
+# outputs/  # DISABLED - contains important examples
+
+# MMOS research (local only)
+mmos/
+
+# Temporary test scripts
+test-*.js
+
+# Local settings (but .claude/ folder itself is OK for examples)
+.claude/settings.local.json
+# DISABLED: .claude/commands/ contains important slash command examples
+# .claude/commands/
+
+# Legacy aios-core (24KB tools only, moved to scripts)
+aios-core/
+
+# DISABLED: docs/ IS part of the framework
+# docs/
+
+# Development tests (not part of framework distribution)
+test/
+tests/
+
+# IDE configuration directories (generated locally, not part of framework distribution)
+# Note: The framework INCLUDES templates in .aios-core/templates/ide-rules/
+# but the installer creates .claude/, .cursor/, etc. locally

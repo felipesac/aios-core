@@ -1,0 +1,337 @@
+# Quality Gate Decision: Story 3.26.1
+# MCP Package Discovery - Complete 1MCP Integration
+# Preliminary Gate (Story in Draft status)
+
+schema: 1
+story: "3.26.1"
+story_title: "MCP Package Discovery - Complete 1MCP Integration"
+gate: PENDING
+status_reason: "Story in Draft status - preliminary gate created to guide development. Will be updated to PASS/CONCERNS/FAIL after implementation and testing."
+reviewer: "Quinn (Test Architect)"
+updated: "2025-10-26T23:30:00Z"
+
+waiver: { active: false }
+
+# ===========================================================================
+# PRELIMINARY ASSESSMENT (PRE-IMPLEMENTATION)
+# ===========================================================================
+preliminary_notes: |
+  This gate was created proactively to guide Story 3.26.1 development.
+
+  **Context:**
+  - Parent Story 3.26 delivered 87% token reduction but only 3/9 MCPs functional
+  - 5 MCPs failed due to incorrect npm package names (not found in registry)
+  - This story focuses on research and integration to restore full 9/9 functionality
+
+  **Expected Timeline:**
+  - Story approval: TBD
+  - Implementation: 6 hours estimated
+  - QA validation: 2-3 hours
+
+  **This gate will be updated to final status after:**
+  1. MCP package discovery research completed
+  2. Available MCPs integrated and tested
+  3. Documentation updated
+  4. QA validation executed
+
+# ===========================================================================
+# ACCEPTANCE CRITERIA PREVIEW
+# ===========================================================================
+ac_preview:
+  total: 6
+  technical_requirements:
+    - id: TR-3.26.1.1
+      title: "Package discovery for 5 missing MCPs"
+      testability: HIGH
+      notes: "Clear success criteria - document installation path for each MCP"
+
+    - id: TR-3.26.1.2
+      title: "Integration into 1MCP configuration"
+      testability: HIGH
+      notes: "Verifiable via `1mcp mcp list` command"
+
+    - id: TR-3.26.1.3
+      title: "Token budget validation"
+      testability: HIGH
+      notes: "Measurable via `/context` command in Claude Code"
+
+    - id: TR-3.26.1.4
+      title: "Documentation updates"
+      testability: MEDIUM
+      notes: "Manual review required, but clear completion criteria"
+
+  functional_requirements:
+    - id: FR-3.26.1.1
+      title: "All 5 MCPs functional via 1MCP"
+      testability: HIGH
+      notes: "Test execution for each MCP - may be blocked if packages don't exist"
+
+    - id: FR-3.26.1.2
+      title: "Preset functionality validated"
+      testability: HIGH
+      notes: "Builds on Story 3.26 preset infrastructure"
+
+# ===========================================================================
+# ANTICIPATED RISKS
+# ===========================================================================
+anticipated_risks:
+  - id: RISK-001
+    category: DISCOVERY
+    severity: high
+    probability: medium
+    description: "Some/all of the 5 MCP packages may not exist in npm registry"
+    impact: "Story may deliver 0/5 new MCPs if packages unavailable"
+    mitigation: |
+      - Story explicitly allows for "not available" outcome with documentation
+      - Alternative: Custom MCP development in follow-up story
+      - Developer should timebox research (2 hours max per MCP)
+    acceptance_criteria: "Document findings clearly, even if negative result"
+
+  - id: RISK-002
+    category: TOKEN_BUDGET
+    severity: medium
+    probability: low
+    description: "Adding 5 MCPs may exceed 80k token budget for aios-full preset"
+    impact: "Would violate Story 3.26 success criteria (≥75% reduction)"
+    mitigation: |
+      - Measure tokens after each MCP addition
+      - If budget exceeded, adjust preset composition
+      - May need to create token-optimized presets
+    acceptance_criteria: "aios-full ≤80k tokens OR preset restructured with documented rationale"
+
+  - id: RISK-003
+    category: API_KEYS
+    severity: low
+    probability: medium
+    description: "New MCPs may require API keys user doesn't have/can't obtain"
+    impact: "MCPs configured but untestable by user"
+    mitigation: |
+      - Document free tier availability for each service
+      - Provide test account setup instructions
+      - Mark as "requires API key" if free tier unavailable
+    acceptance_criteria: "Documentation includes how to obtain all required keys"
+
+  - id: RISK-004
+    category: INTEGRATION
+    severity: low
+    probability: low
+    description: "Discovered packages may have 1MCP compatibility issues"
+    impact: "MCPs found but don't work with 1MCP aggregator"
+    mitigation: |
+      - Test each MCP individually before adding to presets
+      - Document compatibility issues
+      - Consider direct MCP connection as fallback
+    acceptance_criteria: "Compatibility documented, workarounds provided if needed"
+
+# ===========================================================================
+# PRE-IMPLEMENTATION RECOMMENDATIONS
+# ===========================================================================
+pre_implementation_recommendations:
+  design_considerations:
+    - title: "Research Strategy Priority"
+      recommendation: |
+        Follow the documented priority order:
+        1. npm Registry search (most likely)
+        2. MCP Registry (official source)
+        3. GitHub code search
+        4. Service provider documentation
+        5. Alternative approaches (custom development)
+      rationale: "Maximize discovery success rate, minimize time investment"
+
+    - title: "Incremental Integration"
+      recommendation: |
+        Integrate MCPs one at a time, testing each before proceeding:
+        1. Add MCP to 1MCP
+        2. Test connection (`1mcp mcp status <name>`)
+        3. Test functionality (execute 1 tool)
+        4. Measure token impact
+        5. Document and proceed to next
+      rationale: "Isolate issues, prevent token budget surprises"
+
+    - title: "Token Budget Monitoring"
+      recommendation: |
+        After each MCP addition:
+        - Measure aios-dev tokens (should stay ~26k)
+        - Measure aios-full tokens (must stay ≤80k)
+        - If approaching limit, stop and reassess preset composition
+      rationale: "Preserve Story 3.26's 87% reduction achievement"
+
+  testing_strategy:
+    - title: "Validation Tests per MCP"
+      recommendation: |
+        For each successfully integrated MCP:
+        - List operation (e.g., "list tasks" for ClickUp)
+        - Create operation (e.g., "create task")
+        - Query operation (e.g., "search" or "get")
+        Document all test results in completion notes
+      rationale: "Ensure functional integration, not just technical connection"
+
+    - title: "Cross-Platform Validation"
+      recommendation: |
+        Test on at least Windows + Linux:
+        - Package installation works on both
+        - npx-wrapper compatibility (Windows)
+        - Environment variables load correctly
+      rationale: "Prevent platform-specific failures in production"
+
+  documentation_requirements:
+    - title: "Discovery Report Format"
+      recommendation: |
+        outputs/mcp-package-discovery-report.md should include:
+        - MCP name
+        - Search results (npm, GitHub, MCP Registry)
+        - Final package name OR "not available"
+        - Installation command
+        - Required API keys
+        - Verification test
+        - Token impact measurement
+      rationale: "Future reference, helps Story 3.26.2 if custom development needed"
+
+# ===========================================================================
+# PRELIMINARY QUALITY METRICS
+# ===========================================================================
+preliminary_quality_metrics:
+  estimated_test_coverage:
+    unit_tests: 0  # Research story - no code to unit test
+    integration_tests: 5  # One per MCP (if found)
+    manual_tests: 15  # Discovery validation, token measurement, preset testing
+    total: 20
+
+  expected_documentation:
+    - outputs/mcp-package-discovery-report.md
+    - Updated: docs/architecture/mcp-optimization-1mcp.md
+    - Updated: docs/architecture/mcp-api-keys-management.md
+    - Updated: scripts/install-aios.cmd
+    - Updated: scripts/install-aios.sh
+    - Updated: .claude-env.example
+
+  success_scenarios:
+    best_case:
+      description: "All 5 MCPs discovered and integrated successfully"
+      probability: low (20%)
+      outcome: "9/9 MCPs functional, token budget maintained, full presets work"
+
+    expected_case:
+      description: "2-3 MCPs discovered, others not yet available"
+      probability: medium (50%)
+      outcome: "5-6/9 MCPs functional, documented path for remaining MCPs"
+
+    worst_case:
+      description: "0-1 MCPs discovered, most require custom development"
+      probability: low (30%)
+      outcome: "Story documents unavailability, follow-up story for custom MCPs"
+
+# ===========================================================================
+# GATE DECISION CRITERIA (FOR POST-IMPLEMENTATION)
+# ===========================================================================
+future_gate_criteria:
+  will_pass_if:
+    - "All 5 MCPs researched with documented results (even if 'not available')"
+    - "Available MCPs successfully integrated and functional"
+    - "Token budget maintained (aios-full ≤80k)"
+    - "Documentation complete and accurate"
+    - "No regressions to Story 3.26 functionality"
+
+  will_have_concerns_if:
+    - "0-1 MCPs successfully integrated (very low success rate)"
+    - "Token budget exceeded without mitigation plan"
+    - "Integration issues not clearly documented"
+    - "Missing documentation updates"
+
+  will_fail_if:
+    - "Research incomplete or insufficient"
+    - "Token budget exceeded AND Story 3.26 regression"
+    - "No documentation of findings"
+    - "Breaking changes to existing 3/9 functional MCPs"
+
+# ===========================================================================
+# SUCCESS METRICS (POST-IMPLEMENTATION)
+# ===========================================================================
+success_metrics:
+  primary:
+    - metric: "MCPs discovered"
+      target: "5/5 researched with documented installation path"
+      measurement: "Review outputs/mcp-package-discovery-report.md"
+
+    - metric: "MCPs integrated"
+      target: "≥2/5 successfully integrated (40% success rate)"
+      measurement: "`1mcp mcp list` shows X/9 connected"
+
+    - metric: "Token budget"
+      target: "aios-full ≤80k tokens"
+      measurement: "`/context` with aios-full preset"
+
+  secondary:
+    - metric: "Documentation quality"
+      target: "All guides updated, no broken commands"
+      measurement: "Manual review + test installation"
+
+    - metric: "Preset functionality"
+      target: "aios-pm works with discovered MCPs"
+      measurement: "Test ClickUp + Google Workspace tools"
+
+# ===========================================================================
+# DEPENDENCIES & BLOCKERS
+# ===========================================================================
+dependencies:
+  blocks:
+    - story: "3.27"
+      reason: "Story 3.27 (Context Forge POC) can proceed in parallel"
+      impact: "No blocking relationship"
+
+  blocked_by:
+    - story: "3.26"
+      status: "Complete - Validated by User"
+      impact: "Can proceed - prerequisite met"
+
+  external_dependencies:
+    - "npm registry availability"
+    - "MCP Registry (GitHub) accessibility"
+    - "Test accounts for services (ClickUp, Supabase, Google, N8N, 21st)"
+    - "API keys for validation testing"
+
+# ===========================================================================
+# NEXT ACTIONS
+# ===========================================================================
+next_actions:
+  for_product_owner:
+    - "Review and approve Story 3.26.1 for development"
+    - "Prioritize in sprint (high priority due to 56% functionality loss)"
+    - "Confirm acceptance of 'not available' outcome if packages don't exist"
+
+  for_dev_team:
+    - "Read Story 3.26.1 completely"
+    - "Follow research strategy (npm → MCP Registry → GitHub → docs)"
+    - "Timebox research: 2 hours max per MCP"
+    - "Create discovery report with all findings"
+    - "Integrate available MCPs incrementally"
+
+  for_qa_team:
+    - "Review Story 3.26.1 acceptance criteria"
+    - "Prepare test accounts for validation"
+    - "Plan token measurement procedures"
+    - "Ready to execute validation tests after implementation"
+
+# ===========================================================================
+# GATE UPDATE SCHEDULE
+# ===========================================================================
+gate_updates:
+  - milestone: "Story approved"
+    action: "Update gate with approved date, assigned developer"
+
+  - milestone: "Research phase complete"
+    action: "Update with discovery findings, adjust risk assessment"
+
+  - milestone: "Integration complete"
+    action: "Update with integration results, token measurements"
+
+  - milestone: "QA validation complete"
+    action: "Final gate decision (PASS/CONCERNS/FAIL)"
+
+# ===========================================================================
+# HISTORY
+# ===========================================================================
+history:
+  - at: "2025-10-26T23:30:00Z"
+    gate: PENDING
+    note: "Preliminary gate created to guide Story 3.26.1 development. Story currently in Draft status."

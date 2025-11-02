@@ -1,0 +1,206 @@
+---
+id: "3.36"
+title: "Create Documentation Index Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.7"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.7 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing index-tmpl.md template
+
+  This story addresses technical debt identified during Story 3.7 (Incomplete Workflows Part 1).
+
+  **Problem**: Task index-docs.md needs index-tmpl.md template but it doesn't exist.
+
+  **Reference**: Story 3.7 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.7-incomplete-workflow-completion-part-1.yml
+  - Recommendation: "Create index-tmpl.md template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a documentation index template (index-tmpl.md) for organizing documentation,
+  **so that** the index-docs task can generate consistent documentation indexes.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.36.1"
+      description: "Create index-tmpl.md template file"
+      requirements:
+        - Template created at .aios-core/templates/index-tmpl.md
+        - Template includes structure for hierarchical documentation organization
+        - Template uses Markdown format with clear section headers
+        - Template includes placeholders for document lists and descriptions
+        - Template supports root-level docs and subfolder organization
+      validation: "Template file exists and is valid Markdown"
+
+    - id: "TR-3.36.2"
+      description: "Update index-docs task to reference template"
+      requirements:
+        - Remove TODO comment from index-docs.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references index-tmpl.md in frontmatter"
+
+    - id: "TR-3.36.3"
+      description: "Validate template integration"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template with sample documentation structure
+        - Document template placeholders and usage patterns
+      validation: "Gap detection shows index-docs has template reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze documentation index requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review index-docs.md task to understand index generation logic"
+      - "Review existing docs/index.md (if exists) for current structure"
+      - "Identify index requirements: root docs, subfolders, descriptions"
+      - "Define template sections and placeholders"
+
+  - task: "Task 2: Create index-tmpl.md template"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/templates/index-tmpl.md file"
+      - "Add header: # Documentation Index"
+      - "Add Root Documents section with {{rootDocuments}} placeholder"
+      - "Add Folder sections with {{folders}} placeholder array"
+      - "Include structure for document entries (title, path, description)"
+      - "Add inline comments explaining template structure"
+      - "Include example of typical index structure"
+
+  - task: "Task 3: Integrate template with index-docs task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/index-docs.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: index-tmpl.md"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify index-docs now shows template reference"
+      - "Generate sample index using template with test data"
+      - "Validate generated index follows expected structure"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_7: |
+    Story 3.7 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/index-docs.md
+
+    The task includes detailed specification of the desired index structure:
+    ```markdown
+    ## Root Documents
+
+    ### [Document Title](./document.md)
+    Brief description of the document's purpose and contents.
+
+    ## Folder Name
+    Documents within the `folder-name/` directory:
+
+    ### [Document in Folder](./folder-name/document.md)
+    Description of this document.
+    ```
+
+  template_structure: |
+    Documentation Index template should include:
+
+    ```markdown
+    # Documentation Index
+
+    {{#description}}
+    {{description}}
+    {{/description}}
+
+    ## Root Documents
+
+    {{#rootDocuments}}
+    ### [{{title}}]({{path}})
+
+    {{description}}
+
+    {{/rootDocuments}}
+
+    {{#folders}}
+    ## {{folderName}}
+
+    Documents within the `{{folderPath}}/` directory:
+
+    {{#documents}}
+    ### [{{title}}]({{path}})
+
+    {{description}}
+
+    {{/documents}}
+    {{/folders}}
+    ```
+
+  placeholder_list: |
+    Template placeholders to support:
+    - {{description}}: Optional index description
+    - {{rootDocuments}}: Array of root-level documents
+      - {{title}}: Document title
+      - {{path}}: Relative path to document
+      - {{description}}: Document description
+    - {{folders}}: Array of subfolders
+      - {{folderName}}: Display name for folder
+      - {{folderPath}}: Folder path
+      - {{documents}}: Array of documents in folder (same structure as rootDocuments)
+
+  reference_structure: |
+    Refer to task specification in index-docs.md lines 62-100 for exact format requirements:
+    - Use relative paths starting with ./
+    - Level 2 headings (##) for folder sections
+    - Level 3 headings (###) for document entries
+    - Sort folders alphabetically
+    - Root documents listed first
+
+  files_to_create:
+    - ".aios-core/templates/index-tmpl.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/index-docs.md"
+
+  validation_approach: |
+    1. Render template with sample data structure
+    2. Verify output matches format specified in index-docs.md
+    3. Validate all links are relative and properly formatted
+    4. Confirm hierarchical structure (root docs → folders → folder docs)
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.7 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

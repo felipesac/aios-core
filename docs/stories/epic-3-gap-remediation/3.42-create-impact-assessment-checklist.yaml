@@ -1,0 +1,237 @@
+---
+id: "3.42"
+title: "Create Impact Assessment Checklist"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 3
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.8"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.8 identified missing checklist"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing impact-assessment-checklist.md checklist
+
+  This story addresses technical debt identified during Story 3.8 (Incomplete Workflows Part 2).
+
+  **Problem**: Task analyze-impact.md needs impact-assessment-checklist.md checklist but it doesn't exist.
+
+  **Reference**: Story 3.8 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.8-incomplete-workflow-completion-part-2.yml
+  - Recommendation: "Create impact-assessment-checklist.md checklist" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** an impact assessment checklist (impact-assessment-checklist.md),
+  **so that** the analyze-impact task can systematically assess modification impacts.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.42.1"
+      description: "Create impact-assessment-checklist.md checklist file"
+      requirements:
+        - Checklist created at .aios-core/checklists/impact-assessment-checklist.md
+        - Checklist includes systematic impact assessment workflow steps
+        - Checklist uses Markdown format with checkbox items
+        - Checklist includes validation criteria for dependency analysis, change propagation, and risk assessment
+        - Checklist supports all modification types (modify, deprecate, remove, refactor)
+      validation: "Checklist file exists and is valid Markdown"
+
+    - id: "TR-3.42.2"
+      description: "Update analyze-impact task to reference checklist"
+      requirements:
+        - Remove TODO comment from analyze-impact.md
+        - Uncomment checklist reference in task YAML frontmatter
+        - Update task documentation to explain checklist usage
+      validation: "Task file references impact-assessment-checklist.md in frontmatter"
+
+    - id: "TR-3.42.3"
+      description: "Validate checklist integration"
+      requirements:
+        - Run gap detection to verify checklist is discoverable
+        - Test checklist with sample impact assessment
+        - Document checklist usage for different modification types
+      validation: "Gap detection shows analyze-impact has checklist reference"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze impact assessment workflow requirements"
+    estimated_hours: 0.5
+    subtasks:
+      - "Review analyze-impact.md task to understand impact analysis workflow"
+      - "Identify assessment phases: discovery, analysis, propagation, risk"
+      - "Review modification types: modify, deprecate, remove, refactor"
+      - "Define checklist items and validation criteria"
+
+  - task: "Task 2: Create impact-assessment-checklist.md checklist"
+    estimated_hours: 1.5
+    subtasks:
+      - "Create .aios-core/checklists/impact-assessment-checklist.md file"
+      - "Add header: # Impact Assessment Checklist"
+      - "Add Component Discovery section"
+      - "Add Dependency Analysis section"
+      - "Add Change Propagation section"
+      - "Add Risk Assessment section"
+      - "Add Mitigation Planning section"
+      - "Add Approval Workflow section"
+      - "Include inline comments explaining each phase"
+
+  - task: "Task 3: Integrate checklist with analyze-impact task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/analyze-impact.md"
+      - "Remove TODO comment about missing checklist"
+      - "Uncomment checklist reference: impact-assessment-checklist.md"
+      - "Update task documentation to reference the new checklist"
+
+  - task: "Task 4: Validate and document"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify analyze-impact now shows checklist reference"
+      - "Test checklist with sample impact assessment"
+      - "Validate checklist covers all modification types"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_8: |
+    Story 3.8 identified this missing checklist and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/analyze-impact.md
+    ```yaml
+    ---
+    # TODO: Create impact-assessment-checklist.md (follow-up story needed)
+    # checklists:
+    #   - impact-assessment-checklist.md  # Checklist doesn't exist yet
+    utils:
+      - dependency-impact-analyzer
+      - change-propagation-predictor  # Predict change impacts
+      - modification-risk-assessment  # Risk assessment
+    ---
+    ```
+
+  checklist_structure: |
+    Impact Assessment Checklist should include:
+
+    ```markdown
+    # Impact Assessment Checklist
+
+    Use this checklist to systematically assess the impact of component modifications
+    on the broader AIOS-FULLSTACK framework.
+
+    ## Component Discovery
+
+    - [ ] Identify target component for modification
+    - [ ] Validate component exists and is accessible
+    - [ ] Document component type (agent/task/workflow/util)
+    - [ ] Document current component version
+    - [ ] Identify modification type (modify/deprecate/remove/refactor)
+
+    ## Dependency Analysis
+
+    - [ ] Identify all direct dependencies (components that target depends on)
+    - [ ] Identify all reverse dependencies (components that depend on target)
+    - [ ] Document external dependencies (libraries, APIs, services)
+    - [ ] Map dependency graph depth and breadth
+    - [ ] Identify circular dependencies if any
+    - [ ] Assess dependency criticality (critical/high/medium/low)
+
+    ## Change Propagation Analysis
+
+    - [ ] Predict propagation scope (localized/moderate/widespread/system-wide)
+    - [ ] Identify all affected components by category
+    - [ ] Assess breaking change potential
+    - [ ] Document API contract changes
+    - [ ] Identify migration path requirements
+    - [ ] Estimate effort for dependent component updates
+
+    ## Risk Assessment
+
+    - [ ] Calculate overall risk level (low/medium/high/critical)
+    - [ ] Identify technical risks
+    - [ ] Identify business risks
+    - [ ] Identify operational risks
+    - [ ] Assess risk probability for each identified risk
+    - [ ] Assess risk impact for each identified risk
+    - [ ] Calculate risk scores (probability × impact)
+
+    ## Mitigation Planning
+
+    - [ ] Document mitigation strategy for each high-risk item
+    - [ ] Define rollback procedures
+    - [ ] Identify testing requirements
+    - [ ] Plan communication strategy for affected teams
+    - [ ] Create migration guide if needed
+    - [ ] Define validation checkpoints
+
+    ## Approval Workflow
+
+    - [ ] Generate impact assessment report
+    - [ ] Identify required approvers based on risk level
+    - [ ] Submit for review (if high-risk)
+    - [ ] Document approval decisions
+    - [ ] Obtain necessary sign-offs before proceeding
+
+    ## Quality Checks
+
+    - [ ] All dependencies identified and documented
+    - [ ] Impact assessment is comprehensive
+    - [ ] Risk mitigation strategies are actionable
+    - [ ] Approval workflow completed (if required)
+    - [ ] Documentation meets project standards
+    ```
+
+  modification_types: |
+    Different modification types require different assessment focus:
+    - **Modify**: Focus on API compatibility and behavior changes
+    - **Deprecate**: Focus on migration path and timeline
+    - **Remove**: Focus on reverse dependencies and alternatives
+    - **Refactor**: Focus on behavior preservation and test coverage
+
+  risk_thresholds: |
+    Risk-based approval requirements:
+    - **Critical Risk** (20-25): Requires architecture review + approval
+    - **High Risk** (13-19): Requires team lead approval
+    - **Medium Risk** (6-12): Standard review process
+    - **Low Risk** (1-5): No additional approval needed
+
+  files_to_create:
+    - ".aios-core/checklists/impact-assessment-checklist.md"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/analyze-impact.md"
+
+  validation_approach: |
+    1. Execute checklist with sample modification scenarios
+    2. Verify all assessment phases covered systematically
+    3. Validate risk calculations align with risk-profile methodology
+    4. Confirm checklist items are clear and actionable
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.8 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []

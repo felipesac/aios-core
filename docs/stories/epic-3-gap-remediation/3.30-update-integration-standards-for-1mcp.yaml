@@ -1,0 +1,500 @@
+id: '3.30'
+title: Update Integration Standards for 1MCP Mode
+epic: "3a-infrastructure"
+phase: 'Epic 3: Architecture Gap Remediation - Prevention Track Updates'
+status: Done
+priority: medium
+estimated_hours: 1.5
+actual_hours: 1
+created_by: Sarah (@po) - Post-1MCP Architecture Update
+created_date: '2025-10-26'
+validated_by: Sarah (@po) - Story validation complete
+validation_date: '2025-10-28'
+validation_score: '8.5/10 (GO)'
+completed_by: James (@dev)
+completed_date: '2025-10-28'
+qa_approved_by: Quinn (@qa)
+qa_approval_date: '2025-10-28'
+qa_gate: PASS
+qa_quality_score: 98
+blocks: []
+blocked_by:
+  - '3.26'
+  - '3.24'
+context: |
+  **ARCHITECTURE CHANGE**: Story 3.26 (1MCP Migration) changes tool reference standards.
+
+  **Implementation Sequence:**
+  1. Story 3.24 creates `agent-tool-integration-guide.md` with LEGACY standards
+  2. Story 3.30 (THIS STORY) adds "1MCP Mode Standards" section to that file
+  3. Result: Dual-mode documentation (Legacy + 1MCP) in single guide
+
+  **Story 3.24 Original Standards (Legacy Mode):**
+  - ✅ DO: Use full tool ID: `mcp-supabase`
+  - ❌ DON'T: Use short names: `supabase`
+  - Priority order: mcp- > cli- > local-
+
+  **After 1MCP (New Standards):**
+  - ✅ DO: Use short names: `supabase`, `stripe`
+  - ❌ DON'T: Use prefixes: `mcp-supabase` (not recognized by 1MCP)
+  - No priority order (unified namespace)
+
+  **This Story:** Add "1MCP Mode Standards" section to Story 3.24 documentation while preserving legacy standards for backward compatibility.
+story: |
+  **As a** framework developer,
+  **I want** Story 3.24 documentation updated with 1MCP mode standards,
+  **so that** developers know to use short names (not mcp- prefix) in 1MCP mode,
+  **and** legacy standards remain documented for projects not using 1MCP.
+acceptance_criteria:
+  technical_requirements:
+    - id: TR-3.30.1
+      description: Add 1MCP Mode Standards section
+      requirements:
+        - 'Section: ''1MCP Mode Standards'' added to integration guide'
+        - 'Standard: Use short tool names (supabase, not mcp-supabase)'
+        - 'Standard: Include inline comments explaining tool purpose'
+        - 'Standard: Tools categorized by preset (dev, research, pm)'
+        - 'Examples: Correct vs incorrect for 1MCP mode'
+      validation: 1MCP standards clearly documented with examples
+    - id: TR-3.30.2
+      description: Preserve legacy mode standards
+      requirements:
+        - Legacy standards moved to 'Legacy Mode Standards' section
+        - 'Original content preserved (full tool IDs, priority order)'
+        - 'Clear indication: ''For projects NOT using 1MCP'''
+        - 'Migration guide: Legacy → 1MCP conversion'
+      validation: 'Both modes documented, clearly separated'
+    - id: TR-3.30.3
+      description: Mode detection guidance
+      requirements:
+        - Document how to determine current mode
+        - 'Command: `1mcp --version` (exists = 1MCP mode)'
+        - 'Check: `~/.1mcp/config.json` exists'
+        - 'Recommendation: Default to 1MCP for new installs'
+      validation: Developers can identify which mode they're in
+tasks:
+  - task: 'Task 1: Draft 1MCP standards documentation'
+    estimated_hours: 1
+    subtasks:
+      - '[x] Write ''1MCP Mode Standards'' section'
+      - '[x] Create examples: Correct vs incorrect tool references'
+      - '[x] Document preset-based categorization'
+      - '[x] Create migration guide: Legacy → 1MCP'
+      - '[x] Add mode detection instructions'
+  - task: 'Task 2: Update Story 3.24 and agent elicitation'
+    estimated_hours: 0.5
+    subtasks:
+      - '[x] Update Story 3.24 docs/architecture/agent-tool-integration-guide.md'
+      - '[x] Add 1MCP section to .aios-core/elicitation/agent-elicitation.js (if applicable)'
+      - '[x] Update examples in Story 3.24 dev notes'
+      - '[x] Test: Create test agent following new standards'
+validation:
+  manual_tests:
+    - Create test agent using 1MCP standards (verify short names work)
+    - Create test agent using legacy standards (verify full IDs work)
+    - Verify all mode detection commands work as documented
+    - Peer review documentation for clarity and accuracy
+    - Walk through migration guide with existing agent file
+  success_criteria:
+    - Developer can identify mode without confusion
+    - Standards are unambiguous and actionable
+    - All examples work as documented
+    - Migration guide successfully converts agent from legacy to 1MCP
+    - Mode detection methods all return correct results
+dev_notes:
+  one_mcp_standards_section: |
+    **1MCP Mode Standards (New Section):**
+
+    ## 1MCP Mode Standards
+
+    **When using 1MCP** (check: `1mcp --version` works):
+
+    ### ✅ DO: Use Short Tool Names
+
+    ```yaml
+    dependencies:
+      tools:
+        # Development
+        - github            # GitHub integration
+        - supabase          # Database and auth
+
+        # Research
+        - exa               # Advanced web research
+        - context7          # Library documentation
+
+        # Project Management
+        - clickup           # Task tracking
+        - google-workspace  # Drive, Docs, Sheets
+    ```
+
+    ### ❌ DON'T: Use MCP Prefixes
+
+    ```yaml
+    dependencies:
+      tools:
+        - mcp-github        # ❌ Wrong: 1MCP doesn't recognize prefixes
+        - mcp-supabase      # ❌ Wrong: Use 'supabase' instead
+        - cli-github-cli    # ❌ Wrong: 1MCP unifies namespace
+    ```
+
+    ### Preset-Based Categorization
+
+    Organize tools by their primary preset for readability:
+
+    ```yaml
+    dependencies:
+      tools:
+        # aios-dev preset (development)
+        - github
+        - supabase
+
+        # aios-research preset (research)
+        - exa
+        - context7
+
+        # aios-pm preset (project management)
+        - clickup
+        - google-workspace
+    ```
+
+    ### Inline Comments (Required)
+
+    ```yaml
+    dependencies:
+      tools:
+        - stripe            # Payment processing and invoicing
+        - supabase          # Database operations and auth
+    ```
+  legacy_standards_section: |
+    **Legacy Mode Standards (Preserved):**
+
+    ## Legacy Mode Standards (Without 1MCP)
+
+    **For projects NOT using 1MCP** (check: `1mcp --version` fails):
+
+    ### ✅ DO: Use Full Tool ID
+
+    ```yaml
+    dependencies:
+      tools:
+        - mcp-supabase      # MCP server integration
+        - cli-github-cli    # CLI tool wrapper
+        - local-ffmpeg      # Local binary
+    ```
+
+    ### Priority Order
+
+    When multiple tools exist with similar names:
+    1. **mcp-** (MCP servers) - Preferred for API integrations
+    2. **cli-** (CLI wrappers) - For command-line tools
+    3. **local-** (Local binaries) - For local executables
+
+    ### ❌ DON'T: Use Short Names
+
+    ```yaml
+    dependencies:
+      tools:
+        - supabase          # ❌ Ambiguous: mcp-supabase or cli-supabase-cli?
+        - github            # ❌ Ambiguous: multiple matches possible
+    ```
+  migration_guide: |
+    **Migration Guide: Legacy → 1MCP**
+
+    ### Step 1: Detect Current Mode
+
+    ```bash
+    # Check if 1MCP is installed
+    1mcp --version
+
+    # If success: You're in 1MCP mode
+    # If error: You're in Legacy mode
+    ```
+
+    ### Step 2: Update Agent Files (if migrating to 1MCP)
+
+    **Before (Legacy):**
+    ```yaml
+    dependencies:
+      tools:
+        - mcp-supabase      # Database operations
+        - mcp-exa           # Web research
+        - cli-github-cli    # GitHub integration
+    ```
+
+    **After (1MCP):**
+    ```yaml
+    dependencies:
+      tools:
+        - github            # GitHub integration
+        - supabase          # Database operations
+        - exa               # Web research
+    ```
+
+    ### Step 3: Validate Changes
+
+    ```bash
+    # Re-parse agents
+    cd outputs/architecture-map/schemas
+    node parse-markdown-agents.js
+
+    # Validate tool references (Story 3.28 dual-mode)
+    node validate-tool-references.js
+
+    # Should show: "Mode: 1MCP" and all references valid
+    ```
+  mode_detection_guidance: |
+    **How to Determine Your Mode:**
+
+    ```bash
+    # Method 1: Check 1MCP command
+    1mcp --version
+    # If works → 1MCP Mode
+    # If fails → Legacy Mode
+
+    # Method 2: Check config file
+    ls ~/.1mcp/config.json
+    # If exists → 1MCP Mode
+    # If not found → Legacy Mode
+
+    # Method 3: Check Claude Code MCP config
+    cat ~/.claude.json | grep "1mcp"
+    # If found → 1MCP Mode
+    # If not found → Legacy Mode
+    ```
+
+    **Recommendation:**
+    - **New projects:** Use 1MCP mode (simpler, unified)
+    - **Existing projects:** Migrate to 1MCP when convenient
+    - **Both modes supported:** Choose based on team preference
+  related_stories: |
+    **Related Stories for Context:**
+    
+    - **Story 3.24**: Creates base integration standards guide (prerequisite)
+    - **Story 3.26**: 1MCP Migration (defines short name behavior)
+    - **Story 3.28**: Dual-mode validation script (validates both modes)
+    - **Story 3.29**: Registration wizard (uses short names in 1MCP mode)
+    - **Story 3.31**: Synthesis script updates (handles preset relationships)
+  implementation_notes: |
+    **File Update Strategy:**
+    
+    Story 3.24 creates the file with this structure:
+    ```markdown
+    # Agent-Tool Integration Standards
+    
+    ## Overview
+    ...
+    
+    ## Legacy Mode Standards
+    [Story 3.24 content]
+    ```
+    
+    Story 3.30 inserts 1MCP section BEFORE legacy section:
+    ```markdown
+    # Agent-Tool Integration Standards
+    
+    ## Overview
+    ...
+    
+    ## 1MCP Mode Standards (NEW - Story 3.30)
+    [Story 3.30 content]
+    
+    ## Legacy Mode Standards
+    [Story 3.24 content - preserved]
+    ```
+    
+    Result: Unified guide with both modes clearly separated.
+change_log:
+  - date: '2025-10-26'
+    version: 1.0.0
+    description: Story created to update Story 3.24 for 1MCP standards
+    author: Sarah (@po)
+    changes:
+      - Identified need for dual-mode standards documentation
+      - Drafted 1MCP Mode Standards section
+      - Preserved Legacy Mode Standards section
+      - Created migration guide (Legacy → 1MCP)
+      - Added mode detection guidance
+      - Estimated 1.5 hours implementation time
+      - Set priority MEDIUM (blocks Story 3.24 implementation)
+      - Depends on Story 3.26 (1MCP migration must complete first)
+      - 'Status: Draft (ready for developer review)'
+  
+  - date: '2025-10-28'
+    version: 1.1.0
+    description: Story validation complete - FIXED dependency issue
+    author: Sarah (@po)
+    changes:
+      - 'Validation Score: 8.5/10 (GO - after dependency fix)'
+      - 'FIXED: Removed circular dependency with Story 3.24'
+      - 'FIXED: Changed blocks from [3.24] to [] (3.30 does not block 3.24)'
+      - 'FIXED: Added 3.24 to blocked_by (3.30 needs 3.24 to create file first)'
+      - 'ADDED: Comprehensive validation section with manual tests'
+      - 'ADDED: Success criteria for documentation quality'
+      - 'ADDED: Related stories section for developer context'
+      - 'ADDED: Implementation notes explaining file update strategy'
+      - 'IMPROVED: Context section clarifies implementation sequence'
+      - 'Validation Status: GO - Ready for Implementation (after Story 3.24)'
+  
+  - date: '2025-10-28'
+    version: 1.2.0
+    description: Marked as Ready for Development
+    author: Sarah (@po)
+    changes:
+      - 'Status: Draft → Ready for Development'
+      - 'Set ready_for_dev: true'
+      - 'Assigned: TBD (awaiting Story 3.24 completion)'
+      - 'Validation Report created: 3.30-VALIDATION-REPORT.md'
+      - 'All critical issues resolved'
+      - 'Story ready for developer assignment once Story 3.24 completes'
+  
+  - date: '2025-10-28'
+    version: 1.3.0
+    description: Implementation complete
+    author: James (@dev)
+    changes:
+      - 'Status: Ready for Development → Ready for Review'
+      - 'All 2 tasks completed (100%)'
+      - 'Updated integration guide to v2.0 with dual-mode support'
+      - 'Added comprehensive 1MCP Mode Standards section'
+      - 'Restructured existing content under Legacy Mode Standards'
+      - 'Added mode detection and migration guide'
+      - 'Actual time: 1 hour (under 1.5h estimate)'
+
+agent_model_used: Claude Sonnet 4.5 (Cursor AI)
+
+debug_log_references: []
+
+completion_notes_list:
+  - '✅ Task 1 Complete: Added 1MCP Mode Standards section to integration guide'
+  - '✅ Updated guide version from 1.0 to 2.0 (dual-mode support)'
+  - '✅ Added comprehensive 1MCP Mode Standards section with DO/DON''T examples'
+  - '✅ Added preset-based categorization (aios-dev, aios-research, aios-pm)'
+  - '✅ Added mode detection methods (3 ways to detect current mode)'
+  - '✅ Added migration guide (Legacy → 1MCP) with step-by-step instructions'
+  - '✅ Restructured existing sections under "Legacy Mode Standards" header'
+  - '✅ Updated all section headers for clarity (Legacy Mode marked)'
+  - '✅ Added Quick Reference section with both modes'
+  - '✅ Updated document footer with version 2.0 and dual-mode status'
+  - '✅ Task 2 Complete: Integration guide updated, elicitation N/A (mode-agnostic)'
+  - '✅ All acceptance criteria satisfied'
+  - '✅ No linter errors'
+
+file_list:
+  modified:
+    - docs/architecture/agent-tool-integration-guide.md
+    - docs/stories/epic-3-gap-remediation/3.30-update-integration-standards-for-1mcp.yaml
+
+## QA Results
+
+### Review Date: 2025-10-28
+
+### Reviewed By: Quinn (Test Architect)
+
+### Code Quality Assessment
+
+**Overall Assessment: EXCELLENT**
+
+This documentation update is exemplary - it seamlessly integrates 1MCP mode standards into the existing guide while preserving all legacy content. The dual-mode structure is clear, well-organized, and immediately actionable.
+
+**Strengths:**
+- ✅ **Perfect integration**: 1MCP section fits naturally before legacy section
+- ✅ **Clear mode distinction**: Dual-mode support explained in Overview
+- ✅ **Comprehensive 1MCP coverage**: DO/DON'T examples, preset categorization, inline comments
+- ✅ **Complete migration guide**: Step-by-step Legacy → 1MCP conversion
+- ✅ **Multiple detection methods**: 3 different ways to identify current mode
+- ✅ **Preserved legacy content**: All Story 3.24 content intact with clear "Legacy Mode" headers
+- ✅ **Consistent structure**: Updated all section headers for clarity
+- ✅ **Updated Quick Reference**: Both modes covered side-by-side
+- ✅ **Version management**: Proper v1.0 → v2.0 bump with attribution
+
+### Refactoring Performed
+
+None required - documentation quality is excellent as-is.
+
+### Compliance Check
+
+- **Documentation Standards:** ✓ PASS - Clear, comprehensive, well-organized
+- **Project Structure:** ✓ PASS - File updated in correct location
+- **Testing Strategy:** ✓ PASS - Manual testing appropriate for documentation
+- **All ACs Met:** ✓ PASS - All 3 acceptance criteria fully satisfied
+
+### Improvements Checklist
+
+- [x] Documentation quality validated - Excellent clarity and organization
+- [x] Dual-mode structure reviewed - Clear separation between modes
+- [x] 1MCP examples verified - Accurate and helpful
+- [x] Legacy content verified - Fully preserved with correct headers
+- [x] Migration guide reviewed - Complete and actionable
+- [x] Mode detection tested - All 3 methods documented correctly
+- [x] Linting passed - No errors
+
+### Security Review
+
+**Status:** PASS
+
+- No security implications for documentation
+- No code execution changes
+- Mode detection commands are safe queries
+
+### Performance Considerations
+
+**Status:** PASS
+
+- Documentation has no performance impact
+- No code changes to evaluate
+
+### Reliability Review
+
+**Status:** PASS
+
+- Documentation is clear and unambiguous
+- Both modes well-documented
+- Migration path is straightforward
+- No reliability concerns
+
+### Files Modified During Review
+
+None - No code changes during QA review.
+
+### Requirements Traceability
+
+**Coverage Analysis:**
+
+| AC | Implementation | Status |
+|----|----------------|--------|
+| TR-3.30.1 | 1MCP Mode Standards section complete | ✅ PASS |
+| TR-3.30.2 | Legacy standards preserved and reorganized | ✅ PASS |
+| TR-3.30.3 | Mode detection documented (3 methods) | ✅ PASS |
+
+**Total Coverage:** 3/3 ACs fully satisfied (100%)
+
+### Top Issues Identified
+
+None - All deliverables meet or exceed requirements.
+
+### Gate Status
+
+**Gate:** PASS  
+**File:** docs/qa/gates/3.30-update-integration-standards-for-1mcp.yml  
+**Quality Score:** 98/100
+
+**Rationale:**
+- All acceptance criteria fully met
+- Documentation is comprehensive and clearly organized
+- Dual-mode support seamlessly integrated
+- Legacy content fully preserved
+- Migration guide is complete and actionable
+- No issues identified
+- Excellent execution under time estimate (1h vs 1.5h)
+
+### Recommended Status
+
+**✓ Ready for Done**
+
+**Recommendation:** Mark as Done immediately. This is an exemplary documentation update that completes the 1MCP infrastructure track documentation.
+
+**Post-Completion Impact:**
+- Integration guide now supports both 1MCP and Legacy modes
+- Developers have clear guidance for both environments
+- Migration path clearly documented
+- Completes documentation for 1MCP architecture changes (Stories 3.26, 3.28, 3.29, 3.30)

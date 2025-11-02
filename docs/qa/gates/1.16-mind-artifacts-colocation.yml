@@ -1,0 +1,373 @@
+# QA Gate: Story 1.16 - Hybrid-Ops Mind Artifacts Co-location
+# Purpose: Automated validation checklist for mind artifacts co-location
+# Type: Post-implementation validation
+# Status: READY FOR USE
+
+story: "1.16"
+story_name: "Hybrid-Ops Mind Artifacts Co-location"
+epic: "1"
+validation_type: "automated-validation"
+estimated_validation_time: "15-20 minutes"
+
+# ==============================================================================
+# VALIDATION GATES
+# ==============================================================================
+
+validation_gates:
+
+  # ----------------------------------------------------------------------------
+  # Gate 1: Directory Structure Validation
+  # ----------------------------------------------------------------------------
+  - gate_id: "directory-structure"
+    gate_name: "Directory Structure Validation"
+    priority: "critical"
+    description: "Verify both new co-located location and backward compatibility path exist"
+
+    checks:
+      - check_id: "new-location-exists"
+        description: "New co-located minds directory exists in hybrid-ops"
+        type: "file-system"
+        path: "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/"
+        status: "must-exist"
+        validation_method: "directory-exists"
+
+      - check_id: "old-location-preserved"
+        description: "Original location preserved for backward compatibility"
+        type: "file-system"
+        path: "outputs/minds/pedro_valerio/"
+        status: "must-exist"
+        validation_method: "directory-exists"
+
+      - check_id: "directory-structure-complete"
+        description: "All required subdirectories present in new location"
+        type: "file-system"
+        required_paths:
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/artifacts/"
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/heuristics/"
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/behavioral_evidence/"
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/docs/"
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/sources/"
+          - "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/system_prompts/"
+        validation_method: "all-paths-exist"
+
+      - check_id: "file-count-validation"
+        description: "Verify all 83 files copied to new location"
+        type: "file-count"
+        path: "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/"
+        expected_count: 83
+        tolerance: 0
+        validation_method: "recursive-file-count"
+
+      - check_id: "metadata-file-exists"
+        description: "Metadata.yaml present in new location"
+        type: "file-system"
+        path: "aios-fullstack/expansion-packs/hybrid-ops/minds/pedro_valerio/metadata.yaml"
+        status: "must-exist"
+        validation_method: "file-exists"
+
+  # ----------------------------------------------------------------------------
+  # Gate 2: Mind Loader Functionality
+  # ----------------------------------------------------------------------------
+  - gate_id: "mind-loader-functionality"
+    gate_name: "Mind Loader Functionality"
+    priority: "critical"
+    description: "Verify mind loader uses prioritized path resolution"
+
+    checks:
+      - check_id: "loads-from-new-location"
+        description: "Mind loader successfully loads from new co-located location"
+        type: "unit-test"
+        test_command: "npm test -- tests/mind-loading.test.js"
+        expected_result: "all-passing"
+        validation_method: "test-execution"
+
+      - check_id: "fallback-works"
+        description: "Mind loader falls back to old location when new not present"
+        type: "functional-test"
+        test_scenario: "Temporarily rename new location, verify fallback"
+        expected_behavior: "loads from outputs/minds/ with deprecation warning"
+        validation_method: "manual-test"
+
+      - check_id: "deprecation-warning-shown"
+        description: "Deprecation warning logged when using old location"
+        type: "functional-test"
+        test_scenario: "Load from old location only"
+        expected_output: "DEPRECATION: Mind loaded from external path"
+        validation_method: "log-inspection"
+
+      - check_id: "error-message-clear"
+        description: "Clear error when neither location exists"
+        type: "functional-test"
+        test_scenario: "Temporarily rename both locations"
+        expected_output: "Mind 'pedro_valerio' not found in any location"
+        validation_method: "error-message-check"
+
+  # ----------------------------------------------------------------------------
+  # Gate 3: Test Regression
+  # ----------------------------------------------------------------------------
+  - gate_id: "test-regression"
+    gate_name: "Test Regression Validation"
+    priority: "critical"
+    description: "Ensure all existing tests continue passing"
+
+    checks:
+      - check_id: "all-tests-passing"
+        description: "All 29 existing tests pass without regression"
+        type: "integration-test"
+        test_command: "npm test"
+        expected_result: "29/29 passing"
+        validation_method: "test-execution"
+        failure_threshold: 0
+
+      - check_id: "mind-loading-tests"
+        description: "Mind loading specific tests (6 tests)"
+        type: "unit-test"
+        test_command: "npm test -- tests/mind-loading.test.js"
+        expected_result: "6/6 passing"
+        validation_method: "test-execution"
+
+      - check_id: "workflow-integration-tests"
+        description: "Workflow orchestrator integration tests"
+        type: "integration-test"
+        test_command: "npm test -- tests/integration/workflow-orchestrator.test.js"
+        expected_result: "all-passing"
+        validation_method: "test-execution"
+
+      - check_id: "cognitive-utility-tests"
+        description: "All cognitive utility tests (43 tests)"
+        type: "integration-test"
+        test_files:
+          - "tests/coherence-scanner.test.js"
+          - "tests/future-backcaster.test.js"
+          - "tests/automation-checker.test.js"
+        expected_result: "43/43 passing"
+        validation_method: "test-execution"
+
+  # ----------------------------------------------------------------------------
+  # Gate 4: Performance Validation
+  # ----------------------------------------------------------------------------
+  - gate_id: "performance"
+    gate_name: "Performance Requirements"
+    priority: "high"
+    description: "Validate performance meets requirements"
+
+    checks:
+      - check_id: "first-load-performance"
+        description: "First mind load completes within threshold"
+        type: "performance-test"
+        metric: "first-load-time"
+        threshold: "100ms"
+        measurement_method: "timing-benchmark"
+        validation_method: "threshold-check"
+
+      - check_id: "cached-load-performance"
+        description: "Cached mind load completes within threshold"
+        type: "performance-test"
+        metric: "cached-load-time"
+        threshold: "10ms"
+        measurement_method: "timing-benchmark"
+        validation_method: "threshold-check"
+
+      - check_id: "no-performance-degradation"
+        description: "Performance not worse than Story 1.10 baseline"
+        type: "regression-test"
+        baseline_story: "1.10"
+        tolerance: "5%"
+        validation_method: "comparison-benchmark"
+
+  # ----------------------------------------------------------------------------
+  # Gate 5: Documentation Updates
+  # ----------------------------------------------------------------------------
+  - gate_id: "documentation"
+    gate_name: "Documentation Updates"
+    priority: "high"
+    description: "Verify all documentation updated correctly"
+
+    checks:
+      - check_id: "user-guide-config-section"
+        description: "USER-GUIDE.md Configuração section updated"
+        type: "content-validation"
+        file: "aios-fullstack/expansion-packs/hybrid-ops/USER-GUIDE.md"
+        section_lines: "74-87"
+        must_contain:
+          - "hybrid-ops/minds/pedro_valerio/"
+        validation_method: "text-search"
+
+      - check_id: "user-guide-references-section"
+        description: "USER-GUIDE.md Referências section updated"
+        type: "content-validation"
+        file: "aios-fullstack/expansion-packs/hybrid-ops/USER-GUIDE.md"
+        section_lines: "1539-1560"
+        must_contain:
+          - "hybrid-ops/minds/"
+        validation_method: "text-search"
+
+      - check_id: "installation-guide-updated"
+        description: "INSTALLATION.md reflects new structure"
+        type: "content-validation"
+        file: "aios-fullstack/expansion-packs/hybrid-ops/INSTALLATION.md"
+        must_contain:
+          - "minds/pedro_valerio"
+          - "co-located"
+        validation_method: "text-search"
+
+      - check_id: "migration-report-created"
+        description: "MIGRATION-REPORT.md created with details"
+        type: "file-system"
+        file: "aios-fullstack/expansion-packs/hybrid-ops/MIGRATION-REPORT.md"
+        status: "must-exist"
+        must_contain:
+          - "backward compatibility"
+          - "rollback"
+        validation_method: "file-exists-and-contains"
+
+  # ----------------------------------------------------------------------------
+  # Gate 6: Backward Compatibility
+  # ----------------------------------------------------------------------------
+  - gate_id: "backward-compatibility"
+    gate_name: "Backward Compatibility"
+    priority: "critical"
+    description: "Verify no breaking changes for existing users"
+
+    checks:
+      - check_id: "fresh-install-scenario"
+        description: "Fresh install works with new path only"
+        type: "scenario-test"
+        scenario: "Clean environment, install expansion pack"
+        expected_behavior: "Loads from hybrid-ops/minds/, no warnings"
+        validation_method: "manual-test"
+
+      - check_id: "upgrade-scenario"
+        description: "Upgrade scenario maintains functionality"
+        type: "scenario-test"
+        scenario: "Existing outputs/minds/ present, upgrade expansion pack"
+        expected_behavior: "Loads from hybrid-ops/minds/, old path ignored"
+        validation_method: "manual-test"
+
+      - check_id: "legacy-only-scenario"
+        description: "Legacy path still works (with warning)"
+        type: "scenario-test"
+        scenario: "Only outputs/minds/ exists, no new location"
+        expected_behavior: "Loads successfully with deprecation warning"
+        validation_method: "manual-test"
+
+      - check_id: "clean-error-scenario"
+        description: "Clear error when neither path exists"
+        type: "scenario-test"
+        scenario: "Neither old nor new location exists"
+        expected_behavior: "Clear error message, not cryptic failure"
+        validation_method: "error-message-check"
+
+  # ----------------------------------------------------------------------------
+  # Gate 7: Code Quality
+  # ----------------------------------------------------------------------------
+  - gate_id: "code-quality"
+    gate_name: "Code Quality Standards"
+    priority: "medium"
+    description: "Verify code follows existing patterns"
+
+    checks:
+      - check_id: "no-hardcoded-paths"
+        description: "No hardcoded paths in agent files"
+        type: "code-inspection"
+        files_pattern: "aios-fullstack/expansion-packs/hybrid-ops/agents/*.md"
+        must_not_contain:
+          - "outputs/minds/pedro_valerio"
+          - "C:\\Users"
+          - "/absolute/path"
+        validation_method: "grep-inverse"
+
+      - check_id: "mind-loader-abstraction-used"
+        description: "All code uses mind-loader.js abstraction"
+        type: "code-inspection"
+        files_to_check:
+          - "tools/coherence-scanner.js"
+          - "tools/future-backcaster.js"
+          - "tools/automation-checker.js"
+        must_use: "loadMind()"
+        validation_method: "function-usage-check"
+
+# ==============================================================================
+# ACCEPTANCE THRESHOLD
+# ==============================================================================
+
+acceptance_criteria:
+  threshold: "all-gates-passed"
+  critical_gates_required: true
+  high_priority_gates_required: true
+  medium_priority_gates_optional: false
+
+  gate_passing_rules:
+    - "All 'critical' priority gates must pass 100%"
+    - "All 'high' priority gates must pass 100%"
+    - "At least 80% of 'medium' priority gates must pass"
+
+# ==============================================================================
+# VALIDATION EXECUTION
+# ==============================================================================
+
+execution_plan:
+  phase_1:
+    name: "Quick Validation (5 min)"
+    gates: ["directory-structure", "test-regression"]
+
+  phase_2:
+    name: "Functional Validation (5 min)"
+    gates: ["mind-loader-functionality", "backward-compatibility"]
+
+  phase_3:
+    name: "Quality Validation (10 min)"
+    gates: ["performance", "documentation", "code-quality"]
+
+# ==============================================================================
+# REPORTING
+# ==============================================================================
+
+reporting:
+  format: "markdown"
+  output_file: "docs/qa/reports/1.16-validation-report.md"
+  include_sections:
+    - gate_results
+    - failed_checks
+    - performance_metrics
+    - recommendations
+
+  failure_actions:
+    - "Document failed checks in validation report"
+    - "Create follow-up tasks for fixes"
+    - "Update story status to BLOCKED if critical gates fail"
+
+# ==============================================================================
+# METADATA
+# ==============================================================================
+
+metadata:
+  created_date: "2025-01-21"
+  created_by: "Sarah (PO)"
+  story_reference: "docs/stories/1.16-hybrid-ops-mind-artifacts-colocation.md"
+  epic_reference: "docs/epics/1-hybrid-ops-pv-mind-integration.md"
+  validation_version: "1.0"
+
+  related_qa_gates:
+    - "1.15-hybrid-ops-git-migration.yml"  # Structure foundation
+    - "1.10-phase-4-performance-optimization.yml"  # Performance baselines
+    - "1.1-phase-1-foundation.yml"  # Mind loading infrastructure
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+
+notes: |
+  This QA gate validates Story 1.16 implementation. Key focus areas:
+
+  1. DUAL LOCATION: Both new and old locations must work
+  2. NO BREAKING CHANGES: Existing setups must continue functioning
+  3. PERFORMANCE: Must maintain <100ms/<10ms targets from Story 1.10
+  4. DOCUMENTATION: Must be clear enough for user self-service
+
+  Critical Success Factors:
+  - All 29 tests passing (zero regression tolerance)
+  - Backward compatibility fully functional
+  - Clear deprecation path documented
+
+  If any critical gate fails, Story 1.16 MUST NOT be marked complete.

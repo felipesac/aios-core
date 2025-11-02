@@ -1,0 +1,203 @@
+---
+id: "3.35"
+title: "Create Test File Template"
+epic: "3c-remediation"
+phase: "Epic 3: Architecture Gap Remediation"
+status: "Draft"
+priority: "medium"
+estimated_hours: 4
+actual_hours: 0
+created_by: "Sarah (@po) - Follow-up from Story 3.7"
+validated_by: []
+approval_date: null
+completed_date: null
+completed_by: null
+blocks: []
+blocked_by: []
+unblocked_by: "Story 3.7 identified missing template"
+
+# Story Context
+context: |
+  **EPIC 3 - GAP REMEDIATION**: Create missing test-file-tmpl.js template
+
+  This story addresses technical debt identified during Story 3.7 (Incomplete Workflows Part 1).
+
+  **Problem**: Task generate-tests.md needs test-file-tmpl.js template but it doesn't exist.
+
+  **Reference**: Story 3.7 completion notes and QA gate recommendation
+  - File: docs/qa/gates/3c.3.7-incomplete-workflow-completion-part-1.yml
+  - Recommendation: "Create test-file-tmpl.js template" (Medium priority, 2-4 hours)
+
+# User Story
+story: |
+  **As an** AIOS framework developer,
+  **I want** a test file template (test-file-tmpl.js) for generating test files,
+  **so that** the generate-tests task can create consistent, well-structured test files.
+
+# Acceptance Criteria
+acceptance_criteria:
+  technical_requirements:
+    - id: "TR-3.35.1"
+      description: "Create test-file-tmpl.js template file"
+      requirements:
+        - Template created at .aios-core/templates/test-file-tmpl.js
+        - Template includes standard test structure (describe blocks, test cases, setup/teardown)
+        - Template uses Jest/testing framework conventions
+        - Template includes placeholders for dynamic content ({{moduleName}}, {{testCases}}, etc.)
+        - Template includes common test patterns (mocking, assertions, edge cases)
+      validation: "Template file exists and is valid JavaScript"
+
+    - id: "TR-3.35.2"
+      description: "Update generate-tests task to reference template"
+      requirements:
+        - Remove TODO comment from generate-tests.md
+        - Uncomment template reference in task YAML frontmatter
+        - Update task documentation to explain template usage
+      validation: "Task file references test-file-tmpl.js in frontmatter"
+
+    - id: "TR-3.35.3"
+      description: "Validate template integration and usability"
+      requirements:
+        - Run gap detection to verify template is discoverable
+        - Test template rendering with sample module
+        - Verify generated test file is syntactically valid
+        - Document template placeholders and usage
+      validation: "Gap detection shows generate-tests has template reference; sample test file runs"
+
+# Tasks
+tasks:
+  - task: "Task 1: Analyze test requirements and patterns"
+    estimated_hours: 1
+    subtasks:
+      - "Review existing test files in tests/ and test/ directories"
+      - "Identify common test patterns (unit, integration, edge cases)"
+      - "Review generate-tests.md task to understand usage context"
+      - "Identify testing framework (Jest assumed, verify in package.json)"
+      - "Define template structure and placeholders"
+
+  - task: "Task 2: Create test-file-tmpl.js template"
+    estimated_hours: 2
+    subtasks:
+      - "Create .aios-core/templates/test-file-tmpl.js file"
+      - "Add file header with module import placeholders"
+      - "Add describe block with {{moduleName}} placeholder"
+      - "Add test case structure with {{testCases}} placeholder array"
+      - "Include common patterns: beforeEach/afterEach, mocking, assertions"
+      - "Add inline comments explaining each section"
+      - "Include examples of typical test scenarios (happy path, error handling, edge cases)"
+
+  - task: "Task 3: Integrate template with generate-tests task"
+    estimated_hours: 0.5
+    subtasks:
+      - "Update aios-fullstack/aios-core/tasks/generate-tests.md"
+      - "Remove TODO comment about missing template"
+      - "Uncomment template reference: test-file-tmpl.js"
+      - "Update task documentation to reference the new template"
+
+  - task: "Task 4: Validate and test"
+    estimated_hours: 0.5
+    subtasks:
+      - "Run: node outputs/architecture-map/schemas/detect-gaps.js"
+      - "Verify generate-tests now shows template reference"
+      - "Generate sample test file using template with test data"
+      - "Run generated test file to verify syntax validity"
+      - "Update story with completion notes"
+
+# Dev Notes
+dev_notes:
+  context_from_story_3_7: |
+    Story 3.7 identified this missing template and documented it with TODO comment:
+
+    File: aios-fullstack/aios-core/tasks/generate-tests.md
+    ```yaml
+    ---
+    # TODO: Create test-file-tmpl.js template (follow-up story needed)
+    # templates:
+    #   - test-file-tmpl.js  # Template doesn't exist yet
+    ---
+    ```
+
+  template_structure: |
+    Test file template should include:
+
+    ```javascript
+    // Auto-generated test file for {{moduleName}}
+    // Generated on {{timestamp}}
+
+    const {{moduleName}} = require('{{modulePath}}');
+
+    describe('{{moduleName}}', () => {
+      // Setup
+      beforeEach(() => {
+        // {{setupCode}}
+      });
+
+      // Teardown
+      afterEach(() => {
+        // {{teardownCode}}
+      });
+
+      // Test cases
+      {{#testCases}}
+      describe('{{functionName}}', () => {
+        test('{{testDescription}}', () => {
+          // {{testCode}}
+        });
+      });
+      {{/testCases}}
+
+      // Edge cases
+      describe('Edge Cases', () => {
+        // {{edgeCaseTests}}
+      });
+    });
+    ```
+
+  placeholder_list: |
+    Template placeholders to support:
+    - {{moduleName}}: Name of module under test
+    - {{modulePath}}: Import path for module
+    - {{timestamp}}: Generation timestamp
+    - {{setupCode}}: beforeEach setup code
+    - {{teardownCode}}: afterEach cleanup code
+    - {{testCases}}: Array of test case objects
+    - {{functionName}}: Name of function being tested
+    - {{testDescription}}: Description of what test validates
+    - {{testCode}}: Actual test implementation
+    - {{edgeCaseTests}}: Edge case test code
+
+  testing_framework_notes: |
+    Assume Jest testing framework:
+    - Use describe/test blocks
+    - Use beforeEach/afterEach for setup/teardown
+    - Use expect() assertions
+    - Include common patterns: toBe, toEqual, toThrow, etc.
+
+  files_to_create:
+    - ".aios-core/templates/test-file-tmpl.js"
+
+  files_to_modify:
+    - "aios-fullstack/aios-core/tasks/generate-tests.md"
+
+  validation_approach: |
+    1. Syntax validation: Run ESLint on template (may need to handle placeholders)
+    2. Render template with sample data and verify output is valid JavaScript
+    3. Run generated test file: `npm test -- generated-test.spec.js`
+
+# Change Log
+change_log:
+  - date: "2025-10-31"
+    version: "1.0.0"
+    description: "Story created as follow-up to Story 3.7 QA recommendations"
+    author: "Sarah (@po)"
+
+# Dev Agent Record (empty until implementation)
+dev_agent_record:
+  agent_model: null
+  session_date: null
+  workflow: null
+  debug_log_references: []
+  completion_notes: null
+  file_list:
+    created: []
+    modified: []
