@@ -5,6 +5,26 @@ All notable changes to AIOS-FULLSTACK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.32.0] - 2025-11-12
+
+### Removed
+- **hybrid-ops expansion pack** - Moved to separate repository for independent maintenance
+  - Removed `expansion-packs/hybrid-ops/` directory
+  - Removed `.hybrid-ops/` directory
+  - Updated `core-config.yaml` to reference external repository
+  - Updated `install-manifest.yaml` (removed 47 file entries)
+  - Repository: https://github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio
+
+### Changed
+- README.md - hybrid-ops now listed under "Expansion Packs Externos"
+- Expansion pack can now be installed independently via GitHub
+
+### Technical
+- Story: 4.6 - Move Hybrid-Ops to Separate Repository
+- Breaking Change: hybrid-ops no longer bundled with aios-fullstack
+- Migration: Users can install from external repo to `expansion-packs/hybrid-ops/`
+- Future: Story 4.7 will remove `expansion-packs/hybrid-ops.legacy/`
+
 ## [4.31.1] - 2025-10-22
 
 ### Added

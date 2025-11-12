@@ -384,12 +384,14 @@ pvMindContext:
     - documentation-writer-pv
 
 # Expansion Packs Configuration
+# Note: hybrid-ops moved to separate repository (Story 4.6 - 2025-11-12)
+# Install from: https://github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio
 expansionPacks:
-  hybridOps:
-    enabled: true
-    location: expansion-packs/hybrid-ops
-    readme: expansion-packs/hybrid-ops/README.md
-    agentsLocation: expansion-packs/hybrid-ops/agents
+  # hybridOps:  # MOVED TO SEPARATE REPO
+  #   enabled: false  # Now available at: github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio
+  #   location: expansion-packs/hybrid-ops
+  #   readme: expansion-packs/hybrid-ops/README.md
+  #   agentsLocation: expansion-packs/hybrid-ops/agents
 
 # Entity Registry (added in Story 2.13 - Gap Remediation Planning)
 # This section tracks all AIOS framework entities for discovery and validation

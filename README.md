@@ -587,8 +587,11 @@ Veja o [Guia de Expansion Packs](docs/expansion-packs.md) para instruções deta
 
 - **aios-infrastructure-devops** - Infraestrutura e DevOps
 - **expansion-creator** - Criador de expansion packs
-- **hybrid-ops** - Operações híbridas humano-agente
 - **meeting-notes** - Notas e atas de reuniões
+
+### Expansion Packs Externos
+
+- **[hybrid-ops](https://github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio)** - Operações híbridas humano-agente (repositório separado)
 
 Explore o diretório [expansion-packs/](expansion-packs/) para mais inspiração!
 
