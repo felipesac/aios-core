@@ -4,30 +4,6 @@
 
 # Learn Patterns - AIOS Developer Task
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 Learn patterns from successful modifications to improve future meta-agent suggestions and automation.
 
@@ -187,14 +163,14 @@ class LearnPatternsTask {
 
   async initializeDependencies() {
     try {
-      // const PatternLearner = require('../utils/pattern-learner'); // Archived in utils-archive/ (Story 3.1.3)
-      // this.patternLearner = new PatternLearner({ rootPath: this.rootPath }); // Archived in utils-archive/ (Story 3.1.3)
-      // await this.patternLearner.initialize(); // Archived in utils-archive/ (Story 3.1.3)
+      // const PatternLearner = require('../scripts/pattern-learner'); // Archived in archived-utilities/ (Story 3.1.3)
+      // this.patternLearner = new PatternLearner({ rootPath: this.rootPath }); // Archived in archived-utilities/ (Story 3.1.3)
+      // await this.patternLearner.initialize(); // Archived in archived-utilities/ (Story 3.1.3)
 
-      // const ModificationHistory = require('../utils/modification-history'); // Archived in utils-archive/ (Story 3.1.3)
-      // this.modificationHistory = new ModificationHistory({ rootPath: this.rootPath }); // Archived in utils-archive/ (Story 3.1.3)
+      // const ModificationHistory = require('../scripts/modification-history'); // Archived in archived-utilities/ (Story 3.1.3)
+      // this.modificationHistory = new ModificationHistory({ rootPath: this.rootPath }); // Archived in archived-utilities/ (Story 3.1.3)
 
-      const ComponentRegistry = require('../utils/component-registry');
+      const ComponentRegistry = require('../scripts/component-registry');
       this.componentRegistry = new ComponentRegistry({ rootPath: this.rootPath });
 
     } catch (error) {

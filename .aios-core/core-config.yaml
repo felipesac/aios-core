@@ -35,334 +35,7 @@ slashPrefix: AIOS
 
 # Resource Locations (added in documentation sync - 2025-10-22)
 toolsLocation: .aios-core/tools
-utilsLocation: .aios-core/utils
-
-# Utils Registry (Story 3.1.2 - Batch 2: A-D utilities)
-utils:
-  registry:
-    active:
-      - name: aios-validator.js
-        usage: Validation utilities for AIOS framework
-        primary_use: Story and component validation
-        status: active
-
-      - name: approval-workflow.js
-        usage: Required in analyze-impact.md task
-        primary_use: Approval workflow management
-        status: active
-
-      - name: backup-manager.js
-        usage: Required in improve-self.md task
-        primary_use: Backup and rollback operations
-        status: active
-
-      - name: batch-creator.js
-        usage: Imported in index.esm.js and index.js
-        primary_use: Batch operation management
-        status: active
-
-      - name: branch-manager.js
-        usage: Referenced in github-devops.md agent
-        primary_use: Git branch operations
-        status: active
-
-      - name: capability-analyzer.js
-        usage: Required in improve-self.md task
-        primary_use: Agent capability analysis
-        status: active
-
-      - name: clickup-helpers.js
-        usage: Required in pm-adapters/clickup-adapter.js
-        primary_use: ClickUp integration utilities
-        status: active
-
-      - name: code-quality-improver.js
-        usage: Required in improve-code-quality.md task
-        primary_use: Code quality improvements
-        status: active
-
-      - name: commit-message-generator.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Git commit message generation
-        status: active
-
-      - name: component-generator.js
-        usage: Imported in index files, required in create-agent.md
-        primary_use: Component generation and meta-agent operations
-        status: active
-
-      - name: component-metadata.js
-        usage: Required by component-generator.js
-        primary_use: Component metadata management
-        status: active
-
-      - name: component-search.js
-        usage: Imported in index files, referenced in analyze-framework.md
-        primary_use: Component discovery and search
-        status: active
-
-      - name: conflict-resolver.js
-        usage: Mentioned in README
-        primary_use: Conflict resolution patterns
-        status: active
-
-      - name: coverage-analyzer.js
-        usage: Required in generate-tests.md task
-        primary_use: Test coverage analysis
-        status: active
-
-      - name: dependency-analyzer.js
-        usage: Imported in index files, referenced in multiple tasks
-        primary_use: Dependency tracking and analysis
-        status: active
-
-      - name: dependency-impact-analyzer.js
-        usage: Required in analyze-impact.md task
-        primary_use: Impact analysis for dependencies
-        status: active
-
-      - name: documentation-synchronizer.js
-        usage: Required in sync-documentation.md task
-        primary_use: Documentation synchronization
-        status: active
-
-      # Story 3.1.3 - Batch 3: E-P utilities (active)
-      - name: elicitation-engine.js
-        usage: Imported in index.js
-        primary_use: Interactive elicitation workflows
-        status: active
-
-      - name: elicitation-session-manager.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Elicitation session management
-        status: active
-
-      - name: framework-analyzer.js
-        usage: Required in analyze-framework.md task
-        primary_use: Framework structure analysis
-        status: active
-
-      - name: git-wrapper.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Git operations wrapper
-        status: active
-
-      - name: improvement-engine.js
-        usage: Required in analyze-framework.md task
-        primary_use: Framework improvement suggestions
-        status: active
-
-      - name: improvement-validator.js
-        usage: Required in improve-self.md task
-        primary_use: Improvement validation
-        status: active
-
-      - name: migration-generator.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Migration script generation
-        status: active
-
-      - name: migration-path-generator.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Migration path planning
-        status: active
-
-      - name: modification-risk-assessment.js
-        usage: Required in analyze-impact.md task
-        primary_use: Risk assessment for modifications
-        status: active
-
-      - name: modification-validator.js
-        usage: Required by commit-message-generator.js and rollback-handler.js
-        primary_use: Modification validation
-        status: active
-
-      - name: performance-analyzer.js
-        usage: Required in analyze-framework.md task
-        primary_use: Performance analysis
-        status: active
-
-      - name: performance-optimizer.js
-        usage: Required in optimize-performance.md task
-        primary_use: Performance optimization
-        status: active
-
-      # Story 3.1.4 - Batch 4: R-Y utilities (active)
-      - name: refactoring-suggester.js
-        usage: Required in suggest-refactoring.md task
-        primary_use: Refactoring suggestions
-        status: active
-
-      - name: sandbox-tester.js
-        usage: Exists in utils/ (no active requires found)
-        primary_use: Sandbox testing functionality
-        status: active
-
-      - name: security-checker.js
-        usage: Referenced in multiple tasks for security validation
-        primary_use: Security analysis and validation
-        status: active
-
-      - name: status-mapper.js
-        usage: Required in story management tasks
-        primary_use: Status mapping and transitions
-        status: active
-
-      - name: story-manager.js
-        usage: Required in sync-story-to-clickup.md and pull-story-from-clickup.md tasks
-        primary_use: Story lifecycle management
-        status: active
-
-      - name: story-update-hook.js
-        usage: Referenced in story update workflows
-        primary_use: Story update event hooks
-        status: active
-
-      - name: test-generator.js
-        usage: Required in generate-tests.md task
-        primary_use: Test generation
-        status: active
-
-      - name: test-quality-assessment.js
-        usage: Referenced in QA workflows
-        primary_use: Test quality analysis
-        status: active
-
-      - name: test-template-system.js
-        usage: Referenced in test generation workflows
-        primary_use: Test template management
-        status: active
-
-      - name: transaction-manager.js
-        usage: Required in multiple tasks for transaction handling
-        primary_use: Transaction management and rollback
-        status: active
-
-      - name: usage-analytics.js
-        usage: Required in analyze-framework.md task
-        primary_use: Usage analytics and tracking
-        status: active
-
-      - name: visual-impact-generator.js
-        usage: Referenced in impact analysis workflows
-        primary_use: Visual impact analysis and reporting
-        status: active
-
-      - name: yaml-validator.js
-        usage: Required in component-generator.js and modification-validator.js
-        primary_use: YAML validation and schema checking
-        status: active
-
-    archived:
-      - name: change-propagation-predictor.js
-        reason: Archived but had active require() in analyze-impact.md (fixed in Story 3.1.2)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require statement commented out in Story 3.1.2
-
-      - name: compatibility-checker.js
-        reason: Node version checks (obsolete)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Not in Batch 2 story list (already archived before this story)
-
-      - name: component-preview.js
-        reason: Unused, no UI. Had active require() in component-generator.js (fixed in Story 3.1.2)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require statement commented out in Story 3.1.2
-
-      - name: conflict-manager.js
-        reason: Overlaps with conflict-resolver.js. Had active require() in collaborative-edit.md (fixed in Story 3.1.2)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require statement commented out in Story 3.1.2
-
-      - name: deprecation-manager.js
-        reason: Functionality replaced
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Correctly listed as archived in Story 3.1.2
-
-      - name: diff-generator.js
-        reason: Had active require() in review-proposal.md (fixed in Story 3.1.2)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require statement commented out in Story 3.1.2
-
-      # Story 3.1.3 - Batch 3: E-P utilities (archived)
-      - name: manifest-preview.js
-        reason: Had active require() in component-generator.js (fixed in Story 3.1.3)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require and instantiation commented out in Story 3.1.3
-
-      - name: metrics-tracker.js
-        reason: Archived in Story 3.18
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require already commented out in Story 3.18
-
-      - name: migration-rollback.js
-        reason: Archived (unused functionality)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: No active requires found in Story 3.1.3
-
-      - name: migration-tester.js
-        reason: Archived (unused functionality)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: No active requires found in Story 3.1.3
-
-      - name: modification-history.js
-        reason: Had active require() in learn-patterns.md (fixed in Story 3.1.3)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require and instantiation commented out in Story 3.1.3
-
-      - name: modification-synchronizer.js
-        reason: Had active require() in collaborative-edit.md (fixed in Story 3.1.3)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require and instantiation commented out in Story 3.1.3
-
-      - name: pattern-learner.js
-        reason: Had active require() in learn-patterns.md (fixed in Story 3.1.3)
-        archived_date: 2025-10-XX
-        location: utils-archive/
-        note: Require and instantiation commented out in Story 3.1.3
-
-      # Story 3.1.4 - Batch 4: R-Y utilities (archived)
-      - name: redundancy-analyzer.js
-        reason: Already archived. Had active require() in analyze-framework.md (fixed in Story 3.1.4)
-        archived_date: 2025-10-31
-        location: utils-archive/
-        note: Require and instantiation commented out in Story 3.1.4
-
-      - name: rollback-handler.js
-        reason: No active usage found - archived in Story 3.1.4
-        archived_date: 2025-10-31
-        location: utils-archive/
-        note: No requires found in codebase
-
-      - name: safe-removal-handler.js
-        reason: No active usage found - archived in Story 3.1.4
-        archived_date: 2025-10-31
-        location: utils-archive/
-        note: No requires found in codebase
-
-      - name: test-updater.js
-        reason: No active usage found - archived in Story 3.1.4
-        archived_date: 2025-10-31
-        location: utils-archive/
-        note: No requires found in codebase
-
-      - name: version-tracker.js
-        reason: No active usage found - archived in Story 3.1.4
-        archived_date: 2025-10-31
-        location: utils-archive/
-        note: No requires found in codebase
+scriptsLocation: .aios-core/scripts
 
 dataLocation: .aios-core/data
 elicitationLocation: .aios-core/elicitation
@@ -384,14 +57,35 @@ pvMindContext:
     - documentation-writer-pv
 
 # Expansion Packs Configuration
-# Note: hybrid-ops moved to separate repository (Story 4.6 - 2025-11-12)
-# Install from: https://github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio
 expansionPacks:
-  # hybridOps:  # MOVED TO SEPARATE REPO
-  #   enabled: false  # Now available at: github.com/Pedrovaleriolopez/aios-hybrid-ops-pedro-valerio
-  #   location: expansion-packs/hybrid-ops
-  #   readme: expansion-packs/hybrid-ops/README.md
-  #   agentsLocation: expansion-packs/hybrid-ops/agents
+  hybridOps:
+    enabled: true
+    location: expansion-packs/hybrid-ops
+    readme: expansion-packs/hybrid-ops/README.md
+    agentsLocation: expansion-packs/hybrid-ops/agents
+
+# Story Backlog Management (added 2025-11-11 - Fase 2: Agent Integration)
+storyBacklog:
+  enabled: true
+  backlogLocation: docs/STORY-BACKLOG.md
+  archiveLocation: docs/qa/backlog-archive
+  reviewSchedule: weekly  # weekly, biweekly, monthly
+  autoArchiveAfter: 30  # days after completion
+  taskDefinition: .aios-core/tasks/manage-story-backlog.md
+  itemTemplate: .aios-core/templates/story-backlog-item-tmpl.yaml
+  agents:
+    qa:
+      commands: [backlog-add, backlog-update, backlog-review]
+      auto_create_on_review: true
+      default_type: F  # follow-up
+    dev:
+      commands: [backlog-debt]
+      auto_create_on_debt: true
+      default_type: T  # technical-debt
+    po:
+      commands: [backlog-review, backlog-summary, backlog-prioritize, backlog-schedule]
+      review_day: Monday
+      review_time: "09:00"
 
 # Entity Registry (added in Story 2.13 - Gap Remediation Planning)
 # This section tracks all AIOS framework entities for discovery and validation
@@ -404,18 +98,24 @@ registry:
     description: "Agent persona definitions with YAML frontmatter"
 
   tasks:
-    count: 59
+    count: 60
     location: .aios-core/tasks
     format: markdown
     discoverable: true
     description: "Executable task workflows"
 
   templates:
-    count: 18
+    count: 20
     location: .aios-core/templates
     format: yaml
     discoverable: true
     description: "Document templates for stories, PRDs, architecture docs"
+    files:
+      - story-tmpl.yaml              # Standard development story template v2.0
+      - design-story-tmpl.yaml       # Design/research story template v1.0 (added 2025-01-14)
+      - prd-tmpl.md                  # Product requirements document template
+      - epic-tmpl.md                 # Epic template
+      # ... other templates
 
   checklists:
     count: 6
@@ -441,21 +141,13 @@ registry:
       format: yaml
       description: "Local tooling (FFmpeg, etc.)"
 
-  utils:
-    count: 54
-    location: .aios-core/utils
+  scripts:
+    count: 50
+    location: .aios-core/scripts
     format: javascript
     discoverable: true
     description: "Utility scripts for automation and framework operations"
-    notes: "Story 3.18: 28 deprecated utilities archived to .aios-core/utils-archive/"
-    files:
-      # Story 3.2: Template system utilities (orphaned gap remediation)
-      - template-engine.js          # Template rendering engine
-      - template-validator.js       # Template validation utility
-      - test-template-system.js     # Test template generation system
-      # Story 3.3: Tool management utilities (orphaned gap remediation)
-      - tool-resolver.js            # Tool resolution and discovery
-      # Note: tool-helper-executor.js and tool-validation-helper.js archived in Story 3.18
+    note: "Scripts are discovered automatically from filesystem - no manual registry needed"
 
   workflows:
     count: 0
@@ -497,9 +189,12 @@ registry:
 
 # Registry Metadata
 registry_metadata:
-  last_updated: "2025-10-30"
-  updated_by: "Story 3.16 - db-sage Integration"
-  total_entities: 313
+  last_updated: "2025-01-14"
+  updated_by: "Utils Registry Cleanup - Consolidated to scripts/, removed manual registry"
+  total_entities: 315
   source: "outputs/architecture-map/MASTER-RELATIONSHIP-MAP.json"
   validation_script: "outputs/architecture-map/schemas/detect-gaps.js"
-  notes: "Story 3.16: Integrated db-sage agent with 11 tasks and 6 templates for database architecture"
+  notes: |
+    2025-01-14 Utils Cleanup: Removed manual Utils Registry (328 lines), renamed utils to scripts in Entity Registry
+    2025-11-11 Story Backlog - Fase 2: Synced from ttcx-workflow-api (task: manage-story-backlog.md, template: story-backlog-item-tmpl.yaml, agents: @qa +3 cmds, @dev +1 cmd, @po +4 cmds)
+    Story 3.16: Integrated db-sage agent with 11 tasks and 6 templates for database architecture

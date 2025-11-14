@@ -6,27 +6,6 @@ tools:
 
 # Collaborative Edit - AIOS Developer Task
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 Create and manage collaborative editing sessions for real-time component modification with multiple participants.
 
@@ -178,12 +157,12 @@ class CollaborativeEditTask extends EventEmitter {
   }
 
   async initializeDependencies() {
-    // const ModificationSynchronizer = require('../utils/modification-synchronizer'); // Archived in utils-archive/ (Story 3.1.3)
-    // this.synchronizer = new ModificationSynchronizer({ rootPath: this.rootPath }); // Archived in utils-archive/ (Story 3.1.3)
-    // await this.synchronizer.initialize(); // Archived in utils-archive/ (Story 3.1.3)
+    // const ModificationSynchronizer = require('../scripts/modification-synchronizer'); // Archived in archived-utilities/ (Story 3.1.3)
+    // this.synchronizer = new ModificationSynchronizer({ rootPath: this.rootPath }); // Archived in archived-utilities/ (Story 3.1.3)
+    // await this.synchronizer.initialize(); // Archived in archived-utilities/ (Story 3.1.3)
 
-    // const ConflictManager = require('../utils/conflict-manager'); // Archived in utils-archive/ (Story 3.1.2)
-    // this.conflictManager = new ConflictManager({ rootPath: this.rootPath }); // Archived in utils-archive/ (Story 3.1.2)
+    // const ConflictManager = require('../scripts/conflict-manager'); // Archived in archived-utilities/ (Story 3.1.2)
+    // this.conflictManager = new ConflictManager({ rootPath: this.rootPath }); // Archived in archived-utilities/ (Story 3.1.2)
 
     await fs.mkdir(this.sessionDir, { recursive: true });
   }
