@@ -26,26 +26,7 @@ Ask user to confirm:
 Run migration in transaction that will be rolled back:
 
 ```bash
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 <<'
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-SQL'
+psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 \echo 'Starting dry-run...'
 \i {path}

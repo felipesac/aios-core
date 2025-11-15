@@ -178,7 +178,7 @@ If you need to restore an archived utility:
 
 1. **Copy file back**:
    ```bash
-   cp .aios-core/utils-archive/utility-name.js .aios-core/utils/
+   cp .aios-core/utils-archive/utility-name.js .aios-core/scripts/
    ```
 
 2. **Reinstall dependencies** (if needed):
@@ -193,7 +193,7 @@ If you need to restore an archived utility:
 
 4. **Test thoroughly**:
    ```bash
-   node .aios-core/utils/test-utilities.js
+   node .aios-core/scripts/test-utilities.js
    ```
 
 5. **Update Story 3.18**:
@@ -218,7 +218,7 @@ cp -r .backups/utils.backup-3.18-YYYYMMDD-HHMMSS .aios-core/utils
 
 **Selective Restoration**:
 ```bash
-cp .aios-core/utils-archive/specific-utility.js .aios-core/utils/
+cp .aios-core/utils-archive/specific-utility.js .aios-core/scripts/
 ```
 
 ---
@@ -233,10 +233,10 @@ For each utility in the deprecated list with 0 dependencies:
 
 ```bash
 # Use git mv to preserve history
-git mv .aios-core/utils/utility-name.js .aios-core/utils-archive/
+git mv .aios-core/scripts/utility-name.js .aios-core/utils-archive/
 
 # Or for multiple files:
-git mv .aios-core/utils/{aios-validator-fixed.js,aios-validator-refactored.js} .aios-core/utils-archive/
+git mv .aios-core/scripts/{aios-validator-fixed.js,aios-validator-refactored.js} .aios-core/utils-archive/
 ```
 
 **4.2 Move Misplaced Files** (Category D)
@@ -246,7 +246,7 @@ git mv .aios-core/utils/{aios-validator-fixed.js,aios-validator-refactored.js} .
 mkdir -p tests/utils
 
 # Move test files to proper location
-git mv .aios-core/utils/aios-validator.test.js tests/utils/
+git mv .aios-core/scripts/aios-validator.test.js tests/utils/
 ```
 
 **4.3 Update Archive README**
@@ -284,7 +284,7 @@ framework:
   entities:
     utils:
       count: 51  # Updated from 81
-      location: .aios-core/utils/
+      location: .aios-core/scripts/
 ```
 
 **5.2 Add Changelog Entry**
@@ -319,7 +319,7 @@ If any developer guides reference archived utilities, update them:
 Run framework validator to ensure no broken references:
 
 ```bash
-node .aios-core/utils/aios-validator.js
+node .aios-core/scripts/aios-validator.js
 ```
 
 Expected: 0 errors related to missing utilities
@@ -359,7 +359,7 @@ Expected: 0 references to archived utilities
 Re-run test-utilities.js to verify remaining utilities:
 
 ```bash
-node .aios-core/utils/test-utilities.js
+node .aios-core/scripts/test-utilities.js
 ```
 
 Expected: Only active utilities tested, no errors loading utilities
@@ -382,12 +382,12 @@ git checkout .aios-core/core-config.yaml
 
 **Selective Restoration**:
 ```bash
-cp .aios-core/utils-archive/utility-name.js .aios-core/utils/
+cp .aios-core/utils-archive/utility-name.js .aios-core/scripts/
 ```
 
 **Verification**:
 ```bash
-node .aios-core/utils/aios-validator.js
+node .aios-core/scripts/aios-validator.js
 ```
 ```
 

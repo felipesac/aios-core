@@ -42,26 +42,7 @@ If user provides high-level intent (e.g., "add memory integration capability"):
 
 If user provides specific changes:
 - Validate change format and targets
-- Check for conflicts with existing structu
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-re
+- Check for conflicts with existing structure
 - Ensure changes maintain agent consistency
 
 ### 3. Dependency Resolution

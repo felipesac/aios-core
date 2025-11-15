@@ -60,28 +60,7 @@ ELICIT: Team Integration
 
 2. **Load and Parse Manifest**
    ```javascript
-   const manifestCont
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture)
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture';
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-ent = await fs.readFile(manifestPath, 'utf8');
+   const manifestContent = await fs.readFile(manifestPath, 'utf8');
    const manifest = yaml.load(manifestContent);
    
    // Validate structure

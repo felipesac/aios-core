@@ -31,11 +31,11 @@ High
 ## Implementation
 
 ```javascript
-const FrameworkAnalyzer = require('../utils/framework-analyzer');
-const UsageAnalytics = require('../utils/usage-analytics');
-const PerformanceAnalyzer = require('../utils/performance-analyzer');
-// const RedundancyAnalyzer = require('../utils/redundancy-analyzer'); // Archived - Story 3.1.4
-const ImprovementEngine = require('../utils/improvement-engine');
+const FrameworkAnalyzer = require('../scripts/framework-analyzer');
+const UsageAnalytics = require('../scripts/usage-analytics');
+const PerformanceAnalyzer = require('../scripts/performance-analyzer');
+// const RedundancyAnalyzer = require('../scripts/redundancy-analyzer'); // Archived - Story 3.1.4
+const ImprovementEngine = require('../scripts/improvement-engine');
 const fs = require('fs').promises;
 const path = require('path');
 const chalk = require('chalk');
@@ -442,30 +442,6 @@ ${analysis.improvement_suggestions.slice(0, 5).map((suggestion, index) =>
 `;
   }
 };
-```
-
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
 ```
 
 ## Usage Examples

@@ -32,7 +32,7 @@ Automatically synchronize documentation with code changes to ensure documentatio
 *sync-documentation --check
 
 # Sync specific component
-*sync-documentation --component aios-core/utils/pattern-learner.js
+*sync-documentation --component aios-core/scripts/pattern-learner.js
 
 # Sync all components with specific strategies
 *sync-documentation --all --strategies jsdoc,examples
@@ -151,7 +151,7 @@ class SyncDocumentationTask {
 
   async initializeDependencies() {
     try {
-      const DocumentationSynchronizer = require('../utils/documentation-synchronizer');
+      const DocumentationSynchronizer = require('../scripts/documentation-synchronizer');
       this.documentationSynchronizer = new DocumentationSynchronizer({ 
         rootPath: this.rootPath,
         autoSync: false // We'll manage auto-sync manually
@@ -175,28 +175,7 @@ class SyncDocumentationTask {
   }
 
   async checkSyncStatus(config) {
-    console.log(chalk.blue('🔍 Checking documen
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
-tation sync status...\n'));
+    console.log(chalk.blue('🔍 Checking documentation sync status...\n'));
 
     const components = this.documentationSynchronizer.syncedComponents;
     const outOfSync = [];

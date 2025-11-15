@@ -80,7 +80,12 @@ If any required information is missing, list the missing information and ask the
 
 If using brownfield-architecture.md from document-project:
 
-- **Technical D
+- **Technical Debt Section**: Note any workarounds affecting this story
+- **Key Files Section**: Identify files that will need modification
+- **Integration Points**: Find existing integration patterns
+- **Known Issues**: Check if story touches problematic areas
+- **Actual Tech Stack**: Verify versions and constraints
+
 ## Configuration Dependencies
 
 This task requires the following configuration keys from `core-config.yaml`:
@@ -98,12 +103,6 @@ const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
 
 const qaLocation = config.qa?.qaLocation || 'docs/qa';
 ```
-
-ebt Section**: Note any workarounds affecting this story
-- **Key Files Section**: Identify files that will need modification
-- **Integration Points**: Find existing integration patterns
-- **Known Issues**: Check if story touches problematic areas
-- **Actual Tech Stack**: Verify versions and constraints
 
 #### 2.2 From Brownfield PRD
 
@@ -217,6 +216,201 @@ Example task structure for brownfield:
   - [ ] Integration test for {{integration point}}
   - [ ] Update existing tests if needed
 ```
+
+#### 4.4 Predict Quality Requirements and Agent Assignment
+
+**CRITICAL FOR BROWNFIELD:** This step populates the `🤖 CodeRabbit Integration` section with brownfield-specific quality gates. Brownfield stories have HIGHER RISK due to integration complexity, so quality planning is essential.
+
+**Integration Point Analysis:**
+
+Analyze the story's integration risks based on:
+- What existing functionality will be modified?
+- How many integration points are affected?
+- Is this touching core/critical functionality?
+- What is the blast radius of potential bugs?
+
+**Brownfield-Specific Agent Assignment Rules:**
+
+**If modifying existing database:**
+- **Assign**: @db-sage, @dev
+- **Rationale**: Database changes in brownfield require expert review for:
+  - Existing data migration impacts
+  - RLS policy compatibility
+  - Index performance on existing data
+  - Foreign key constraint conflicts
+- **Quality Gates**: Pre-Commit (schema validation), Pre-PR (SQL review), Pre-Deployment (migration testing)
+
+**If changing existing APIs:**
+- **Assign**: @architect, @dev
+- **Rationale**: API changes risk breaking existing clients:
+  - Backward compatibility validation
+  - Contract versioning requirements
+  - Breaking change identification
+  - Client impact assessment
+- **Quality Gates**: Pre-Commit (contract validation), Pre-PR (backward compat check)
+
+**If touching deployment/infrastructure:**
+- **Assign**: @github-devops, @dev
+- **Rationale**: Infrastructure changes need rollback safety:
+  - Environment-specific configuration validation
+  - Rollback procedure verification
+  - Zero-downtime deployment planning
+  - Feature flag implementation if needed
+- **Quality Gates**: Pre-Commit (config validation), Pre-Deployment (deep scan with rollback plan)
+
+**If affecting existing UI/UX:**
+- **Assign**: @ux-expert, @dev
+- **Rationale**: UI changes must maintain user experience consistency:
+  - Design system compliance
+  - Accessibility standards maintained
+  - User workflow continuity
+  - Browser compatibility preserved
+- **Quality Gates**: Pre-Commit (a11y validation), Pre-PR (UX consistency check)
+
+**Risk-Based Quality Gate Determination:**
+
+**HIGH RISK** (affects core functionality, many integration points, production-critical):
+- **Quality Gates**: Pre-Commit + Pre-PR + Pre-Deployment
+- **Additional Requirements**:
+  - Feature flag implementation recommended
+  - Phased rollout strategy
+  - Detailed rollback procedure
+  - Monitoring and alerting plan
+- **Focus Areas**:
+  - Regression prevention (existing functionality MUST work)
+  - Integration safety (new code doesn't break old code)
+  - Rollback readiness (changes are reversible)
+  - Performance impact (no degradation to existing features)
+
+**MEDIUM RISK** (new feature with isolated scope, some integration):
+- **Quality Gates**: Pre-Commit + Pre-PR
+- **Additional Requirements**:
+  - Integration testing with existing features
+  - Unit tests for new and affected code
+  - Documentation updates
+- **Focus Areas**:
+  - Integration points validated
+  - Existing patterns followed
+  - Error handling comprehensive
+
+**LOW RISK** (documentation, tests only, isolated bug fix):
+- **Quality Gates**: Pre-Commit
+- **Additional Requirements**:
+  - Standard code review
+  - Basic testing
+- **Focus Areas**:
+  - Code quality standards
+  - Documentation clarity
+
+**CodeRabbit Focus for Brownfield:**
+
+Regardless of story type, ALL brownfield stories must include these focus areas:
+
+```yaml
+🤖 CodeRabbit Integration:
+
+  Story Type Analysis:
+    Primary Type: [Database|API|Frontend|Deployment|Security|Integration]
+    Secondary Type(s): [Additional types]
+    Complexity: [Low|Medium|High]
+    Risk Level: [LOW RISK|MEDIUM RISK|HIGH RISK] ← Brownfield-specific
+    Integration Points: [List of systems/components affected] ← Brownfield-specific
+
+  Specialized Agent Assignment:
+    Primary Agents:
+      - @dev (always required)
+      - @[integration-specific-agent] (based on affected systems)
+
+    Supporting Agents:
+      - @[supporting-agent-1] (if multiple systems)
+      - @[supporting-agent-2] (if cross-cutting concerns)
+
+  Quality Gate Tasks:
+    - [ ] Pre-Commit (@dev): Run `coderabbit --prompt-only -t uncommitted` before story complete
+    - [ ] Pre-PR (@github-devops): Run `coderabbit --prompt-only --base main` before PR creation
+    - [ ] Pre-Deployment (@github-devops): Run `coderabbit --prompt-only -t committed --base HEAD~10` before production deploy (HIGH RISK stories only)
+
+  CodeRabbit Focus Areas:
+    Primary Focus (Brownfield-Specific):
+      - Regression prevention: Existing functionality preserved
+      - Integration safety: New code doesn't break existing code
+      - Rollback readiness: Changes are reversible
+      - [Type-specific focus from detection rules]
+
+    Secondary Focus:
+      - [Type-specific focus areas]
+      - Performance impact: No degradation to existing features
+      - Error handling: Graceful degradation for integration failures
+```
+
+**Brownfield Example (HIGH RISK Database + API Story):**
+
+```yaml
+🤖 CodeRabbit Integration:
+
+  Story Type Analysis:
+    Primary Type: Database
+    Secondary Type(s): API
+    Complexity: High (schema changes + multiple API endpoints)
+    Risk Level: HIGH RISK (affects core payment processing functionality)
+    Integration Points:
+      - Payment service API
+      - Transaction database tables
+      - External payment gateway webhook
+      - User notification system
+
+  Specialized Agent Assignment:
+    Primary Agents:
+      - @dev (pre-commit reviews)
+      - @db-sage (schema changes, RLS policies, existing data migration)
+      - @architect (API contract changes, backward compatibility)
+
+    Supporting Agents:
+      - @github-devops (phased rollout, rollback procedure)
+
+  Quality Gate Tasks:
+    - [ ] Pre-Commit (@dev): Run before story complete
+    - [ ] Pre-PR (@github-devops): Run before PR creation
+    - [ ] Pre-Deployment (@github-devops): Run before production deploy with rollback plan validation
+
+  CodeRabbit Focus Areas:
+    Primary Focus (Brownfield-Specific):
+      - Regression prevention: Existing payment flows MUST work identically
+      - Integration safety: New schema compatible with existing queries
+      - Rollback readiness: Migration reversible without data loss
+      - Service filters on ALL queries (.eq('service', 'ttcx'))
+      - Schema compliance with existing patterns
+
+    Secondary Focus:
+      - API backward compatibility: v1 clients still supported
+      - Performance: No degradation to existing payment processing
+      - Error handling: Graceful fallback for gateway failures
+      - RLS policies: Consistent with existing security model
+      - Migration testing: Validated on copy of production data structure
+```
+
+**Integration-Specific Considerations:**
+
+When story involves specific integration patterns:
+
+**Database Integration:**
+- Focus: Existing data compatibility, migration safety, RLS policy consistency
+- Validation: Run migration on production-like data, verify all existing queries still work
+
+**API Integration:**
+- Focus: Contract versioning, backward compatibility, client impact assessment
+- Validation: Integration tests with existing API clients, contract testing
+
+**Frontend Integration:**
+- Focus: User workflow continuity, design system compliance, accessibility preservation
+- Validation: Visual regression testing, user acceptance testing on existing flows
+
+**External System Integration:**
+- Focus: Graceful degradation, retry logic, error handling, monitoring
+- Validation: Failure scenario testing, circuit breaker validation
+
+**Log Completion:**
+- After populating this section, log: "✅ Brownfield story analysis complete: [Primary Type] | Risk Level: [RISK] | Integration Points: [count] | Agents assigned: [agent list]"
 
 ### 5. Risk Assessment and Mitigation
 

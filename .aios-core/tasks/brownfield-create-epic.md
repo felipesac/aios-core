@@ -99,13 +99,66 @@ Create a focused epic following this structure:
 - How it integrates: {{integration approach}}
 - Success criteria: {{measurable outcomes}}
 
-#### Stories
+#### Stories (Enhanced with Quality Planning)
 
-List 1-3 focused stories that complete the epic:
+List 1-3 focused stories that complete the epic, including predicted quality gates and specialized agent assignments:
 
-1. **Story 1:** {{Story title and brief description}}
-2. **Story 2:** {{Story title and brief description}}
-3. **Story 3:** {{Story title and brief description}}
+**Story Structure with Quality Predictions:**
+
+Each story should include:
+- Story title and brief description
+- Predicted specialized agents (based on story type)
+- Quality gates (Pre-Commit, Pre-PR, Pre-Deployment if applicable)
+
+**Examples:**
+
+1. **Story 1: {{Database Migration Story}}**
+   - Description: {{Add new table for feature X with RLS policies}}
+   - **Predicted Agents**: @dev, @db-sage (database changes require expert SQL review)
+   - **Quality Gates**:
+     - Pre-Commit: Schema validation, service filter verification
+     - Pre-PR: SQL review, migration safety check
+   - **Focus**: Service filters (.eq('service', 'ttcx')), RLS policies, foreign keys
+
+2. **Story 2: {{API Integration Story}}**
+   - Description: {{Create REST endpoint for feature X}}
+   - **Predicted Agents**: @dev, @architect (if new patterns)
+   - **Quality Gates**:
+     - Pre-Commit: Security scan, error handling validation
+     - Pre-PR: API contract validation, backward compatibility check
+   - **Focus**: Input validation, authentication, error responses
+
+3. **Story 3: {{Deployment Story}}**
+   - Description: {{Deploy feature X to production with configuration}}
+   - **Predicted Agents**: @dev, @github-devops (deployment coordination)
+   - **Quality Gates**:
+     - Pre-Commit: Configuration validation
+     - Pre-PR: Environment consistency check
+     - Pre-Deployment: Full security scan, rollback plan validation
+   - **Focus**: Secrets management, environment config, zero-downtime deployment
+
+**Agent Assignment Guide for Epic Planning:**
+
+When breaking down epic into stories, predict agents based on:
+
+- **Database Changes** → Include @db-sage in story planning
+- **API/Backend Changes** → Include @architect for contract review
+- **Frontend/UI Changes** → Include @ux-expert for accessibility
+- **Deployment/Infrastructure** → Include @github-devops for coordination
+- **Security Features** → Ensure @dev focuses on OWASP validation
+
+**Quality Gate Prediction Guidance:**
+
+- **All Stories**: Must include Pre-Commit review (@dev)
+- **Stories Creating PRs**: Include Pre-PR validation (@github-devops)
+- **Production Deployments**: Include Pre-Deployment scan (@github-devops)
+- **HIGH RISK Stories**: Consider feature flags and phased rollout
+
+This quality planning during epic creation ensures:
+- Story creators know which agents to consult
+- Quality gates are planned upfront, not retrofitted
+- Risk-appropriate validation is built into each story
+- Specialized expertise is allocated correctly
 
 #### Compatibility Requirements
 
@@ -119,6 +172,44 @@ List 1-3 focused stories that complete the epic:
 - **Primary Risk:** {{main risk to existing system}}
 - **Mitigation:** {{how risk will be addressed}}
 - **Rollback Plan:** {{how to undo changes if needed}}
+
+**Quality Assurance Strategy:**
+
+Proactive quality validation reduces risk to existing systems:
+
+- **CodeRabbit Validation**: All stories include pre-commit reviews
+  - Database stories: @db-sage validates schema compliance, service filters, RLS policies
+  - API stories: @architect validates contracts, backward compatibility
+  - Deployment stories: @github-devops validates configuration, rollback readiness
+
+- **Specialized Expertise**: Agent assignment ensures domain experts review relevant changes
+  - Prevents architectural drift
+  - Catches integration issues early
+  - Validates security considerations
+  - Ensures accessibility standards
+
+- **Quality Gates Aligned with Risk**:
+  - LOW RISK: Pre-Commit validation only
+  - MEDIUM RISK: Pre-Commit + Pre-PR validation
+  - HIGH RISK: Pre-Commit + Pre-PR + Pre-Deployment validation
+
+- **Regression Prevention**:
+  - Each story includes tasks to verify existing functionality
+  - Integration tests validate compatibility
+  - Performance testing prevents degradation
+  - Feature flags enable safe rollout if needed
+
+**Example Quality Risk Mitigation:**
+
+For an epic adding payment processing:
+- Risk: Breaking existing checkout flow
+- Quality Mitigation:
+  - @db-sage reviews schema changes for payment tables
+  - @architect validates API contracts with existing payment gateway
+  - Pre-Deployment scan validates no hardcoded secrets
+  - Phased rollout: 5% → 25% → 50% → 100% of users
+  - Monitoring alerts on transaction failures
+  - 1-click rollback procedure documented and tested
 
 #### Definition of Done
 

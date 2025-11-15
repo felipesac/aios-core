@@ -10,28 +10,6 @@
 
 Provide a user-friendly interface to the AIOS knowledge base without overwhelming users with information upfront.
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Required to read/write architecture documentation
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture'; // architectureShardedLocation
-```
-
 ## Instructions
 
 When entering KB mode (*kb-mode), follow these steps:

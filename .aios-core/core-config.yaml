@@ -87,6 +87,23 @@ storyBacklog:
       review_day: Monday
       review_time: "09:00"
 
+# Project Status Configuration (Story 6.1.2.4)
+# Dynamic project status display in agent greetings
+projectStatus:
+  enabled: true
+  autoLoadOnAgentActivation: true
+  showInGreeting: true
+  cacheTimeSeconds: 60
+  components:
+    gitBranch: true
+    gitStatus: true
+    recentWork: true
+    currentEpic: true
+    currentStory: true
+  statusFile: .aios/project-status.yaml
+  maxModifiedFiles: 5  # Show only first 5 modified files
+  maxRecentCommits: 2  # Show only 2 most recent commits
+
 # Entity Registry (added in Story 2.13 - Gap Remediation Planning)
 # This section tracks all AIOS framework entities for discovery and validation
 registry:

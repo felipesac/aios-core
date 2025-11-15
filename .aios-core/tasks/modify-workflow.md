@@ -67,30 +67,7 @@ phases:
     
   # New phase insertion
   architecture_review:  # NEW
-    sequence: 1.5      # Inserted between planning
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`prdShardedLocation`**: Location for sharded PRD documents (typically docs/prd)
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture)
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const prdShardedLocation = config.prdShardedLocation || 'docs/prd';
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture';
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
- and architecture
+    sequence: 1.5      # Inserted between planning and architecture
     agents: [architect, qa]
     artifacts: [architecture-review-doc]
     entry_criteria: ["PRD approved"]

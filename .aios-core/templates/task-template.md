@@ -4,6 +4,43 @@
 > Agent: {{AGENT_NAME}}
 > Version: {{VERSION}}
 
+---
+
+## ⚠️ NAMING CONVENTION
+
+**CRITICAL:** This task follows AIOS-FULLSTACK naming convention.
+
+### Agent-Specific Tasks
+If this task is specific to **{{AGENT_NAME}}**, the filename MUST be:
+```
+{{AGENT_ID}}-{{BASE_TASK_NAME}}.md
+```
+
+**Example:** For `ux-design-expert` agent, a user research task should be:
+```
+✅ ux-user-research.md
+❌ user-research.md
+```
+
+### Shared Tasks
+If this task is used by **multiple agents**, the filename should NOT have agent prefix:
+```
+{{TASK_NAME}}.md
+```
+
+**Example:** A documentation task used by `pm`, `po`, and `sm`:
+```
+✅ create-doc.md
+❌ pm-create-doc.md
+```
+
+### How to Apply
+- Use the `*create-task` command which automatically applies naming convention
+- The elicitation process will ask for agent(s) and apply the correct format
+- See: `.aios-core/tasks/create-task.md` for details
+
+---
+
 ## Description
 {{TASK_DESCRIPTION}}
 

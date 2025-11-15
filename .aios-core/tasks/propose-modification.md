@@ -35,7 +35,7 @@ Create and submit modification proposals for collaborative review and approval w
 *propose-modification aios-core/agents/weather-agent.md enhance --title "Add caching support" --description "Implement response caching to reduce API calls" --priority medium
 
 # Propose critical refactoring with impact analysis
-*propose-modification aios-core/utils/core-utility.js refactor --title "Optimize performance" --priority critical --impact-analysis --assignees "alice,bob"
+*propose-modification aios-core/scripts/core-utility.js refactor --title "Optimize performance" --priority critical --impact-analysis --assignees "alice,bob"
 
 # Create draft proposal for workflow deprecation
 *propose-modification aios-core/workflows/legacy-workflow.yaml deprecate --draft --title "Deprecate legacy workflow" --link-issues "123,456"
@@ -167,28 +167,7 @@ class ProposeModificationTask {
         config.description = params[++i];
       } else if (param.startsWith('--priority') && params[i + 1]) {
         config.priority = params[++i];
-      } el
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
-se if (param.startsWith('--tags') && params[i + 1]) {
+      } else if (param.startsWith('--tags') && params[i + 1]) {
         config.tags = params[++i].split(',').map(t => t.trim());
       } else if (param.startsWith('--assignees') && params[i + 1]) {
         config.assignees = params[++i].split(',').map(a => a.trim());
@@ -210,13 +189,13 @@ se if (param.startsWith('--tags') && params[i + 1]) {
 
   async initializeDependencies() {
     try {
-      const ProposalSystem = require('../utils/proposal-system');
+      const ProposalSystem = require('../scripts/proposal-system');
       this.proposalSystem = new ProposalSystem({ rootPath: this.rootPath });
 
-      const ImpactAnalyzer = require('../utils/dependency-impact-analyzer');
+      const ImpactAnalyzer = require('../scripts/dependency-impact-analyzer');
       this.impactAnalyzer = new ImpactAnalyzer({ rootPath: this.rootPath });
 
-      const NotificationService = require('../utils/notification-service');
+      const NotificationService = require('../scripts/notification-service');
       this.notificationService = new NotificationService({ rootPath: this.rootPath });
 
     } catch (error) {

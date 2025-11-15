@@ -65,34 +65,6 @@ If the user has @kayvan/markdown-tree-parser installed, use it and skip the manu
 
 ---
 
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories) - May reference sharded documents
-- **`prdShardedLocation`**: Location for sharded PRD documents (typically docs/prd) - Target for PRD sharding
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Target for architecture sharding
-- **`markdownExploder`**: Boolean flag to enable/disable md-tree automatic sharding
-- **`core-config`**: Direct reference to core configuration file
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const markdownExploder = config.markdownExploder || false;
-const prdShardedLocation = config.prdShardedLocation || 'docs/prd';
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture';
-const qaLocation = config.qa?.qaLocation || 'docs/qa'; // qaLocation
-```
-
----
-
 ## Manual Method (if @kayvan/markdown-tree-parser is not available or user indicated manual method)
 
 ### Task Instructions

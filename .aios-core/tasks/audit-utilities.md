@@ -29,7 +29,7 @@ const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
 
 ## Purpose
 
-Systematically audit all utilities in `.aios-core/utils/` to determine their functional status, classify them as WORKING/FIXABLE/DEPRECATED, and generate actionable recommendations for maintenance and cleanup.
+Systematically audit all utilities in `.aios-core/scripts/` to determine their functional status, classify them as WORKING/FIXABLE/DEPRECATED, and generate actionable recommendations for maintenance and cleanup.
 
 ## Classification Criteria
 
@@ -58,7 +58,7 @@ Systematically audit all utilities in `.aios-core/utils/` to determine their fun
 Execute the test-utilities.js script to test all utilities:
 
 ```bash
-node .aios-core/utils/test-utilities.js
+node .aios-core/scripts/test-utilities.js
 ```
 
 This will:
@@ -73,7 +73,7 @@ Run integration scan to find utility usage:
 
 ```bash
 # For each utility, count references in agents and tasks
-for util in .aios-core/utils/*.js; do
+for util in .aios-core/scripts/*.js; do
   name=$(basename $util .js)
   count=$(grep -r "$name" .aios-core/agents .aios-core/tasks expansion-packs 2>/dev/null | wc -l)
   echo "$name: $count references"

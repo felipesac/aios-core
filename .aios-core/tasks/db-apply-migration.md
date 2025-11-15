@@ -47,26 +47,7 @@ mkdir -p supabase/snapshots supabase/rollback
 pg_dump "$SUPABASE_DB_URL" --schema-only --clean --if-exists \
   > "supabase/snapshots/${TS}_before.sql"
 
-echo "✓ Pre-migration snapshot: supabase/snapshots/${TS}_befo
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-re.sql"
+echo "✓ Pre-migration snapshot: supabase/snapshots/${TS}_before.sql"
 echo $TS > /tmp/dbsage_migration_ts
 ```
 

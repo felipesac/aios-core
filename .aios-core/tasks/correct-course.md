@@ -16,30 +16,6 @@ checklists:
 - Produce a consolidated "Sprint Change Proposal" document that contains the impact analysis and the clearly drafted proposed edits for user review and approval.
 - Ensure a clear handoff path if the nature of the changes necessitates fundamental replanning by other core agents (like PM or Architect).
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`prdShardedLocation`**: Location for sharded PRD documents (typically docs/prd) - Required to access product requirements
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Required to read/write architecture documentation
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const prdShardedLocation = config.prdShardedLocation || 'docs/prd'; // prdShardedLocation
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture'; // architectureShardedLocation
-```
-
 ## Instructions
 
 ### 1. Initial Setup & Mode Selection

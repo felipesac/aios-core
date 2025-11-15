@@ -1,12 +1,17 @@
 ---
+# Template selection determined dynamically during task execution
+# User selects from available templates in .aios-core/templates/
 tools:
-  - github-cli
-# TODO: Create documentation-checklist.md for validation (follow-up story needed)
-# checklists:
-#   - documentation-checklist.md
+  - github-cli        # For file operations
+utils:
+  - template-engine
+  - template-validator
 ---
 
 # Create Document from Template (YAML Driven)
+
+## Execution Dependencies
+**Utils:** template-engine, template-validator
 
 ## ⚠️ CRITICAL EXECUTION NOTICE ⚠️
 
@@ -42,25 +47,6 @@ If a YAML Template has not been provided, list all templates from .aios-core/tem
 **WORKFLOW VIOLATION:** Creating content for elicit=true sections without user interaction violates this task.
 
 **NEVER ask yes/no questions or use any other format.**
-
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-```
 
 ## Processing Flow
 

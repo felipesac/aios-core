@@ -162,25 +162,6 @@ ELICIT: Resources and Dependencies
 🚀 To use: Select workflow when starting new project
 ```
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-```
-
 ## Workflow Execution Notes
 - Workflows are selected during project initialization
 - Each stage execution is logged in memory

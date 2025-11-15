@@ -10,34 +10,6 @@ tools:
 
 # Document an Existing Project
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`prdShardedLocation`**: Location for sharded PRD documents (typically docs/prd) - Required to access product requirements
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Required to read/write architecture documentation
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const prdShardedLocation = config.prdShardedLocation || 'docs/prd'; // prdShardedLocation
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture'; // architectureShardedLocation
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 
 Generate comprehensive documentation for existing projects optimized for AI development agents. This task creates structured reference materials that enable AI agents to understand project context, conventions, and patterns for effective contribution to any codebase.
@@ -198,7 +170,7 @@ project-root/
 │   ├── controllers/     # HTTP request handlers
 │   ├── services/        # Business logic (NOTE: inconsistent patterns between user and payment services)
 │   ├── models/          # Database models (Sequelize)
-│   ├── utils/           # Mixed bag - needs refactoring
+│   ├── scripts/           # Mixed bag - needs refactoring
 │   └── legacy/          # DO NOT MODIFY - old payment system still in use
 ├── tests/               # Jest tests (60% coverage)
 ├── scripts/             # Build and deployment scripts
@@ -308,7 +280,7 @@ Based on the enhancement requirements, these files will be affected:
 ### Integration Considerations
 
 - Will need to integrate with existing auth middleware
-- Must follow existing response format in `src/utils/responseFormatter.js`
+- Must follow existing response format in `src/scripts/responseFormatter.js`
 - [Other integration points]
 
 ## Appendix - Useful Commands and Scripts

@@ -129,26 +129,7 @@ Rows: Estimated XXX, Actual YYY
 
 ## Common Performance Issues
 
-### Issue 1: Sequential S
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-can on Large Table
+### Issue 1: Sequential Scan on Large Table
 
 ```
 Seq Scan on fragments  (cost=0.00..10000 rows=1000000)

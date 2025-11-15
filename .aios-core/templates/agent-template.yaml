@@ -2,6 +2,33 @@
 # This template is used by aios-developer to create new agents
 # Variables are replaced during generation: {{VARIABLE_NAME}}
 
+###############################################################################
+# NAMING CONVENTION FOR "{{AGENT_ID}}" AGENT
+###############################################################################
+#
+# CRITICAL: All dependencies specific to this agent MUST follow naming convention:
+#
+#   Workflows:  {{AGENT_ID}}-{workflow-name}.yaml
+#   Tasks:      {{AGENT_ID}}-{task-name}.md
+#   Templates:  {{AGENT_ID}}-{template-name}.yaml
+#   Checklists: {{AGENT_ID}}-{checklist-name}.md
+#   Scripts:    {{AGENT_ID}}-{script-name}.js
+#
+# Examples for this agent:
+#   ✅ {{AGENT_ID}}-greenfield-ui.yaml (workflow)
+#   ✅ {{AGENT_ID}}-user-research.md (task)
+#   ✅ {{AGENT_ID}}-report-tmpl.yaml (template)
+#   ✅ {{AGENT_ID}}-validation-checklist.md (checklist)
+#   ✅ {{AGENT_ID}}-connection-manager.js (script)
+#
+# SHARED dependencies (used by multiple agents) do NOT use agent prefix:
+#   ✅ create-doc.md (used by pm, po, sm)
+#   ✅ execute-checklist.md (used by qa, dev)
+#
+# Use *create-task command to automatically apply naming convention.
+#
+###############################################################################
+
 agent:
   name: "{{AGENT_NAME}}"
   id: "{{AGENT_ID}}"
@@ -34,6 +61,12 @@ commands:
 
 {{#IF_DEPENDENCIES}}
 dependencies:
+  {{#IF_WORKFLOWS}}
+  workflows:
+    {{#EACH_WORKFLOW_DEPS}}
+    - {{ITEM}}
+    {{/EACH_WORKFLOW_DEPS}}
+  {{/IF_WORKFLOWS}}
   {{#IF_TASKS}}
   tasks:
     {{#EACH_TASK_DEPS}}
@@ -58,6 +91,12 @@ dependencies:
     - {{ITEM}}
     {{/EACH_DATA_DEPS}}
   {{/IF_DATA}}
+  {{#IF_SCRIPTS}}
+  scripts:
+    {{#EACH_SCRIPTS_DEPS}}
+    - {{ITEM}}
+    {{/EACH_SCRIPTS_DEPS}}
+  {{/IF_SCRIPTS}}
   {{#IF_TOOLS}}
   tools:
     {{#EACH_TOOL_DEPS}}

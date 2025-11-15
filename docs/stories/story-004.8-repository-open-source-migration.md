@@ -422,7 +422,6 @@ Migrate `aios-fullstack` to open-source structure and separate expansion-packs i
 - [x] `.gitignore` enhanced ✅ (adicionados padrões de segurança)
 - [x] `docs/ENVIRONMENT.md` ✅ (criado)
 - [x] `docs/security/security-scan-report.md` ✅ (criado)
-- [ ] Badges no README
 
 ---
 

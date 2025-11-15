@@ -1,159 +1,330 @@
 ---
-# No checklists needed - this task facilitates brainstorming sessions, validation is through user interaction
-docOutputLocation: docs/brainstorming-session-results.md
-template: ".aios-core/templates/brainstorming-output-tmpl.yaml"
+id: facilitate-brainstorming-session
+name: Facilitate Brainstorming Session
+agent: aios-master
+category: collaboration
+complexity: medium
 tools:
-  - github-cli
+  - clickup        # Capture ideas and organize them
+  - mcp            # Call specialized agents for domain expertise
+checklists:
+  - aios-master-checklist.md
 ---
 
-# Facilitate Brainstorming Session Task
+# Facilitate Brainstorming Session
 
-Facilitate interactive brainstorming sessions with users. Be creative and adaptive in applying techniques.
+## Purpose
+
+To conduct a structured brainstorming session with multiple AI agents (and optionally human participants) to generate, categorize, and prioritize ideas for features, solutions, or strategic decisions.
+
+## Input
+
+### Required Parameters
+
+- **topic**: `string`
+  - **Description**: The challenge, opportunity, or question to brainstorm about
+  - **Example**: "How can we improve user onboarding for AIOS?"
+  - **Validation**: Must be at least 20 characters
+
+- **session_goal**: `string`
+  - **Description**: What outcome is desired from this session
+  - **Options**: `"ideation"` (generate many ideas), `"solution"` (solve a problem), `"strategy"` (strategic planning)
+  - **Default**: `"ideation"`
+
+### Optional Parameters
+
+- **participating_agents**: `array<string>`
+  - **Description**: Agent IDs to invite to the session
+  - **Default**: Auto-select based on topic (using brief analysis)
+  - **Example**: `["po", "architect", "ux-expert", "github-devops"]`
+
+- **time_limit**: `number`
+  - **Description**: Session duration in minutes
+  - **Default**: `30`
+  - **Range**: `10-60`
+
+- **output_format**: `string`
+  - **Description**: How to organize final output
+  - **Options**: `"categorized"` (by theme), `"prioritized"` (by value), `"actionable"` (with next steps)
+  - **Default**: `"categorized"`
+
+- **context_documents**: `array<string>`
+  - **Description**: Optional file paths for context (PRD, backlog, architecture docs)
+  - **Example**: `["docs/prd.md", "docs/backlog.md"]`
+
+## Output
+
+- **ideas**: `array<object>`
+  - **Structure**: `{ id, text, source_agent, category, priority, rationale }`
+  - **Description**: All generated ideas with metadata
+
+- **categories**: `array<object>`
+  - **Structure**: `{ name, ideas_count, top_ideas }`
+  - **Description**: Ideas grouped by theme
+
+- **prioritized_recommendations**: `array<object>`
+  - **Structure**: `{ idea, value_score, effort_estimate, roi, next_steps }`
+  - **Description**: Top 5-10 ideas with actionable next steps
+
+- **session_summary**: `object`
+  - **Structure**: `{ topic, duration, agents_participated, ideas_generated, key_insights }`
+  - **Description**: Session metadata and insights
+
+- **clickup_board_url**: `string` (optional)
+  - **Description**: ClickUp board with ideas organized (if ClickUp integration enabled)
 
 ## Process
 
-### Step 1: Session Setup
+### Phase 1: Setup & Context Loading (5 min)
 
-Ask 4 context questions (don't preview what happens next):
+1. **Load Context**
+   - If `context_documents` provided, read and summarize key points
+   - Extract relevant constraints, requirements, or goals
 
-1. What are we brainstorming about?
-2. Any constraints or parameters?
-3. Goal: broad exploration or focused ideation?
-4. Do you want a structured document output to reference later? (Default Yes)
+2. **Select Participating Agents**
+   - If `participating_agents` not provided:
+     - Analyze topic using brief analysis
+     - Identify relevant domains (e.g., "user onboarding" → ux-expert, po, copywriter)
+     - Auto-select 3-5 appropriate agents
+   - Log: "✅ Session participants: [agent list]"
 
-### Step 2: Present Approach Options
+3. **Define Session Structure**
+   - Based on `session_goal`:
+     - **Ideation**: Divergent thinking (generate maximum ideas)
+     - **Solution**: Convergent thinking (evaluate and refine)
+     - **Strategy**: Structured frameworks (SWOT, OKRs, etc.)
 
-After getting answers to Step 1, present 4 approach options (numbered):
+### Phase 2: Divergent Thinking - Idea Generation (10-15 min)
 
-1. User selects specific techniques
-2. Analyst recommends techniques based on context
-3. Random technique selection for creative variety
-4. Progressive technique flow (start broad, narrow down)
+4. **Round 1: Initial Ideas (5 min)**
+   - Prompt each agent: "Generate 3-5 ideas for: {topic}"
+   - Collect responses
+   - No evaluation yet (pure brainstorming)
 
-### Step 3: Execute Techniques Interactively
+5. **Round 2: Build on Ideas (5 min)**
+   - Share all ideas with agents
+   - Prompt: "Build on or remix existing ideas. Generate 2-3 new ideas inspired by what you see."
+   - Collect responses
 
-**KEY PRINCIPLES:**
+6. **Round 3: Wild Cards (2 min)**
+   - Prompt: "Generate 1-2 unconventional or 'what if' ideas"
+   - Encourage creative risk-taking
 
-- **FACILITATOR ROLE**: Guide user to generate their own ideas through questions, prompts, and examples
-- **CONTINUOUS ENGAGEMENT**: Keep user engaged with chosen technique until they want to switch or are satisfied
-- **CAPTURE OUTPUT**: If (default) document output requested, capture all ideas generated in each technique section to the document from the b
-## Configuration Dependencies
+### Phase 3: Convergent Thinking - Categorization (5-10 min)
 
-This task requires the following configuration keys from `core-config.yaml`:
+7. **Categorize Ideas**
+   - Use AI to identify themes/patterns
+   - Group ideas into 3-7 categories
+   - Example categories: "Quick Wins", "Big Bets", "Research Needed", "Technical Solutions", "UX Improvements"
 
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
+8. **Deduplicate & Merge**
+   - Identify similar ideas
+   - Merge or link related concepts
 
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
+### Phase 4: Evaluation & Prioritization (5-10 min)
 
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+9. **Score Ideas** (if `output_format: "prioritized"`)
+   - Criteria:
+     - **Value**: Impact on users/business (1-10)
+     - **Effort**: Development complexity (1-10)
+     - **ROI**: Value/Effort ratio
+     - **Alignment**: Fits strategy/goals (1-10)
+   - Calculate aggregate scores
 
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
+10. **Select Top Ideas**
+    - Identify top 5-10 ideas based on scores
+    - For each, generate:
+      - **Rationale**: Why this idea is valuable
+      - **Next Steps**: Concrete actions to pursue it
+
+### Phase 5: Documentation & Actionability (5 min)
+
+11. **Create Session Report**
+    - Summary of all ideas
+    - Categorized view
+    - Prioritized recommendations
+    - Session metadata
+
+12. **Export to ClickUp** (optional)
+    - If ClickUp integration enabled:
+      - Create board: "Brainstorm: {topic}"
+      - Add ideas as tasks with categories as tags
+      - Link to session report
+
+## Checklist
+
+### Pre-conditions
+
+- [ ] Topic is well-defined and specific enough
+  - **Validation**: `topic.length >= 20 && topic.includes('?') || topic.includes('how') || topic.includes('what')`
+  - **Error**: "Topic too vague. Provide a specific question or challenge."
+
+- [ ] Session goal is valid
+  - **Validation**: `["ideation", "solution", "strategy"].includes(session_goal)`
+
+- [ ] Participating agents exist (if provided)
+  - **Validation**: Check agent IDs against available agents
+  - **Error**: "Agent '{agent_id}' not found"
+
+### Post-conditions
+
+- [ ] At least 10 ideas generated
+  - **Validation**: `ideas.length >= 10`
+  - **Error**: "Insufficient ideas. Extend session or add more agents."
+
+- [ ] All ideas have categories
+  - **Validation**: `ideas.every(i => i.category)`
+
+- [ ] Top 5 ideas have next steps
+  - **Validation**: `prioritized_recommendations.slice(0, 5).every(r => r.next_steps)`
+
+- [ ] Session summary is complete
+  - **Validation**: `session_summary.ideas_generated > 0 && session_summary.agents_participated.length > 0`
+
+### Acceptance Criteria
+
+- [ ] Session produces actionable recommendations
+  - **Type**: acceptance
+  - **Manual Check**: true
+  - **Criteria**: User can immediately act on at least 3 ideas
+
+- [ ] Ideas are diverse and cover multiple perspectives
+  - **Type**: acceptance
+  - **Manual Check**: false
+  - **Test**: `categories.length >= 3`
+
+## Templates
+
+### Session Report Template
+
+```markdown
+# Brainstorming Session: {topic}
+
+**Date**: {date}
+**Duration**: {duration} minutes
+**Participants**: {agents_participated.join(', ')}
+**Goal**: {session_goal}
+
+## Context
+
+{context_summary}
+
+## Ideas Generated
+
+**Total**: {ideas_generated}
+
+### By Category
+
+{categories.map(cat => `
+#### ${cat.name} (${cat.ideas_count} ideas)
+
+${cat.top_ideas.map(idea => `- ${idea.text} (by ${idea.source_agent})`).join('\n')}
+`).join('\n')}
+
+## Top Recommendations
+
+{prioritized_recommendations.map((rec, i) => `
+### ${i+1}. ${rec.idea.text}
+
+**Value Score**: ${rec.value_score}/10
+**Effort Estimate**: ${rec.effort_estimate}/10
+**ROI**: ${rec.roi.toFixed(2)}
+
+**Why this matters**: ${rec.rationale}
+
+**Next Steps**:
+${rec.next_steps.map(step => `- ${step}`).join('\n')}
+`).join('\n')}
+
+## Key Insights
+
+{key_insights}
+
+## Session Metadata
+
+- **Ideas Generated**: {ideas_generated}
+- **Categories Identified**: {categories.length}
+- **Agents Participated**: {agents_participated.length}
+- **Session Duration**: {duration} minutes
 ```
 
-eginning.
+## Tools
 
-**Technique Selection:**
-If user selects Option 1, present numbered list of techniques from the brainstorming-techniques data file. User can select by number..
+- **clickup**:
+  - **Version**: 1.0.0
+  - **Used For**: Export ideas to ClickUp board for tracking
+  - **Optional**: Yes (user can opt-out)
 
-**Technique Execution:**
+- **mcp**:
+  - **Version**: 1.0.0
+  - **Used For**: Call specialized agents for domain-specific ideas
+  - **Shared With**: All brainstorming sessions
 
-1. Apply selected technique according to data file description
-2. Keep engaging with technique until user indicates they want to:
-   - Choose a different technique
-   - Apply current ideas to a new technique  
-   - Move to convergent phase
-   - End session
+## Performance
 
-**Output Capture (if requested):**
-For each technique used, capture:
+- **Duration Expected**: 30 minutes (configurable: 10-60 min)
+- **Cost Estimated**: $0.05-0.15 (depends on agent count and rounds)
+- **Cacheable**: false (sessions are unique)
+- **Parallelizable**: true (agents can generate ideas simultaneously)
 
-- Technique name and duration
-- Key ideas generated by user
-- Insights and patterns identified
-- User's reflections on the process
+## Error Handling
 
-### Step 4: Session Flow
+- **Strategy**: fallback
+- **Fallback**: If agent fails, continue with remaining agents
+- **Retry**:
+  - **Max Attempts**: 2
+  - **Backoff**: linear
+  - **Backoff MS**: 1000
+- **Abort Workflow**: false (continue even if some agents fail)
+- **Notification**: log + summary report
 
-1. **Warm-up** (5-10 min) - Build creative confidence
-2. **Divergent** (20-30 min) - Generate quantity over quality
-3. **Convergent** (15-20 min) - Group and categorize ideas
-4. **Synthesis** (10-15 min) - Refine and develop concepts
+## Metadata
 
-### Step 5: Document Output (if requested)
+- **Story**: N/A (framework capability)
+- **Version**: 1.0.0
+- **Dependencies**: None
+- **Author**: Brad Frost Clone
+- **Created**: 2025-11-13
+- **Updated**: 2025-11-13
 
-Generate structured document with these sections:
+---
 
-**Executive Summary**
+## Usage Examples
 
-- Session topic and goals
-- Techniques used and duration
-- Total ideas generated
-- Key themes and patterns identified
+### Example 1: Feature Ideation
 
-**Technique Sections** (for each technique used)
+```bash
+aios activate Maestro
+aios brainstorm "How can we improve AIOS user onboarding for non-technical users?"
+```
 
-- Technique name and description
-- Ideas generated (user's own words)
-- Insights discovered
-- Notable connections or patterns
+**Output**: 25 ideas across 5 categories, top 10 prioritized with next steps
 
-**Idea Categorization**
+### Example 2: Problem Solving with Specific Agents
 
-- **Immediate Opportunities** - Ready to implement now
-- **Future Innovations** - Requires development/research
-- **Moonshots** - Ambitious, transformative concepts
-- **Insights & Learnings** - Key realizations from session
+```bash
+aios brainstorm "How to reduce API latency in database queries?" \
+  --agents="db-sage,architect,github-devops" \
+  --goal="solution" \
+  --format="actionable"
+```
 
-**Action Planning**
+**Output**: Focused technical solutions with implementation steps
 
-- Top 3 priority ideas with rationale
-- Next steps for each priority
-- Resources/research needed
-- Timeline considerations
+### Example 3: Strategic Planning
 
-**Reflection & Follow-up**
+```bash
+aios brainstorm "What should be our open-source expansion strategy for Q1 2026?" \
+  --agents="po,architect,github-devops" \
+  --goal="strategy" \
+  --context="docs/prd.md,docs/open-source-roadmap.md"
+```
 
-- What worked well in this session
-- Areas for further exploration
-- Recommended follow-up techniques
-- Questions that emerged for future sessions
+**Output**: Strategic recommendations aligned with existing plans
 
-## Key Principles
+---
 
-- **YOU ARE A FACILITATOR**: Guide the user to brainstorm, don't brainstorm for them (unless they request it persistently)
-- **INTERACTIVE DIALOGUE**: Ask questions, wait for responses, build on their ideas
-- **ONE TECHNIQUE AT A TIME**: Don't mix multiple techniques in one response
-- **CONTINUOUS ENGAGEMENT**: Stay with one technique until user wants to switch
-- **DRAW IDEAS OUT**: Use prompts and examples to help them generate their own ideas
-- **REAL-TIME ADAPTATION**: Monitor engagement and adjust approach as needed
-- Maintain energy and momentum
-- Defer judgment during generation
-- Quantity leads to quality (aim for 100 ideas in 60 minutes)
-- Build on ideas collaboratively
-- Document everything in output document
+**Related Tasks:**
+- `create-next-story` - Convert ideas into actionable stories
+- `analyze-framework` - Analyze framework capabilities for improvement ideas
 
-## Advanced Engagement Strategies
-
-**Energy Management**
-
-- Check engagement levels: "How are you feeling about this direction?"
-- Offer breaks or technique switches if energy flags
-- Use encouraging language and celebrate idea generation
-
-**Depth vs. Breadth**
-
-- Ask follow-up questions to deepen ideas: "Tell me more about that..."
-- Use "Yes, and..." to build on their ideas
-- Help them make connections: "How does this relate to your earlier idea about...?"
-
-**Transition Management**
-
-- Always ask before switching techniques: "Ready to try a different approach?"
-- Offer options: "Should we explore this idea deeper or generate more alternatives?"
-- Respect their process and timing
- 

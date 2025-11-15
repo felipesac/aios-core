@@ -32,28 +32,6 @@ Creates multiple related components in a single batch operation with dependency 
 4. Preview of all components to be created
 5. Confirmation before batch creation
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-```
-
 ## Workflow Steps
 
 ### 1. Suite Type Selection

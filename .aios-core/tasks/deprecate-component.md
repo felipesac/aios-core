@@ -8,30 +8,6 @@ tools:
 
 # Deprecate Component - AIOS Developer Task
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 Mark framework components as deprecated with timeline management and migration path generation.
 
@@ -245,16 +221,16 @@ class DeprecateComponentTask {
   async initializeDependencies() {
     try {
       // Initialize deprecation manager
-      // const DeprecationManager = require('../utils/deprecation-manager'); // Archived in Story 3.18
+      // const DeprecationManager = require('../scripts/deprecation-manager'); // Archived in Story 3.18
       // this.deprecationManager = new DeprecationManager({ rootPath: this.rootPath });
       // await this.deprecationManager.initialize();
 
       // Initialize usage tracker
-      // const UsageTracker = require('../utils/usage-tracker'); // Archived in Story 3.18
+      // const UsageTracker = require('../scripts/usage-tracker'); // Archived in Story 3.18
       // this.usageTracker = new UsageTracker({ rootPath: this.rootPath });
 
       // Initialize component search
-      const ComponentSearch = require('../utils/component-search');
+      const ComponentSearch = require('../scripts/component-search');
       this.componentSearch = new ComponentSearch({ rootPath: this.rootPath });
 
     } catch (error) {

@@ -25,28 +25,7 @@ Before generating the prompt, you must understand these core principles for inte
 
 - **Be Explicit and Detailed**: The AI cannot read your mind. Provide as much detail and context as possible. Vague requests lead to generic or incorrect outputs.
 - **Iterate, Don't Expect Perfection**: Generating an entire complex application in one go is rare. The most effective method is to prompt for one component or one section at a time, then build upon the results.
-- **Provide Context First**: Always start by providing the AI with the necessary context, such as 
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture)
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture';
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-the tech stack, existing code snippets, and overall project goals.
+- **Provide Context First**: Always start by providing the AI with the necessary context, such as the tech stack, existing code snippets, and overall project goals.
 - **Mobile-First Approach**: Frame all UI generation requests with a mobile-first design mindset. Describe the mobile layout first, then provide separate instructions for how it should adapt for tablet and desktop.
 
 ### 2. The Structured Prompting Framework

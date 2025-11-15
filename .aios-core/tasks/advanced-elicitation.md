@@ -7,30 +7,6 @@
 - Support iterative refinement through multiple analytical perspectives
 - Usable during template-driven document creation or any chat conversation
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Required to read/write architecture documentation
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture'; // architectureShardedLocation
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-```
-
 ## Usage Scenarios
 
 ### Scenario 1: Template Document Creation

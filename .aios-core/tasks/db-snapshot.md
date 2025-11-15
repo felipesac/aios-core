@@ -112,26 +112,7 @@ Contents:
   - 15 policies
 
 To restore this snapshot:
-  *roll
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-back supabase/snapshots/20251026_143022_pre_migration.sql
+  *rollback supabase/snapshots/20251026_143022_pre_migration.sql
 
 Metadata saved to:
   supabase/snapshots/20251026_143022_pre_migration.meta

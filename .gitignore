@@ -76,6 +76,7 @@ sample-project/*
 # Expansion Projects (separate from core AIOS-FULLSTACK)
 # These folders are from other projects and should NOT be in this repository
 .aios/                        # AIOS expansion project files
+.aios/project-status.yaml     # Project status cache (Story 6.1.2.4 - auto-generated)
 .cursor/                      # Cursor IDE project files
 aios-memory-layer-mvp/        # Separate memory layer project
 memory/                       # Memory expansion package

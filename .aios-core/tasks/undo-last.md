@@ -12,24 +12,6 @@
 
 Rollback the last component creation or modification operation. This task allows undoing recent changes made by the aios-developer agent, including single component creation, batch creation, or component updates.
 
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`utils.registry`**: Utility registry location for framework utilities - Required to access TransactionManager and backup utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Context Required
 - Access to transaction history
 - File system permissions for affected files

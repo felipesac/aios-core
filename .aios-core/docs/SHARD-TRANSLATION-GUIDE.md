@@ -103,10 +103,10 @@ After sharding, validate that all filenames are correct:
 
 ```bash
 # Check for issues
-node .aios-core/utils/validate-filenames.js
+node .aios-core/scripts/validate-filenames.js
 
 # Auto-fix issues (renames files)
-node .aios-core/utils/validate-filenames.js --fix
+node .aios-core/scripts/validate-filenames.js --fix
 ```
 
 **What the validator checks:**
@@ -123,10 +123,10 @@ If you have an existing project with Portuguese filenames:
 cp -r docs docs.backup-portuguese
 
 # 2. Validate to see issues
-node .aios-core/utils/validate-filenames.js
+node .aios-core/scripts/validate-filenames.js
 
 # 3. Auto-fix (renames files)
-node .aios-core/utils/validate-filenames.js --fix
+node .aios-core/scripts/validate-filenames.js --fix
 
 # 4. Or re-shard from original
 *shard docs/prd.md docs/prd
@@ -175,7 +175,7 @@ The system can be extended to support other languages by:
 
 **Solution:**
 1. Check you're using the updated `.aios-core/tasks/shard-doc.md`
-2. Run validator to confirm: `node .aios-core/utils/validate-filenames.js`
+2. Run validator to confirm: `node .aios-core/scripts/validate-filenames.js`
 3. Use `--fix` flag to auto-correct
 
 ### Problem: core-config references missing files
@@ -205,7 +205,7 @@ novo-termo: new-term
 If a term is intentionally Portuguese (e.g., company name), add exception to validator:
 
 ```javascript
-// .aios-core/utils/validate-filenames.js
+// .aios-core/scripts/validate-filenames.js
 const ALLOWED_EXCEPTIONS = ['your-term'];
 ```
 
@@ -261,7 +261,7 @@ ls docs/prd/
 ls docs/architecture/
 
 # Count Portuguese files
-node .aios-core/utils/validate-filenames.js
+node .aios-core/scripts/validate-filenames.js
 ```
 
 #### Step 2: Backup
@@ -277,13 +277,13 @@ cp -r docs docs.backup-$(date +%Y%m%d)
 *shard docs/architecture.md docs/architecture
 
 # Option B: Auto-fix existing files
-node .aios-core/utils/validate-filenames.js --fix
+node .aios-core/scripts/validate-filenames.js --fix
 ```
 
 #### Step 4: Verify
 ```bash
 # Confirm all files are English
-node .aios-core/utils/validate-filenames.js
+node .aios-core/scripts/validate-filenames.js
 
 # Check stories can find files
 *create-story  # Test story creation
@@ -320,7 +320,7 @@ A: Edit `.aios-core/tasks/shard-doc.md`, Section 3, and add to the YAML dictiona
 If you encounter issues:
 
 1. Check this guide first
-2. Run the validator: `node .aios-core/utils/validate-filenames.js`
+2. Run the validator: `node .aios-core/scripts/validate-filenames.js`
 3. Review `.aios-core/tasks/shard-doc.md` for translation rules
 4. Open an issue with:
    - Your PRD heading

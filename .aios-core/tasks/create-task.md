@@ -8,25 +8,6 @@ tools:
 
 # Create Task
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-```
-
 ## Purpose
 To create a new task file that defines executable workflows for agents, with proper structure, elicitation steps, and validation.
 
@@ -40,11 +21,34 @@ To create a new task file that defines executable workflows for agents, with pro
 ### Step 1: Task Definition
 ```
 ELICIT: Task Basic Information
-1. What is the task name? (e.g., "validate-api", "generate-report")
-2. What is the primary purpose of this task?
-3. What agent(s) will use this task?
+
+1. What agent(s) will use this task?
+   Examples: "ux-design-expert", "db-sage", "dev", "pm, po, sm" (multiple)
+
+   → If SINGLE agent: Task is agent-specific (will apply naming convention)
+   → If MULTIPLE agents: Task is shared (no prefix)
+
+2. What is the task name?
+
+   IF agent-specific (single agent):
+     → Suggested format: "{agent-id}-{action}"
+     → Examples: "ux-user-research", "db-apply-migration", "dev-develop-story"
+     → Validation: Must start with "{agent-id}-"
+
+   IF shared (multiple agents):
+     → Use descriptive name WITHOUT agent prefix
+     → Examples: "create-doc", "execute-checklist", "manage-story-backlog"
+     → Validation: Must NOT have agent-specific prefix
+
+3. What is the primary purpose of this task?
+
 4. What are the prerequisites for running this task?
 ```
+
+**NAMING CONVENTION (CRITICAL):**
+- Agent-specific tasks: `{agent-id}-{task-name}.md`
+- Shared tasks: `{task-name}.md` (no prefix)
+- Use component-generator.applyNamingConvention() to apply automatically
 
 ### Step 2: Task Workflow
 ```

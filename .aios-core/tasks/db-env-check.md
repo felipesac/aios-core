@@ -18,26 +18,7 @@ echo "✓ SUPABASE_DB_URL present (redacted)"
 ### 2. Check SSL Mode and Pooler
 
 ```bash
-case "$SUPABASE_DB_URL"
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
- in
+case "$SUPABASE_DB_URL" in
   *"sslmode="*) echo "✓ sslmode present";;
   *) echo "⚠️ Consider adding sslmode=require";;
 esac

@@ -12,10 +12,11 @@ workflow:
   elicitation: advanced-elicitation
 
 agent_config:
-  editable_sections: 
+  editable_sections:
     - Status
     - Story
     - Acceptance Criteria
+    - CodeRabbit Integration
     - Tasks / Subtasks
     - Dev Notes
     - Testing
@@ -49,7 +50,127 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
-    
+
+  - id: coderabbit-integration
+    title: 🤖 CodeRabbit Integration
+    instruction: |
+      Based on story type analysis, document the predicted quality gates and
+      specialized agent assignments. This section is auto-generated during story
+      creation but can be manually adjusted if needed.
+    elicit: true
+    owner: scrum-master
+    editors: [scrum-master, po]
+    sections:
+      - id: story-type-analysis
+        title: Story Type Analysis
+        instruction: |
+          Categorize story based on technical characteristics:
+          - Database: Schema changes, migrations, RLS policies
+          - API: REST endpoints, services, business logic
+          - Frontend: Components, UX, accessibility
+          - Deployment: CI/CD, infrastructure, configuration
+          - Security: Authentication, authorization, data protection
+          - Architecture: Patterns, scalability, cross-cutting concerns
+          - Integration: External systems, APIs, data sync
+        template: |
+          **Primary Type**: {{story_type}}
+          **Secondary Type(s)**: {{story_type_secondary}}
+          **Complexity**: {{complexity_level}}
+        elicit: true
+        owner: scrum-master
+        editors: [scrum-master]
+
+      - id: specialized-agents
+        title: Specialized Agent Assignment
+        instruction: |
+          List which specialized agents should be involved based on story type:
+
+          **Always Required**:
+          - @dev: Pre-commit reviews (all stories)
+
+          **Conditional Assignment**:
+          - @db-sage: Database/SQL changes, schema modifications, RLS policies
+          - @github-devops: PR creation, deployment, CI/CD configuration
+          - @architect: Architecture decisions, new patterns, scalability
+          - @ux-expert: Frontend/UX work, accessibility (WCAG 2.1 AA)
+          - @qa: Story validation, test coverage verification
+        template: |
+          **Primary Agents**:
+          - {{primary_agent_1}}
+          - {{primary_agent_2}}
+
+          **Supporting Agents**:
+          - {{supporting_agent_1}}
+          - {{supporting_agent_2}}
+        elicit: true
+        owner: scrum-master
+        editors: [scrum-master, po]
+
+      - id: quality-gates
+        title: Quality Gate Tasks
+        instruction: |
+          Predicted CodeRabbit validation checkpoints based on story type and risk:
+
+          **Pre-Commit** (@dev - always required):
+          - Before marking story complete
+          - Focus: Code quality, security basics, patterns
+
+          **Pre-PR** (@github-devops - when creating PR):
+          - Before creating pull request
+          - Focus: Integration safety, backward compatibility
+
+          **Pre-Deployment** (@github-devops - production stories only):
+          - Before deploying to production
+          - Focus: Security scan, configuration validation, rollback readiness
+        template: |
+          - [ ] Pre-Commit (@dev): Run before marking story complete
+          - [ ] Pre-PR (@github-devops): Run before creating pull request
+          - [ ] Pre-Deployment (@github-devops): Run before production deploy (if applicable)
+        elicit: true
+        owner: scrum-master
+        editors: [scrum-master]
+
+      - id: focus-areas
+        title: CodeRabbit Focus Areas
+        instruction: |
+          Specific patterns for CodeRabbit to validate based on story type:
+
+          **Database Stories**:
+          - Service filters: .eq('service', 'ttcx') on all queries
+          - Schema compliance: Foreign keys, indexes, constraints
+          - RLS policies: Row-level security properly configured
+
+          **API Stories**:
+          - Error handling: Try-catch blocks, proper error responses
+          - Security: Input validation, authentication, authorization
+          - Validation: Request/response schema validation
+
+          **Frontend Stories**:
+          - Accessibility: WCAG 2.1 AA compliance (semantic HTML, ARIA, keyboard nav)
+          - Performance: Component optimization, lazy loading
+          - Responsive design: Mobile-first, breakpoints
+
+          **Deployment Stories**:
+          - CI/CD: Pipeline configuration, test coverage
+          - Secrets management: No hardcoded credentials
+          - Environment config: Proper variable usage
+
+          **Security Stories**:
+          - OWASP Top 10: Injection, XSS, authentication
+          - Timing attacks: Constant-time comparisons
+          - Data protection: Encryption, sanitization
+        template: |
+          **Primary Focus**:
+          - {{focus_area_1}}
+          - {{focus_area_2}}
+
+          **Secondary Focus**:
+          - {{focus_area_3}}
+          - {{focus_area_4}}
+        elicit: true
+        owner: scrum-master
+        editors: [scrum-master]
+
   - id: tasks-subtasks
     title: Tasks / Subtasks
     type: bullet-list

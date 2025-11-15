@@ -8,30 +8,6 @@ tools:
 
 # Create Agent Task
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 To create a new agent definition file following AIOS-FULLSTACK standards using the template system with progressive disclosure elicitation.
 
@@ -45,7 +21,7 @@ To create a new agent definition file following AIOS-FULLSTACK standards using t
 This task now uses the enhanced template system with progressive disclosure:
 
 ```javascript
-const ComponentGenerator = require('../utils/component-generator');
+const ComponentGenerator = require('../scripts/component-generator');
 const generator = new ComponentGenerator({
   rootPath: process.cwd()
 });

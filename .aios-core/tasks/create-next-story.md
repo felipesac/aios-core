@@ -258,6 +258,220 @@ custom_fields:
 - Save story file with updated frontmatter
 - Log: "✅ Story task created in ClickUp: {story_task_id}"
 
+#### 5.2.5 Predict Specialized Agents and CodeRabbit Tasks
+
+**CRITICAL:** This step populates the `🤖 CodeRabbit Integration` section created by the story template. Use the architecture context gathered in Step 3 and story requirements from Step 2 to predict which specialized agents and quality gates are needed.
+
+**Story Type Detection Rules:**
+
+Analyze the story's technical characteristics based on:
+- Acceptance Criteria keywords
+- Architecture files referenced in Step 3.2
+- Data models, APIs, or components mentioned in epic
+- File locations and affected systems
+
+**Type 1: Database Story**
+
+**Detection Indicators:**
+- References to `database-schema.md` or `data-models.md`
+- Acceptance Criteria mention: schema, table, migration, RLS, foreign key, index
+- File locations include `supabase/migrations/` or database-related paths
+
+**Assignment:**
+- **Primary Agents**: @db-sage, @dev
+- **Quality Gates**: Pre-Commit (schema validation), Pre-PR (SQL review)
+- **Focus Areas**:
+  - Service filters: `.eq('service', 'ttcx')` on ALL queries
+  - Schema compliance: Foreign keys, indexes, constraints properly defined
+  - RLS policies: Row-level security configured and tested
+  - Migration safety: Reversible, tested in dev environment
+
+**Type 2: API Story**
+
+**Detection Indicators:**
+- References to `rest-api-spec.md` or `backend-architecture.md`
+- Acceptance Criteria mention: endpoint, API, service, controller, route
+- File locations include `api/src/` or backend paths
+
+**Assignment:**
+- **Primary Agents**: @dev, @architect (if new patterns)
+- **Quality Gates**: Pre-Commit (security scan), Pre-PR (API contract validation)
+- **Focus Areas**:
+  - Error handling: Try-catch blocks, proper error responses (4xx, 5xx)
+  - Security: Input validation, authentication, authorization checks
+  - Validation: Request/response schema validation
+  - API contracts: Consistent with `rest-api-spec.md`
+
+**Type 3: Frontend Story**
+
+**Detection Indicators:**
+- References to `frontend-architecture.md` or `components.md`
+- Acceptance Criteria mention: UI, component, page, form, display, user interface
+- File locations include `src/components/` or frontend paths
+
+**Assignment:**
+- **Primary Agents**: @ux-expert, @dev
+- **Quality Gates**: Pre-Commit (a11y validation), Pre-PR (UX consistency check)
+- **Focus Areas**:
+  - Accessibility: WCAG 2.1 AA compliance (semantic HTML, ARIA labels, keyboard navigation)
+  - Performance: Component optimization, lazy loading, code splitting
+  - Responsive design: Mobile-first approach, breakpoints tested
+  - UX consistency: Follows design system patterns
+
+**Type 4: Deployment/Infrastructure Story**
+
+**Detection Indicators:**
+- Acceptance Criteria mention: deploy, CI/CD, environment, configuration, infrastructure
+- References to deployment pipelines or environment configuration
+- File locations include `.github/workflows/`, `docker/`, or config files
+
+**Assignment:**
+- **Primary Agents**: @github-devops, @dev
+- **Quality Gates**: Pre-Commit (config validation), Pre-Deployment (deep scan)
+- **Focus Areas**:
+  - CI/CD: Pipeline configuration, test coverage enforcement
+  - Secrets management: No hardcoded credentials, proper secret handling
+  - Environment config: Proper variable usage, validation of required vars
+  - Rollback readiness: Changes are reversible, documented rollback procedure
+
+**Type 5: Security Story**
+
+**Detection Indicators:**
+- Acceptance Criteria mention: authentication, authorization, security, encryption, vulnerability
+- References to security patterns or threat models
+- Implements OWASP-related features
+
+**Assignment:**
+- **Primary Agents**: @dev, @architect
+- **Quality Gates**: Pre-Commit (SAST scan), Pre-PR (security review)
+- **Focus Areas**:
+  - OWASP Top 10: Injection prevention, XSS protection, auth vulnerabilities
+  - Timing attacks: Constant-time comparisons for sensitive operations
+  - Data protection: Encryption at rest/transit, proper sanitization
+  - Authentication: Secure session management, password handling
+
+**Type 6: Architecture Story**
+
+**Detection Indicators:**
+- Acceptance Criteria mention: refactor, pattern, architecture, scalability
+- Affects multiple layers or introduces new patterns
+- References to `backend-architecture.md` or system design
+
+**Assignment:**
+- **Primary Agents**: @architect, @dev
+- **Quality Gates**: Pre-Commit (pattern validation), Pre-PR (architecture review)
+- **Focus Areas**:
+  - Patterns: Follows established architectural patterns
+  - Scalability: Performance considerations, load handling
+  - Maintainability: Code organization, separation of concerns
+  - Backward compatibility: Existing functionality preserved
+
+**Type 7: Integration Story**
+
+**Detection Indicators:**
+- Acceptance Criteria mention: integration, external API, webhook, third-party
+- References to `external-apis.md`
+- Connects to external systems
+
+**Assignment:**
+- **Primary Agents**: @dev, @architect, @github-devops
+- **Quality Gates**: Pre-Commit, Pre-PR (integration safety)
+- **Focus Areas**:
+  - Backward compatibility: Existing integrations unaffected
+  - API contracts: Proper versioning, contract testing
+  - Error handling: Graceful degradation, retry logic
+  - Documentation: Integration points clearly documented
+
+**Populate CodeRabbit Integration Section:**
+
+Based on the detected story type(s), populate the template fields:
+
+```yaml
+🤖 CodeRabbit Integration:
+
+  Story Type Analysis:
+    Primary Type: [Database|API|Frontend|Deployment|Security|Architecture|Integration]
+    Secondary Type(s): [Additional types if story spans multiple areas]
+    Complexity: [Low|Medium|High] - Based on number of systems affected and scope
+
+  Specialized Agent Assignment:
+    Primary Agents:
+      - @dev (always required for pre-commit reviews)
+      - @[type-specific-agent] (from detection rules above)
+
+    Supporting Agents:
+      - @[supporting-agent-1] (if cross-cutting concerns)
+      - @[supporting-agent-2] (if multiple systems affected)
+
+  Quality Gate Tasks:
+    - [ ] Pre-Commit (@dev): Run `coderabbit --prompt-only -t uncommitted` before marking story complete
+    - [ ] Pre-PR (@github-devops): Run `coderabbit --prompt-only --base main` before creating pull request
+    - [ ] Pre-Deployment (@github-devops): Run `coderabbit --prompt-only -t committed --base HEAD~10` before production deploy (only for production/deployment stories)
+
+  CodeRabbit Focus Areas:
+    Primary Focus:
+      - [Focus area 1 from type-specific rules]
+      - [Focus area 2 from type-specific rules]
+
+    Secondary Focus:
+      - [Focus area 3 if applicable]
+      - [Focus area 4 if applicable]
+```
+
+**Multi-Type Stories:**
+
+If story spans multiple types (e.g., Database + API):
+- List primary type first (the one with most work)
+- List secondary type(s) in order of importance
+- Combine agent assignments (no duplicates)
+- Include ALL relevant focus areas from both types
+- Use highest quality gate requirement (e.g., if either requires Pre-Deployment, include it)
+
+**Complexity Determination:**
+
+- **Low**: Single file/component, well-defined scope, minimal dependencies
+- **Medium**: Multiple files, moderate scope, some cross-system interaction
+- **High**: Many files, complex scope, multiple systems, new patterns, or security-critical
+
+**Example Output (Database + API Story):**
+
+```yaml
+🤖 CodeRabbit Integration:
+
+  Story Type Analysis:
+    Primary Type: Database
+    Secondary Type(s): API
+    Complexity: High (affects schema, migrations, and multiple API endpoints)
+
+  Specialized Agent Assignment:
+    Primary Agents:
+      - @dev (pre-commit reviews)
+      - @db-sage (schema and SQL review)
+      - @architect (API contract changes)
+
+    Supporting Agents:
+      - @github-devops (deployment coordination)
+
+  Quality Gate Tasks:
+    - [ ] Pre-Commit (@dev): Run before story complete
+    - [ ] Pre-PR (@github-devops): Run before PR creation
+    - [ ] Pre-Deployment (@github-devops): Run before production deploy
+
+  CodeRabbit Focus Areas:
+    Primary Focus:
+      - Service filters on all queries (.eq('service', 'ttcx'))
+      - Schema compliance (foreign keys, indexes, constraints)
+      - API error handling and validation
+
+    Secondary Focus:
+      - RLS policies properly configured
+      - API contract consistency with spec
+      - Migration reversibility
+```
+
+**Log Completion:**
+- After populating this section, log: "✅ Story type analysis complete: [Primary Type] | Agents assigned: [agent list] | Quality gates: [gate count]"
+
 - **`Dev Notes` section (CRITICAL):**
   - CRITICAL: This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details.
   - Include ALL relevant technical details from Steps 2-3, organized by category:

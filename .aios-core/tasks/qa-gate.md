@@ -87,29 +87,6 @@ waiver:
   approved_by: 'Product Owner'
 ```
 
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories) - Required to access story for quality review
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality gate files
-- **`core-config`**: Direct reference to core configuration file - This task reads qaLocation from config
-- **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture)
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const devStoryLocation = config.devStoryLocation; // Story location
-const qaLocation = config.qa?.qaLocation || 'docs/qa'; // QA gates directory
-const architectureShardedLocation = config.architectureShardedLocation || 'docs/architecture'; // architectureShardedLocation
-```
-
 ## Gate Decision Criteria
 
 ### PASS

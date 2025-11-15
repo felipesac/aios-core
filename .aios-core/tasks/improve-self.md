@@ -6,30 +6,6 @@ tools:
 
 # *improve-self
 
-
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`devStoryLocation`**: Location of story files (typically docs/stories)
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports and gate files
-- **`utils.registry`**: Utility registry location for framework utilities
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
-const utils_registry = config.utils?.registry || config['utils.registry'] || '.aios-core/utils'; // utils.registry
-```
-
 ## Purpose
 Enable the meta-agent to improve its own capabilities with comprehensive safeguards
 
@@ -217,11 +193,11 @@ if (process.env.AIOS_SAFE_MODE === 'true') {
 ## Implementation
 
 ```javascript
-const CapabilityAnalyzer = require('../utils/capability-analyzer');
-const ImprovementValidator = require('../utils/improvement-validator');
-const SandboxTester = require('../utils/sandbox-tester');
-const BackupManager = require('../utils/backup-manager');
-// const MetricsTracker = require('../utils/metrics-tracker'); // Archived in Story 3.18
+const CapabilityAnalyzer = require('../scripts/capability-analyzer');
+const ImprovementValidator = require('../scripts/improvement-validator');
+const SandboxTester = require('../scripts/sandbox-tester');
+const BackupManager = require('../scripts/backup-manager');
+// const MetricsTracker = require('../scripts/metrics-tracker'); // Archived in Story 3.18
 
 module.exports = {
   name: 'improve-self',

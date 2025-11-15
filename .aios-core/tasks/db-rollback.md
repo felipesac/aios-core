@@ -157,26 +157,7 @@ FROM pg_tables WHERE schemaname='public';
 
 -- Check functions exist  
 SELECT 'Functions exist' AS check, COUNT(*) > 0 AS pass
-FROM pg_proc WHERE pronamespace='public'::regnam
-## Configuration Dependencies
-
-This task requires the following configuration keys from `core-config.yaml`:
-
-- **`qaLocation`**: QA output directory (typically docs/qa) - Required to write quality reports
-
-**Loading Config:**
-```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
-
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
-
-const qaLocation = config.qa?.qaLocation || 'docs/qa';
-```
-
-espace;
+FROM pg_proc WHERE pronamespace='public'::regnamespace;
 
 -- Check for orphaned objects (optional)
 -- SELECT 'No orphaned triggers' AS check, COUNT(*) = 0 AS pass
