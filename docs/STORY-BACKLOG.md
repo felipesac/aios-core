@@ -4,8 +4,8 @@ Centralized tracking for follow-up tasks, technical debt, and optimization oppor
 
 ## Statistics
 
-- **Total Items**: 12
-- **Active Items**: 10 (2 promoted to stories)
+- **Total Items**: 16
+- **Active Items**: 14 (2 promoted to stories)
 - **Promoted to Stories**: 2
 - **Completed Items**: 0
 - **Last Updated**: 2025-11-16
@@ -13,6 +13,62 @@ Centralized tracking for follow-up tasks, technical debt, and optimization oppor
 ## Backlog Items by Priority
 
 ### 🔴 HIGH Priority
+
+#### [story-6.1.2.5-T1] Fix greeting-builder.js execution during agent activation ✅ RESOLVED
+- **Source**: Story 6.1.2.5 QA Review (2025-11-16)
+- **Priority**: 🔴 HIGH (CRITICAL BLOCKER - RESOLVED)
+- **Effort**: 6-8 hours (completed in 2 hours)
+- **Status**: ✅ COMPLETE (2025-11-16)
+- **Assignee**: @qa (Quinn) - implemented Option A
+- **Sprint**: Sprint 2 (URGENT)
+- **Tags**: `blocker`, `agent-activation`, `architecture`, `greeting-system`, `investigated`
+- **Investigation Findings (2025-11-16 - Quinn)**:
+  - **Root Cause:** Claude Code slash commands are **PROMPT EXPANSION**, not **CODE EXECUTION**
+  - **Implication:** ADR-001 Option B (Slash Command Wrapper) not viable as originally designed
+  - **Slash Command Behavior:** `.claude/commands/*.md` files expand as prompts → Claude interprets as instructions → Claude executes via Bash/Read tools
+  - **No Native JS Execution:** Cannot return values from JavaScript functions in slash commands
+  - **Current Workaround:** Bash node -e with quote escaping (fragile, not production-ready)
+- **Revised Options**:
+  - **Option A (Recommended):** Inline YAML greeting logic in activation-instructions (verbose but reliable, no external deps)
+  - **Option C (Alternative):** Pre-generate static greetings at build time (simple but loses dynamic context)
+  - **Option Workaround:** Accept current Bash escaping approach (risky, maintenance burden)
+- **Implementation Summary (Option A - Inline YAML Logic)**:
+  - [x] User chose Option A (inline YAML greeting logic)
+  - [x] Created inline greeting template (`.aios-core/templates/activation-instructions-inline-greeting.yaml`)
+  - [x] Implemented in po.md test case - validated successfully ✅
+  - [x] Applied to remaining 10 agents via batch script
+  - [x] All 11 agents updated and synchronized to `.claude/commands/AIOS/agents/`
+  - [x] Created backups (*.backup-pre-inline)
+  - [x] Verified po agent activation (existing session scenario) ✅
+  - [x] Documented architectural decision in Story 6.1.2.5
+  - [ ] **Remaining:** Manual testing of AC2 (new session), AC4 (workflow), AC5 (git warning) → story-6.1.2.5-F1
+- **Acceptance**: ✅ All agents successfully display contextual greetings with inline logic (po validated, others ready for testing)
+- **Evidence**:
+  - po.md and qa.md activation failures with quote syntax errors during manual node -e execution
+  - Investigation confirmed slash commands cannot execute JavaScript natively
+  - ADR-001 validation revealed incorrect assumption about execution model
+
+---
+
+#### [story-6.1.2.5-F1] Complete manual testing for contextual greetings
+- **Source**: Story 6.1.2.5 QA Review (AC2-AC5)
+- **Priority**: 🔴 HIGH
+- **Effort**: 2 hours
+- **Status**: ⏸️ BLOCKED (depends on story-6.1.2.5-T1)
+- **Assignee**: User + @qa
+- **Sprint**: Sprint 2
+- **Tags**: `follow-up`, `testing`, `manual-validation`
+- **Description**: Tasks 2.1-2.4 from Story 6.1.2.5 not performed - need user validation of 4 greeting scenarios after fixing BLOCKER issue. These manual tests are critical to verify contextual greeting system works in actual Claude Code sessions.
+- **Success Criteria**:
+  - [ ] Test AC2: New session shows full greeting (screenshot + verification)
+  - [ ] Test AC3: Existing context shows quick greeting (screenshot + verification)
+  - [ ] Test AC4: Workflow shows key commands + next steps (screenshot + verification)
+  - [ ] Test AC5: Git warning displays correctly (screenshot + verification)
+  - [ ] Document results in story QA Results section
+- **Acceptance**: All 4 greeting scenarios validated with screenshots
+- **Dependencies**: story-6.1.2.5-T1 must be resolved first
+
+---
 
 #### [story-6.1.2.6-T1] Add unit tests for decision-log-generator
 - **Source**: Legacy Backlog Migration
@@ -228,6 +284,51 @@ Centralized tracking for follow-up tasks, technical debt, and optimization oppor
   - [ ] Implement rollback to previous preference
   - [ ] Add analytics on preference trends
 - **Acceptance**: Preference change history is tracked and accessible
+
+---
+
+#### [story-6.1.6-O1] Replace console.warn with proper logger
+- **Source**: Story 6.1.6 QA Review (2025-11-16)
+- **Priority**: 🟢 LOW
+- **Effort**: 2 hours
+- **Status**: 📋 TODO
+- **Assignee**: Backend Developer
+- **Sprint**: Sprint 3
+- **Tags**: `enhancement`, `logging`, `code-quality`
+- **Description**: Replace console.warn statements in output-formatter.js with proper logger (winston or similar) for better log management in production. Currently 6 console.warn statements provide diagnostic information but lack filtering and production-grade log management capabilities.
+- **Success Criteria**:
+  - [ ] Install and configure winston or similar logging library
+  - [ ] Replace all console.warn calls in output-formatter.js
+  - [ ] Add log level configuration (debug, info, warn, error)
+  - [ ] Test logging in development and production modes
+  - [ ] Update documentation for logging configuration
+- **Acceptance**: All diagnostic logging uses proper logger with configurable log levels
+- **References**: 
+  - File: `.aios-core/scripts/output-formatter.js` (lines 46, 54, 63, 76, 134, 139)
+  - QA Gate: `docs/qa/gates/6.1.6-output-formatter-implementation.yml`
+
+---
+
+#### [story-6.1.6-O2] Set up isolated coverage report for formatter module
+- **Source**: Story 6.1.6 QA Review (2025-11-16)
+- **Priority**: 🟢 LOW
+- **Effort**: 1 hour
+- **Status**: 📋 TODO
+- **Assignee**: Backend Developer
+- **Sprint**: Sprint 3
+- **Tags**: `enhancement`, `testing`, `metrics`
+- **Description**: Set up isolated coverage report generation for the output formatter module to quantify test coverage percentage. Currently coverage is estimated at ≥85% based on test analysis, but exact metrics would improve visibility into code quality.
+- **Success Criteria**:
+  - [ ] Configure Jest to generate coverage reports for formatter module
+  - [ ] Create npm script for isolated coverage run
+  - [ ] Set up coverage thresholds (≥80% target)
+  - [ ] Add coverage badge to documentation
+  - [ ] Document coverage reporting process
+- **Acceptance**: Coverage reports generate successfully and show quantified metrics for formatter module
+- **References**:
+  - Test Files: `tests/unit/output-formatter.test.js`, `tests/integration/formatter-integration.test.js`
+  - Source Files: `.aios-core/scripts/output-formatter.js`, `.aios-core/scripts/validate-output-pattern.js`
+  - QA Gate: `docs/qa/gates/6.1.6-output-formatter-implementation.yml`
 
 ---
 
