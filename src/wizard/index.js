@@ -17,6 +17,12 @@ const {
 const { generateIDEConfigs, showSuccessSummary } = require('./ide-config-generator');
 const { configureEnvironment } = require('../../packages/installer/src/config/configure-environment');
 const { installDependencies } = require('../installer/dependency-installer');
+const { installProjectMCPs } = require('../../bin/modules/mcp-installer');
+const {
+  validateInstallation,
+  displayValidationReport,
+  provideTroubleshooting
+} = require('./validation');
 
 /**
  * Handle Ctrl+C gracefully
@@ -222,6 +228,84 @@ async function runWizard() {
     } catch (error) {
       console.error('\n⚠️  Dependency installation error:', error.message);
       answers.depsInstalled = false;
+    }
+
+    // Story 1.5/1.8: MCP Installation
+    if (answers.selectedMCPs && answers.selectedMCPs.length > 0) {
+      console.log('\n🔌 Installing MCPs...');
+
+      try {
+        const mcpResult = await installProjectMCPs({
+          selectedMCPs: answers.selectedMCPs,
+          projectPath: process.cwd(),
+          apiKeys: answers.exaApiKey ? { EXA_API_KEY: answers.exaApiKey } : {},
+          onProgress: (status) => {
+            if (status.mcp) {
+              console.log(`  [${status.mcp}] ${status.message}`);
+            } else {
+              console.log(`  ${status.message}`);
+            }
+          }
+        });
+
+        if (mcpResult.success) {
+          const successCount = Object.values(mcpResult.installedMCPs).filter(r => r.status === 'success').length;
+          console.log(`\n✅ MCPs installed successfully! (${successCount}/${answers.selectedMCPs.length})`);
+          console.log(`   Configuration: ${mcpResult.configPath}`);
+        } else {
+          console.error('\n⚠️  Some MCPs failed to install:');
+          mcpResult.errors.forEach(err => console.error(`  - ${err}`));
+          console.log('\n💡 Check .aios/install-errors.log for details');
+        }
+
+        // Store MCP result for validation
+        answers.mcpsInstalled = mcpResult.success;
+        answers.mcpResult = mcpResult;
+
+      } catch (error) {
+        console.error('\n⚠️  MCP installation error:', error.message);
+        answers.mcpsInstalled = false;
+      }
+    }
+
+    // Story 1.8: Installation Validation
+    console.log('\n🔍 Validating installation...\n');
+
+    try {
+      const validation = await validateInstallation(
+        {
+          files: {
+            ideConfigs: configResult?.files || [],
+            env: '.env',
+            coreConfig: '.aios-core/core-config.yaml',
+            mcpConfig: '.mcp.json'
+          },
+          configs: {
+            env: answers.envResult,
+            mcps: answers.mcpResult,
+            coreConfig: '.aios-core/core-config.yaml'
+          },
+          mcps: answers.mcpResult,
+          dependencies: answers.depsResult
+        },
+        (status) => {
+          console.log(`  [${status.step}] ${status.message}`);
+        }
+      );
+
+      // Display validation report
+      await displayValidationReport(validation);
+
+      // Offer troubleshooting if there are errors
+      if (validation.errors && validation.errors.length > 0) {
+        await provideTroubleshooting(validation.errors);
+      }
+
+      // Store validation result
+      answers.validationResult = validation;
+    } catch (error) {
+      console.error('\n⚠️  Validation failed:', error.message);
+      console.log('Installation may be incomplete. Check logs in .aios/ directory.');
     }
 
     // Show completion

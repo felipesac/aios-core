@@ -88,14 +88,51 @@ function getPackageManagerQuestion(detectedPM = 'npm') {
 }
 
 /**
- * Get MCP selection questions (Story 1.5)
- * This is a placeholder - full implementation in Story 1.5
- * 
+ * Get MCP selection questions (Story 1.5 / 1.8 Integration)
+ *
  * @returns {Object[]} Array of inquirer question objects
  */
 function getMCPQuestions() {
-  // Placeholder - Story 1.5 will implement MCP selection
-  return [];
+  return [
+    {
+      type: 'checkbox',
+      name: 'selectedMCPs',
+      message: colors.primary('Select MCPs to install (project-level):'),
+      choices: [
+        {
+          name: colors.highlight('Browser (Puppeteer)') + colors.dim(' - Web automation and testing'),
+          value: 'browser',
+          checked: true
+        },
+        {
+          name: colors.highlight('Context7') + colors.dim(' - Library documentation search'),
+          value: 'context7',
+          checked: true
+        },
+        {
+          name: colors.highlight('Exa') + colors.dim(' - Advanced web search'),
+          value: 'exa',
+          checked: true
+        },
+        {
+          name: colors.highlight('Desktop Commander') + colors.dim(' - File system access'),
+          value: 'desktop-commander',
+          checked: true
+        }
+      ],
+      validate: (input) => {
+        // Allow empty selection (user can skip MCP installation)
+        return true;
+      }
+    },
+    {
+      type: 'password',
+      name: 'exaApiKey',
+      message: colors.primary('Exa API Key (optional, can configure later in .env):'),
+      when: (answers) => answers.selectedMCPs && answers.selectedMCPs.includes('exa'),
+      default: ''
+    }
+  ];
 }
 
 /**
@@ -134,8 +171,8 @@ function buildQuestionSequence(_context = {}) {
   // Story 1.4: IDE Selection
   questions.push(...getIDEQuestions());
 
-  // Story 1.5: MCP Selection (when implemented)
-  // questions.push(...getMCPQuestions());
+  // Story 1.5/1.8: MCP Selection
+  questions.push(...getMCPQuestions());
 
   // Story 1.7: Package Manager Selection
   // Note: Detection happens in wizard, we pass detected PM to highlight it
