@@ -56,7 +56,8 @@
 | 3.14 | [Story 3.14 Duplication Resolution](epic-3-gap-remediation/STORY-3.14-DUPLICATION-RESOLUTION.md) | ❓ **Done** |  N/A | Unassigned | TBD |
 | 004.8 | [Story 4.8: Repository Open-Source Migration & Expansion-Packs Separation](story-004.8-repository-open-source-migration.md) | ❓ Unknown |  N/A | Unassigned | TBD |
 | 6 | [Story 1.8: Phase 3 Workflow Orchestration - 9-Phase Enhancement](1.8-phase-3-workflow-orchestration.md) | ❓ Unknown |  N/A | Unassigned | TBD |
-| 6.1.1 | [Story 6.1.1: Agent Persona Definitions](aios migration/story-6.1.1-agent-persona-definitions.md) | ❓ Unknown |  N/A | Unassigned | TBD |
+| **6.0.1** | **[Story 6.0.1: SYNKRA Framework Rebranding](6.0.1-synkra-framework-rebranding.md)** | ✅ **Approved** | 🔴 Critical | @dev | 13 pts |
+| 6.1.1 | [Story 6.1.1: Agent Persona Definitions](aios migration/story-6.1.1-agent-persona-definitions.md) | ⏸️ Blocked by 6.0.1 |  N/A | Unassigned | TBD |
 | 6.1.2. | [Story 6.1.2: Agent File Updates](aios migration/story-6.1.2.md) | ❓ Unknown |  N/A | Unassigned | TBD |
 | 6.1.2.1 | [Story 6.1.2.1: Agent File Operations (Renames, Merge, Symlinks)](aios migration/story-6.1.2.1-agent-file-operations.md) | ❓ Unknown |  N/A | Unassigned | TBD |
 | 6.1.2.2 | [Story 6.1.2.2: Agent UX Improvements](aios migration/story-6.1.2.2-agent-ux-improvements.md) | ❓ Unknown |  N/A | Unassigned | TBD |
