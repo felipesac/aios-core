@@ -2,8 +2,8 @@
 
 **ID:** 2.1 | **Épico:** [EPIC-S2](../../../epics/epic-s2-modular-architecture.md)
 **Sprint:** 2 | **Points:** 8 | **Priority:** 🔴 Critical | **Created:** 2025-01-19
-**Updated:** 2025-11-28 (QA Complete)
-**Status:** ✅ QA Passed - Ready for Merge
+**Updated:** 2025-11-28 (Done)
+**Status:** ✅ Done (Merged to main)
 
 ## 📊 User Story
 **Como** arquiteto, **Quero** definir estrutura modular clara, **Para** organizar .aios-core/ em 4 modules
@@ -146,6 +146,8 @@
 | 2025-11-27 | Created ADR-002 suite (5 documents) | Dex (dev) |
 | 2025-11-27 | Architecture review APPROVED | Aria (architect) |
 | 2025-11-28 | QA review PASSED | Quinn (qa) |
+| 2025-11-28 | Merged to main (commit 9ad1e2ad) | Gage (devops) |
+| 2025-11-28 | Status → Done | Pax (po) |
 
 ---
 
