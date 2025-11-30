@@ -39,15 +39,18 @@ expect(IDE_CONFIGS.cursor.configFile).toContain('.cursor');  // Changed from '.c
 expect(IDE_CONFIGS.antigravity.agentFolder).toContain('.agent');  // Changed from '.antigravity'
 ```
 
-### 2. Wizard IDE Flow Test - Cascading Failure
+### 2. Wizard IDE Flow Test - Implementation Bug
 **File:** `tests/integration/wizard-ide-flow.test.js`
-**Severity:** LOW
+**Severity:** MEDIUM
+**Status:** PARTIALLY FIXED - Test paths updated, but implementation bug remains
 
-**Problem:** Integration test depends on IDE config values that changed. Will be fixed automatically when ide-configs.test.js assertions are corrected, or may need minor adjustments.
+**Problem:**
+1. ~~Test path expectations use old .cursorrules path~~ (FIXED)
+2. **Implementation bug**: `ide-config-generator.js` tries to copy agents from `.aios-core/agents` which doesn't exist
 
 **Solution:**
-- Review test after fixing ide-configs.test.js
-- Update any hardcoded IDE configuration expectations
+- ✅ Test paths updated to use `.cursor/rules.md`
+- 🔧 **NEW ISSUE**: Create `.aios-core/agents/` directory with agent files, OR update generator to handle missing directory gracefully
 
 ### 3. Project Status Loader Test - Wrong Import Path
 **File:** `.aios-core/infrastructure/tests/project-status-loader.test.js:8`

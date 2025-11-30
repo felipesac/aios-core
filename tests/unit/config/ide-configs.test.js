@@ -71,8 +71,8 @@ describe('IDE Configs', () => {
       expect(IDE_CONFIGS['github-copilot'].requiresDirectory).toBe(true);
       expect(IDE_CONFIGS.antigravity.requiresDirectory).toBe(true);
 
-      // IDEs that do not require directories
-      expect(IDE_CONFIGS.cursor.requiresDirectory).toBe(false);
+      // IDEs that do not require directories (only windsurf uses root file)
+      expect(IDE_CONFIGS.cursor.requiresDirectory).toBe(true);  // Changed: now uses .cursor/rules.md
       expect(IDE_CONFIGS.windsurf.requiresDirectory).toBe(false);
     });
 
@@ -85,7 +85,7 @@ describe('IDE Configs', () => {
 
     it('should have correct config file paths', () => {
       expect(IDE_CONFIGS['claude-code'].configFile).toContain('.claude');
-      expect(IDE_CONFIGS.cursor.configFile).toBe('.cursorrules');
+      expect(IDE_CONFIGS.cursor.configFile).toContain('.cursor');  // Changed: now .cursor/rules.md
       expect(IDE_CONFIGS.windsurf.configFile).toBe('.windsurfrules');
       expect(IDE_CONFIGS.trae.configFile).toContain('.trae');
       expect(IDE_CONFIGS['roo-code'].configFile).toContain('.roo');
@@ -122,8 +122,9 @@ describe('IDE Configs', () => {
       expect(IDE_CONFIGS['gemini-cli'].agentFolder).toContain('agents');
       expect(IDE_CONFIGS['github-copilot'].agentFolder).toContain('.github');
       expect(IDE_CONFIGS['github-copilot'].agentFolder).toContain('agents');
-      expect(IDE_CONFIGS.antigravity.agentFolder).toContain('.antigravity');
-      expect(IDE_CONFIGS.antigravity.agentFolder).toContain('agents');
+      // AntiGravity uses .agent/workflows instead of .antigravity/agents
+      expect(IDE_CONFIGS.antigravity.agentFolder).toContain('.agent');
+      expect(IDE_CONFIGS.antigravity.agentFolder).toContain('workflows');
     });
   });
 

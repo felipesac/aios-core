@@ -5,7 +5,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const yaml = require('js-yaml');
-const { ProjectStatusLoader } = require('../project-status-loader');
+const { ProjectStatusLoader } = require('../scripts/project-status-loader');
 
 describe('ProjectStatusLoader', () => {
   let loader;
@@ -82,10 +82,11 @@ describe('ProjectStatusLoader', () => {
   });
 
   describe('getModifiedFiles', () => {
-    it('should return empty array for non-git repo', async () => {
+    it('should return empty result for non-git repo', async () => {
       await fs.mkdir(testRoot, { recursive: true });
-      const files = await loader.getModifiedFiles();
-      expect(files).toEqual([]);
+      const result = await loader.getModifiedFiles();
+      // Implementation returns { files: [], totalCount: 0 } for non-git repos
+      expect(result.files || result).toEqual([]);
     });
 
     it('should detect modified files', async () => {

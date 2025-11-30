@@ -45,8 +45,8 @@ describe('Wizard IDE Flow Integration', () => {
       // Now includes config file + agent files (16+ files)
       expect(result.files.length).toBeGreaterThanOrEqual(1);
 
-      // Verify config file exists
-      const configPath = path.join(testDir, '.cursorrules');
+      // Verify config file exists (now in .cursor/rules.md)
+      const configPath = path.join(testDir, '.cursor', 'rules.md');
       expect(await fs.pathExists(configPath)).toBe(true);
 
       // Verify agent folder was created with agents
@@ -77,7 +77,7 @@ describe('Wizard IDE Flow Integration', () => {
       expect(result.files.length).toBeGreaterThanOrEqual(3);
 
       // Verify all config files exist
-      expect(await fs.pathExists(path.join(testDir, '.cursorrules'))).toBe(true);
+      expect(await fs.pathExists(path.join(testDir, '.cursor', 'rules.md'))).toBe(true);
       expect(await fs.pathExists(path.join(testDir, '.windsurfrules'))).toBe(true);
       expect(await fs.pathExists(path.join(testDir, '.trae', 'rules.md'))).toBe(true);
 
@@ -145,7 +145,7 @@ describe('Wizard IDE Flow Integration', () => {
       const wizardState = {
         projectType: 'greenfield',
         projectName: 'no-dir-test',
-        selectedIDEs: ['cursor', 'windsurf']
+        selectedIDEs: ['windsurf']  // Only windsurf uses root file now
       };
 
       const result = await generateIDEConfigs(wizardState.selectedIDEs, wizardState, {
@@ -154,11 +154,8 @@ describe('Wizard IDE Flow Integration', () => {
 
       expect(result.success).toBe(true);
 
-      // These should be files at root, not directories
-      const cursorStat = await fs.stat(path.join(testDir, '.cursorrules'));
+      // Windsurf should be a file at root, not directory
       const windsurfStat = await fs.stat(path.join(testDir, '.windsurfrules'));
-
-      expect(cursorStat.isFile()).toBe(true);
       expect(windsurfStat.isFile()).toBe(true);
     });
   });
@@ -177,8 +174,8 @@ describe('Wizard IDE Flow Integration', () => {
 
       expect(result.success).toBe(true);
 
-      // Check Cursor content
-      const cursorContent = await fs.readFile(path.join(testDir, '.cursorrules'), 'utf8');
+      // Check Cursor content (now in .cursor/rules.md)
+      const cursorContent = await fs.readFile(path.join(testDir, '.cursor', 'rules.md'), 'utf8');
       expect(cursorContent).toContain('AIOS-FULLSTACK');
       expect(cursorContent).toContain('Story-Driven Development');
 
@@ -244,7 +241,7 @@ describe('Wizard IDE Flow Integration', () => {
       expect(result.files.length).toBeGreaterThanOrEqual(3);
 
       // All formats should be text (markdown)
-      const cursorContent = await fs.readFile(path.join(testDir, '.cursorrules'), 'utf8');
+      const cursorContent = await fs.readFile(path.join(testDir, '.cursor', 'rules.md'), 'utf8');
       expect(typeof cursorContent).toBe('string');
 
       const traeContent = await fs.readFile(path.join(testDir, '.trae', 'rules.md'), 'utf8');
@@ -267,7 +264,7 @@ describe('Wizard IDE Flow Integration', () => {
         projectRoot: testDir
       });
 
-      const configPath = path.join(testDir, '.cursorrules');
+      const configPath = path.join(testDir, '.cursor', 'rules.md');
       const content = await fs.readFile(configPath, 'utf8');
 
       // Template should be generated with AIOS content
@@ -286,7 +283,7 @@ describe('Wizard IDE Flow Integration', () => {
 
       expect(result.success).toBe(true);
 
-      const configPath = path.join(testDir, '.cursorrules');
+      const configPath = path.join(testDir, '.cursor', 'rules.md');
       const content = await fs.readFile(configPath, 'utf8');
 
       // Template should be generated without errors
