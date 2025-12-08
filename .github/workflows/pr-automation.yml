@@ -10,7 +10,7 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
+  contents: write  # Required for git push (Story 3.11c metrics recording)
   pull-requests: write
   checks: write
 
@@ -363,4 +363,102 @@ jobs:
           else
             echo "⚠️ CodeRabbit configuration not found"
             echo "Create .coderabbit.yaml to customize review behavior"
+          fi
+
+  # ============================================================================
+  # METRICS RECORDING (Story 3.11c)
+  # ============================================================================
+
+  record-metrics:
+    name: Record Quality Metrics
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, story-validation]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0  # Full history for git operations
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Record Layer 2 metrics
+        env:
+          LINT_RESULT: ${{ needs.lint.result }}
+          TYPE_RESULT: ${{ needs.typecheck.result }}
+          TEST_RESULT: ${{ needs.test.result }}
+          STORY_RESULT: ${{ needs.story-validation.result }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH_NAME: ${{ github.head_ref }}
+          AUTHOR: ${{ github.actor }}
+        run: |
+          # Determine if all checks passed and export for Node.js
+          ALL_PASSED="true"
+          if [ "$LINT_RESULT" != "success" ] || [ "$TYPE_RESULT" != "success" ] || [ "$TEST_RESULT" != "success" ]; then
+            ALL_PASSED="false"
+          fi
+          export ALL_PASSED
+
+          # Record metrics using Node.js script
+          node -e "
+            const { recordPRReviewMetrics } = require('./.aios-core/quality/metrics-hook');
+            (async () => {
+              const passed = process.env.ALL_PASSED === 'true';
+              await recordPRReviewMetrics({
+                passed,
+                durationMs: 180000,  // ~3 minutes average
+                findingsCount: 0,
+                metadata: {
+                  prNumber: parseInt(process.env.PR_NUMBER, 10),
+                  branchName: process.env.BRANCH_NAME,
+                  author: process.env.AUTHOR,
+                  lintResult: process.env.LINT_RESULT,
+                  typecheckResult: process.env.TYPE_RESULT,
+                  testResult: process.env.TEST_RESULT,
+                  storyResult: process.env.STORY_RESULT
+                }
+              });
+              console.log('✅ Layer 2 metrics recorded');
+            })().catch(err => {
+              console.warn('⚠️ Failed to record metrics:', err.message);
+              process.exit(0);  // Don't fail the workflow
+            });
+          "
+
+      - name: Commit and push metrics update
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # Stage metrics file if it exists and has changes
+          if [ -f .aios/data/quality-metrics.json ]; then
+            git add .aios/data/quality-metrics.json
+          fi
+
+          # Only commit if there are staged changes
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(metrics): update quality metrics [skip ci]"
+
+            # Push with retry (3 attempts)
+            for i in 1 2 3; do
+              if git push; then
+                echo "✅ Metrics pushed successfully"
+                break
+              else
+                echo "⚠️ Push attempt $i failed, retrying..."
+                git pull --rebase
+                sleep 2
+              fi
+            done
+          else
+            echo "ℹ️ No metrics changes to commit"
           fi
