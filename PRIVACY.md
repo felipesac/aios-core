@@ -19,13 +19,30 @@ AIOS-FULLSTACK does **NOT** collect:
 - API keys or credentials
 - Browsing history or tracking data
 
-### What May Be Collected (Opt-in Only)
+### What May Be Collected (Consent-Based)
 
-If you explicitly opt-in to telemetry features (disabled by default):
+AIOS-FULLSTACK uses a **consent-based telemetry system**. The system is designed as follows:
+
+- **Consent Manager**: A consent management component is initialized by default to handle user preferences
+- **No automatic collection**: No data is collected until you explicitly grant consent
+- **Default state**: All telemetry consents default to "not granted" (`null` or `false`)
+- **Interactive consent**: You will be prompted to grant or deny consent for specific features
+
+If you grant consent, the following may be collected:
 - Anonymous crash reports (no personally identifiable information)
 - Anonymous usage statistics (feature usage patterns only)
+- Performance metrics (anonymized)
+- Error reports (for stability improvements)
 
-You can disable any data collection at any time by setting `telemetryEnabled: false` in your configuration.
+**To completely disable the consent manager**, set `telemetry.enabled: false` in your configuration:
+
+```javascript
+const aios = new AIOS({
+  telemetry: { enabled: false }
+});
+```
+
+You can also revoke consent at any time through the consent management interface or by deleting the `.aios/telemetry/` directory.
 
 ## Local Data Storage
 
