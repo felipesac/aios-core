@@ -301,13 +301,11 @@ For greenfield and brownfield projects, gather deployment preferences:
    - `direct-to-main`: Feature branches merge directly to main
 
 2. **Deployment Platform:**
-   - `vercel`: Vercel deployment
-   - `netlify`: Netlify deployment
-   - `aws`: AWS (S3/CloudFront, ECS, Lambda)
-   - `gcp`: Google Cloud Platform
-   - `azure`: Microsoft Azure
-   - `railway`: Railway.app
-   - `custom`: Custom deployment scripts
+   - `Vercel`: Vercel deployment
+   - `AWS`: AWS (S3/CloudFront, ECS, Lambda)
+   - `Railway`: Railway.app
+   - `Docker`: Docker-based deployment
+   - `None`: No deployment platform configured
 
 3. **Branch Configuration:**
    - Staging branch name (default: `staging`)
@@ -355,15 +353,13 @@ const { buildConfigContext, generateConfig, DeploymentWorkflow, DeploymentPlatfo
 const configContext = buildConfigContext(projectName, mode, {
   workflow: DeploymentWorkflow.STAGING_FIRST,
   platform: DeploymentPlatform.VERCEL,
-  branches: {
-    staging: 'staging',
-    production: 'main',
-  },
-  quality_gates: {
+  stagingBranch: 'staging',
+  productionBranch: 'main',
+  qualityGates: {
     lint: true,
     typecheck: true,
     tests: true,
-    security_scan: false,
+    security: false,
   },
 });
 
@@ -417,7 +413,7 @@ if (validation.isValid) {
 
 After successful execution:
 
-```
+```text
 Project Documentation Setup Complete
 =====================================
 Mode: greenfield

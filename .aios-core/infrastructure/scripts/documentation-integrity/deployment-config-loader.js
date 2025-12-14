@@ -157,11 +157,31 @@ function getTargetBranch(sourceBranch, deploymentConfig) {
   }
 
   // Default target - resolve symbolic name to actual branch
-  const defaultTarget = branches.default_target || 'production';
+  const defaultTarget = (branches.default_target || 'production').toLowerCase();
+  const stagingBranch = branches.staging_branch;
+  const productionBranch = branches.production_branch;
+
+  // Handle symbolic names
   if (defaultTarget === 'staging') {
-    return branches.staging_branch || branches.production_branch;
+    return stagingBranch || productionBranch;
   }
-  return branches.production_branch;
+  if (defaultTarget === 'production') {
+    return productionBranch;
+  }
+
+  // Handle explicit branch names as fallback (for manually-edited configs)
+  if (stagingBranch && defaultTarget === stagingBranch.toLowerCase()) {
+    return stagingBranch;
+  }
+  if (productionBranch && defaultTarget === productionBranch.toLowerCase()) {
+    return productionBranch;
+  }
+
+  // Conservative fallback with warning
+  console.warn(
+    `[deployment-config-loader] Unknown default_target "${branches.default_target}", falling back to production`,
+  );
+  return productionBranch;
 }
 
 /**

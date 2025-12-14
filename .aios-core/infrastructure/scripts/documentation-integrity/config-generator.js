@@ -62,7 +62,7 @@ const DEFAULT_DEPLOYMENT_CONFIG = {
     lint: true,
     typecheck: true,
     tests: true,
-    security: false,
+    securityScan: false,
     minCoverage: 50,
   },
 };
@@ -137,7 +137,7 @@ function buildConfigContext(projectName, mode, deploymentConfig = {}, analysisRe
     QUALITY_LINT: config.qualityGates.lint,
     QUALITY_TYPECHECK: config.qualityGates.typecheck,
     QUALITY_TESTS: config.qualityGates.tests,
-    QUALITY_SECURITY: config.qualityGates.security || false,
+    QUALITY_SECURITY: config.qualityGates.securityScan || false,
     MIN_COVERAGE: config.qualityGates.minCoverage || 50,
 
     // Brownfield specific (defaults for greenfield)
@@ -325,7 +325,7 @@ function buildDeploymentConfig(inputs = {}) {
       lint: inputs.lint !== false,
       typecheck: inputs.typecheck !== false,
       tests: inputs.tests !== false,
-      security: inputs.security || false,
+      securityScan: inputs.securityScan || false,
       minCoverage: inputs.minCoverage || 50,
     },
     autoAssignReviewers: inputs.autoAssignReviewers || false,
