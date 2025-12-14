@@ -6,6 +6,7 @@
  */
 
 const { generateEnvContent, generateEnvExample } = require('../../src/config/templates/env-template');
+const pkg = require('../../../../package.json');
 
 describe('.env Template Generator', () => {
   describe('generateEnvContent', () => {
@@ -13,7 +14,7 @@ describe('.env Template Generator', () => {
       const content = generateEnvContent();
 
       expect(content).toContain('NODE_ENV=development');
-      expect(content).toContain('AIOS_VERSION=2.1.0');
+      expect(content).toContain(`AIOS_VERSION=${pkg.version}`);
       expect(content).toContain('OPENAI_API_KEY=');
       expect(content).toContain('ANTHROPIC_API_KEY=');
       expect(content).toContain('# AIOS Environment Configuration');
@@ -83,7 +84,7 @@ describe('.env Template Generator', () => {
       const content = generateEnvExample();
 
       expect(content).toContain('NODE_ENV=development');
-      expect(content).toContain('AIOS_VERSION=2.1.0');
+      expect(content).toContain(`AIOS_VERSION=${pkg.version}`);
       expect(content).toContain('OPENAI_API_KEY=');
       expect(content).toContain('ANTHROPIC_API_KEY=');
       expect(content).toContain('CLICKUP_API_KEY=');
