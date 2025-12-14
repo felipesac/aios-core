@@ -23,6 +23,7 @@ O Sprint 6 combina:
 | [6.2](story-6.2-test-coverage-improvement.md) | Test Coverage Improvement to 80% | 8 | 🟡 Medium | 📋 Ready |
 | [6.3](story-6.3-isolated-vm-investigation.md) | isolated-vm macOS Investigation | 3 | 🟡 Medium | 📋 Ready |
 | [6.4](story-6.4-mcp-task-integration.md) | MCP-Task Integration Investigation | 21 | 🔴 Critical | ⚪ Ready |
+| [6.9](story-6.9-documentation-integrity-system.md) | Documentation Integrity System | 13 | 🔴 Critical | ✅ DONE |
 
 ### Open-Source Readiness - Community & Release (OSR-6 to OSR-10)
 
