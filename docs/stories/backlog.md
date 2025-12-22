@@ -1,9 +1,9 @@
 # Backlog
 
 **Generated:** 2025-12-05T18:00:00.000Z
-**Updated:** 2025-12-22T18:00:00.000Z
+**Updated:** 2025-12-22T19:10:00.000Z
 **Total Items:** 8
-**Stories Completed:** 20 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6, Story OSR-7, Story OSR-8, Story OSR-9, **Story OSR-10**, Story 6.9, Story 6.10, Story 6.11, Story 6.12, Story 6.13, Story SQS-0, Story SQS-1, Story SQS-2, Story SQS-3, Story SQS-4, Story SQS-9)
+**Stories Completed:** 21 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6, Story OSR-7, Story OSR-8, Story OSR-9, **Story OSR-10**, Story 6.9, Story 6.10, Story 6.11, Story 6.12, Story 6.13, **Story 6.18**, Story SQS-0, Story SQS-1, Story SQS-2, Story SQS-3, Story SQS-4, Story SQS-9)
 **Latest Release:** [v2.2.3](https://github.com/SynkraAI/aios-core/releases/tag/v2.2.3) (2025-12-22)
 
 > **Roadmap Sync Reminder:** When completing sprints, update the [AIOS Public Roadmap](https://github.com/orgs/SynkraAI/projects/1) and [ROADMAP.md](../../ROADMAP.md). See sync checklist in ROADMAP.md.
@@ -16,7 +16,7 @@
 - 🔧 **Technical Debt**: 8
 - ✨ **Enhancement**: 2
 - 🔴 **Critical**: 0
-- ✅ **Resolved**: 21 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6, Story OSR-7, Story OSR-8, Story OSR-9, **Story OSR-10**, Story 6.9, Story 6.10, Story 6.11, Story 6.12, Story 6.13, Story SQS-0, Story SQS-1, Story SQS-2, Story SQS-3, Story SQS-4, Story SQS-9, Tech Debt 1734220200001)
+- ✅ **Resolved**: 22 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6, Story OSR-7, Story OSR-8, Story OSR-9, **Story OSR-10**, Story 6.9, Story 6.10, Story 6.11, Story 6.12, Story 6.13, **Story 6.18**, Story SQS-0, Story SQS-1, Story SQS-2, Story SQS-3, Story SQS-4, Story SQS-9, Tech Debt 1734220200001)
 - ❌ **Obsolete**: 1 (removed from active backlog)
 
 ---
@@ -554,6 +554,7 @@ Esta inconsistência pode causar:
 
 | ID | Type | Title | Priority | Related Story | Resolved | PR |
 |----|------|-------|----------|---------------|----------|-----|
+| 1734912000003 | ✅ Resolved | Dynamic Manifest & Brownfield Upgrade System | 🟠 High | [6.18](v2.1/sprint-6/story-6.18-dynamic-manifest-brownfield-upgrade.md) ✅ Done | 2025-12-22 | [PR #11](https://github.com/SynkraAI/aios-core/pull/11) |
 | 1734540000001 | ✅ Resolved | Squad Designer - Guided Squad Creation | 🟠 High | [SQS-9](v2.1/sprint-8/story-sqs-9-squad-designer.md) ✅ Done | 2025-12-18 | [PR #10](https://github.com/SynkraAI/aios-core/pull/10) |
 | 1734230000001 | ✅ Resolved | Systematic Documentation Audit for OSR | 🔴 Critical | [6.13](v2.1/sprint-6/story-6.13-systematic-documentation-audit.md) ✅ Done | 2025-12-15 | [PR #5](https://github.com/SynkraAI/aios-core/pull/5) |
 | 1734225000001 | ✅ Resolved | Repository Cleanup for Open-Source Release | 🔴 Critical | [6.12](v2.1/sprint-6/story-6.12-repository-cleanup-osr.md) ✅ Done | 2025-12-15 | - |
@@ -568,6 +569,34 @@ Esta inconsistência pode causar:
 | 1733749000001 | ✅ Resolved | Repository Strategy Investigation | 🔴 Critical | [OSR-2](v2.1/sprint-5/story-osr-2-repo-investigation.md) ✅ Done | 2025-12-08 | - |
 | 1733664000001 | ✅ Resolved | GitHub DevOps Setup for User Projects | 🔴 Critical | [5.10](v2.1/sprint-5/story-5.10-github-devops-user-projects.md) ✅ Done | 2025-12-08 | [PR #29](https://github.com/Pedrovaleriolopez/aios-fullstack/pull/29) |
 | 1733673600001 | ✅ Resolved | Quality Metrics Live Integration | 🔴 Critical | [3.11c](v2.1/sprint-3/story-3.11c-metrics-live-integration.md) ✅ Done | 2025-12-08 | [PR #28](https://github.com/Pedrovaleriolopez/aios-fullstack/pull/28) |
+
+### ~~Dynamic Manifest & Brownfield Upgrade System (ID: 1734912000003)~~ ✅ RESOLVED
+
+**Created:** 2025-12-22 | **Resolved:** 2025-12-22 | **Sprint:** 6
+
+**Problem:** Static `install-manifest.yaml` (Nov 2025) couldn't detect new files for brownfield upgrades. New agents like `squad-creator` weren't being installed in existing projects.
+
+**Solution Implemented (Story 6.18 - PR #11):**
+- [x] Created `src/installer/file-hasher.js` - Cross-platform SHA256 hashing with CRLF/BOM normalization
+- [x] Created `src/installer/brownfield-upgrader.js` - Semver-based upgrade detection with user modification preservation
+- [x] Created `scripts/generate-install-manifest.js` - Dynamic manifest generation
+- [x] Created `scripts/validate-manifest.js` - Manifest integrity verification
+- [x] Integrated upgrade detection in `bin/aios-init.js` wizard
+- [x] Added `manifest-validation` job to CI workflow
+- [x] Added npm scripts: `generate:manifest`, `validate:manifest`, `prepublishOnly`
+- [x] 126 unit tests passing across 5 test suites
+
+**Features:**
+- Detects user-modified files and preserves local changes
+- Dry-run mode for safe upgrade preview
+- Generates upgrade reports (new/modified/deleted files)
+- Creates `.installed-manifest.yaml` for version tracking
+
+**Result:** Users can now run `npx aios-core` in existing projects to receive incremental upgrades without losing customizations.
+
+📄 **[Ver Story 6.18](v2.1/sprint-6/story-6.18-dynamic-manifest-brownfield-upgrade.md)**
+
+---
 
 ### ~~Systematic Documentation Audit for OSR (ID: 1734230000001)~~ ✅ RESOLVED
 
@@ -894,5 +923,5 @@ Esta inconsistência pode causar:
 ---
 
 *Auto-generated by AIOS Backlog Manager (Story 6.1.2.6)*
-*Last Updated: 2025-12-18 by @po (Pax)*
-*Update: Epic SQS - 6/9 stories complete (Sprint 7 DONE: SQS-0 ✅, SQS-1 ✅, SQS-2 ✅, SQS-3 ✅, SQS-4 ✅ | Sprint 8: SQS-9 ✅ merged PR #10)*
+*Last Updated: 2025-12-22 by @po (Pax)*
+*Update: Story 6.18 (Dynamic Manifest & Brownfield Upgrade) ✅ DONE - merged PR #11 | Epic SQS - 6/9 stories complete*
