@@ -1,32 +1,32 @@
 {
   "version": "1.0",
-  "lastUpdated": "2025-12-22T17:31:43.716Z",
+  "lastUpdated": "2025-12-22T21:59:02.046Z",
   "retentionDays": 30,
   "layers": {
     "layer1": {
       "passRate": 0.8333333333333334,
       "avgTimeMs": 1000,
-      "totalRuns": 192,
-      "lastRun": "2025-12-18T18:35:33.357Z"
+      "totalRuns": 198,
+      "lastRun": "2025-12-22T19:57:38.772Z"
     },
     "layer2": {
-      "passRate": 0.9009009009009009,
-      "avgTimeMs": 154054,
-      "totalRuns": 111,
-      "lastRun": "2025-12-22T17:31:43.715Z",
+      "passRate": 0.9043478260869565,
+      "avgTimeMs": 154174,
+      "totalRuns": 115,
+      "lastRun": "2025-12-22T21:59:02.044Z",
       "autoCatchRate": 0,
       "coderabbit": {
         "active": true,
-        "findingsCount": 160,
+        "findingsCount": 165,
         "severityBreakdown": {
           "critical": 0,
-          "high": 32,
-          "medium": 64,
-          "low": 64
+          "high": 33,
+          "medium": 66,
+          "low": 66
         }
       },
       "quinn": {
-        "findingsCount": 96,
+        "findingsCount": 99,
         "topCategories": [
           "test-coverage",
           "documentation"
@@ -36,8 +36,8 @@
     "layer3": {
       "passRate": 1,
       "avgTimeMs": 600000,
-      "totalRuns": 32,
-      "lastRun": "2025-12-18T18:35:33.096Z"
+      "totalRuns": 33,
+      "lastRun": "2025-12-22T19:57:38.524Z"
     }
   },
   "trends": {
@@ -73,7 +73,7 @@
       },
       {
         "date": "2025-12-22",
-        "value": 1
+        "value": 0.9166666666666666
       }
     ]
   },
@@ -3654,6 +3654,127 @@
         "triggeredBy": "pr",
         "prNumber": 11,
         "branchName": "feat/story-6.18-brownfield-upgrade",
+        "author": "Pedrovaleriolopez",
+        "lintResult": "success",
+        "typecheckResult": "success",
+        "testResult": "success",
+        "storyResult": "success"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.255Z",
+      "layer": 1,
+      "passed": true,
+      "durationMs": 2500,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "hook"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.301Z",
+      "layer": 1,
+      "passed": true,
+      "durationMs": 1500,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "hook"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.365Z",
+      "layer": 2,
+      "passed": true,
+      "durationMs": 180000,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "pr"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.393Z",
+      "layer": 2,
+      "passed": true,
+      "durationMs": 120000,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "pr"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.467Z",
+      "layer": 2,
+      "passed": true,
+      "durationMs": 150000,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "pr",
+        "prNumber": 42,
+        "branchName": "feature/test"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.524Z",
+      "layer": 3,
+      "passed": true,
+      "durationMs": 600000,
+      "findingsCount": 1,
+      "metadata": {
+        "triggeredBy": "manual"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.569Z",
+      "layer": 1,
+      "passed": true,
+      "durationMs": 0,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "hook"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.629Z",
+      "layer": 1,
+      "passed": false,
+      "durationMs": 0,
+      "findingsCount": 1,
+      "metadata": {
+        "triggeredBy": "hook"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.705Z",
+      "layer": 1,
+      "passed": true,
+      "durationMs": 0,
+      "findingsCount": 2,
+      "metadata": {
+        "triggeredBy": "hook",
+        "lintErrors": 1,
+        "typeErrors": 1
+      }
+    },
+    {
+      "timestamp": "2025-12-22T19:57:38.772Z",
+      "layer": 1,
+      "passed": true,
+      "durationMs": 2000,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "hook"
+      }
+    },
+    {
+      "timestamp": "2025-12-22T21:59:02.044Z",
+      "layer": 2,
+      "passed": true,
+      "durationMs": 180000,
+      "findingsCount": 0,
+      "metadata": {
+        "triggeredBy": "pr",
+        "prNumber": 12,
+        "branchName": "feature/story-6.19-ide-command-auto-sync",
         "author": "Pedrovaleriolopez",
         "lintResult": "success",
         "typecheckResult": "success",
