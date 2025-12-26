@@ -1,291 +1,641 @@
-# Creating Squads for AIOS
+# Squad Development Guide
 
-This guide explains how to create and publish Squads for AIOS.
+Complete guide for creating, validating, publishing, and managing Squads in AIOS.
 
-> **AIOS Squads:** Equipes de AI agents trabalhando com você 🤖
+> **AIOS Squads:** Equipes de AI agents trabalhando com você
+
+## Table of Contents
+
+1. [What is a Squad?](#what-is-a-squad)
+2. [Quick Start](#quick-start)
+3. [Squad Architecture](#squad-architecture)
+4. [Creating Squads](#creating-squads)
+5. [Squad Designer](#squad-designer)
+6. [Validating Squads](#validating-squads)
+7. [Publishing & Distribution](#publishing--distribution)
+8. [Migration from Legacy Format](#migration-from-legacy-format)
+9. [Squad Loader & Resolution](#squad-loader--resolution)
+10. [Troubleshooting](#troubleshooting)
+11. [FAQ](#faq)
+
+---
 
 ## What is a Squad?
 
-Squads are modular teams of AI agents that extend AIOS functionality with:
-- New agents with specialized capabilities
-- Custom workflows for specific domains
-- Task libraries for common operations
-- Templates for document generation
+Squads are modular teams of AI agents that extend AIOS functionality. Each squad is a self-contained package containing:
+
+| Component | Purpose |
+|-----------|---------|
+| **Agents** | Domain-specific AI personas |
+| **Tasks** | Executable workflows (TASK-FORMAT-SPEC-V1) |
+| **Workflows** | Multi-step orchestrations |
+| **Config** | Coding standards, tech stack, source tree |
+| **Templates** | Document generation templates |
+| **Tools** | Custom tool integrations |
+
+### Distribution Levels
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SQUAD DISTRIBUTION                        │
+├─────────────────────────────────────────────────────────────┤
+│  Level 1: LOCAL        → ./squads/           (Private)      │
+│  Level 2: AIOS-SQUADS  → github.com/SynkraAI (Public/Free)  │
+│  Level 3: SYNKRA API   → api.synkra.dev      (Marketplace)  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Official Squads
+
+| Squad | Version | Description |
+|-------|---------|-------------|
+| [etl-squad](https://github.com/SynkraAI/aios-squads/tree/main/etl) | 2.0.0 | Data collection and transformation |
+| [creator-squad](https://github.com/SynkraAI/aios-squads/tree/main/creator) | 1.0.0 | Content generation utilities |
+
+---
 
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
-- Familiarity with AIOS architecture
+- AIOS project initialized (`.aios-core/` exists)
 - Git for version control
 
-### Create Your First Squad
+### Option 1: Guided Design (Recommended)
 
 ```bash
-# Clone the template
-npx create-aios-squad my-squad
+# Activate squad-creator agent
+@squad-creator
 
-# Navigate to directory
-cd my-squad
+# Design squad from your documentation
+*design-squad --docs ./docs/prd/my-project.md
 
-# Install dependencies
-npm install
+# Review recommendations, then create
+*create-squad my-squad --from-design
 
-# Start development
-npm run dev
+# Validate before use
+*validate-squad my-squad
 ```
 
-## Squad Structure
+### Option 2: Direct Creation
 
-```
-my-squad/
-├── squad.yaml             # Squad manifest
-├── README.md              # Documentation
-├── LICENSE                # License file
-├── package.json           # npm configuration
-├── agents/                # Agent definitions
-│   └── my-agent.yaml
-├── tasks/                 # Task workflows
-│   └── my-task.yaml
-├── workflows/             # Multi-step workflows
-│   └── my-workflow.yaml
-├── templates/             # Templates
-│   └── my-template.md
-└── tests/                 # Test files
-    └── my-agent.test.js
+```bash
+@squad-creator
+
+# Create with interactive prompts
+*create-squad my-domain-squad
+
+# Or specify template
+*create-squad my-squad --template etl
 ```
 
-## Squad Manifest
+---
 
-The `squad.yaml` defines your Squad:
+## Squad Architecture
+
+### Directory Structure
+
+```
+./squads/my-squad/
+├── squad.yaml              # Manifest (required)
+├── README.md               # Documentation
+├── LICENSE                 # License file
+├── config/
+│   ├── coding-standards.md # Code style rules
+│   ├── tech-stack.md       # Technologies used
+│   └── source-tree.md      # Directory structure
+├── agents/
+│   └── my-agent.md         # Agent definitions
+├── tasks/
+│   └── my-task.md          # Task definitions (task-first!)
+├── workflows/
+│   └── my-workflow.yaml    # Multi-step workflows
+├── checklists/
+│   └── review-checklist.md # Validation checklists
+├── templates/
+│   └── report-template.md  # Document templates
+├── tools/
+│   └── custom-tool.js      # Custom tool integrations
+├── scripts/
+│   └── setup.js            # Utility scripts
+└── data/
+    └── reference-data.json # Static data files
+```
+
+### Squad Manifest (squad.yaml)
 
 ```yaml
-name: my-squad
-version: 1.0.0
-description: Description of what this Squad does
-author: Your Name
-license: MIT
+# Required fields
+name: my-squad                    # kebab-case, unique identifier
+version: 1.0.0                    # Semantic versioning
+description: What this squad does
 
+# Metadata
+author: Your Name <email@example.com>
+license: MIT
+slashPrefix: my                   # Command prefix for IDE
+
+# AIOS compatibility
 aios:
   minVersion: "2.1.0"
   type: squad
 
+# Components declaration
 components:
   agents:
-    - agents/*.yaml
+    - my-agent.md
   tasks:
-    - tasks/*.yaml
-  workflows:
-    - workflows/*.yaml
-  templates:
-    - templates/*.md
+    - my-task.md
+  workflows: []
+  checklists: []
+  templates: []
+  tools: []
+  scripts: []
 
-dependencies: []
+# Configuration inheritance
+config:
+  extends: extend                 # extend | override | none
+  coding-standards: config/coding-standards.md
+  tech-stack: config/tech-stack.md
+  source-tree: config/source-tree.md
 
-keywords:
-  - aios
-  - squad
-  - your-domain
+# Dependencies
+dependencies:
+  node: []                        # npm packages
+  python: []                      # pip packages
+  squads: []                      # Other squads
+
+# Discovery tags
+tags:
+  - domain-specific
+  - automation
 ```
 
-## Creating Agents
+### Task-First Architecture
 
-### Agent YAML Structure
+Squads follow **task-first architecture** where tasks are the primary entry point:
 
-```yaml
-# agents/my-agent.yaml
-name: my-agent
-version: 1.0.0
-description: What this agent does
-
-persona:
-  name: Agent Name
-  role: Agent Role
-  expertise:
-    - Skill 1
-    - Skill 2
-
-capabilities:
-  - capability-1
-  - capability-2
-
-commands:
-  - name: my-command
-    description: What this command does
-    workflow: my-workflow
-
-system_prompt: |
-  You are [Agent Name], specialized in...
-
-  Your responsibilities:
-  - Responsibility 1
-  - Responsibility 2
+```
+User Request → Task → Agent Execution → Output
+                ↓
+           Workflow (if multi-step)
 ```
 
-### Agent Best Practices
-- Keep agents focused on specific domains
-- Define clear boundaries and capabilities
-- Include helpful error messages
-- Document all commands
-- Follow AIOS Squad naming conventions
-
-## Creating Tasks
-
-### Task YAML Structure
-
-```yaml
-# tasks/my-task.yaml
-name: my-task
-version: 1.0.0
-description: What this task does
-
-inputs:
-  - name: input1
-    type: string
-    required: true
-    description: Description of input
-
-outputs:
-  - name: result
-    type: object
-    description: What the task returns
-
-steps:
-  - id: step-1
-    action: validate-inputs
-    description: Validate provided inputs
-
-  - id: step-2
-    action: process-data
-    description: Process the data
-    depends_on: [step-1]
-
-  - id: step-3
-    action: return-result
-    description: Return the processed result
-    depends_on: [step-2]
-```
-
-## Creating Workflows
-
-### Workflow YAML Structure
-
-```yaml
-# workflows/my-workflow.yaml
-name: my-workflow
-version: 1.0.0
-description: Multi-step workflow description
-
-trigger:
-  command: "*my-command"
-  agent: my-agent
-
-elicitation:
-  enabled: true
-  questions:
-    - id: q1
-      prompt: "What would you like to do?"
-      type: choice
-      options:
-        - Option A
-        - Option B
-
-steps:
-  - task: my-task
-    inputs:
-      input1: "{{elicitation.q1}}"
-    on_success: next
-    on_error: handle-error
-
-error_handling:
-  - id: handle-error
-    action: notify
-    message: "An error occurred"
-```
-
-## Testing Your Squad
-
-### Unit Tests
-
-```javascript
-// tests/my-agent.test.js
-import { loadAgent, executeCommand } from '@aios/testing';
-
-describe('my-agent', () => {
-  let agent;
-
-  beforeAll(async () => {
-    agent = await loadAgent('./agents/my-agent.yaml');
-  });
-
-  test('should execute my-command', async () => {
-    const result = await executeCommand(agent, '*my-command', {
-      input1: 'test'
-    });
-    expect(result.success).toBe(true);
-  });
-});
-```
-
-### Running Tests
-
-```bash
-npm test
-```
-
-## Publishing Your Squad
-
-### To npm (Public)
-
-```bash
-# Login to npm
-npm login
-
-# Publish
-npm publish
-```
-
-### To GitHub (Alternative)
-
-1. Create repository in `aios-squads` org or your own
-2. Add topics: `aios`, `aios-squad`
-3. Create release with semantic version
-
-## Integration Guidelines
-
-### Compatibility
-- Test with minimum supported AIOS version
-- Document any special requirements
-- Handle missing dependencies gracefully
-
-### Performance
-- Keep agent definitions lightweight
-- Optimize workflows for speed
-- Cache when appropriate
-
-### Security
-- Never store credentials in code
-- Use environment variables
-- Validate all inputs
-
-## Example Squads
-
-### Official Squads (Reference)
-- [ETL Squad](https://github.com/SynkraAI/aios-squads/tree/main/etl) - Data collection and transformation
-- [Creator Squad](https://github.com/SynkraAI/aios-squads/tree/main/creator) - Content generation
-
-## Getting Help
-
-- [GitHub Discussions](https://github.com/SynkraAI/aios-core/discussions/categories/ideas)
-- [Issue Tracker](https://github.com/SynkraAI/aios-core/issues)
-
-## Contributing Back
-
-Found an issue or have an improvement?
-- Submit bug reports
-- Propose enhancements
-- Share your Squad with the community!
+Tasks must follow [TASK-FORMAT-SPECIFICATION-V1](../../.aios-core/docs/standards/TASK-FORMAT-SPECIFICATION-V1.md).
 
 ---
 
-*AIOS Squads: Equipes de AI agents trabalhando com você* 🤖
+## Creating Squads
+
+### Using @squad-creator Agent
+
+```bash
+# Activate the agent
+@squad-creator
+
+# View all commands
+*help
+```
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `*create-squad {name}` | Create new squad with prompts |
+| `*create-squad {name} --template {type}` | Create from template (basic, etl, agent-only) |
+| `*create-squad {name} --from-design` | Create from design blueprint |
+| `*validate-squad {name}` | Validate squad structure |
+| `*list-squads` | List all local squads |
+| `*design-squad` | Design squad from documentation |
+
+### Templates
+
+| Template | Use Case |
+|----------|----------|
+| `basic` | Simple squad with one agent and task |
+| `etl` | Data extraction, transformation, loading |
+| `agent-only` | Squad with agents, no tasks |
+
+### Config Inheritance Modes
+
+| Mode | Behavior |
+|------|----------|
+| `extend` | Add squad rules to core AIOS rules |
+| `override` | Replace core rules with squad rules |
+| `none` | Standalone configuration |
+
+---
+
+## Squad Designer
+
+The Squad Designer analyzes your documentation and recommends agents and tasks.
+
+### Usage
+
+```bash
+@squad-creator
+
+# Interactive design
+*design-squad
+
+# Design from specific files
+*design-squad --docs ./docs/prd/requirements.md ./docs/specs/api.md
+
+# Specify domain context
+*design-squad --domain casting --docs ./docs/
+```
+
+### Workflow
+
+1. **Collect Documentation** - Provide PRDs, specs, requirements
+2. **Domain Analysis** - System extracts concepts, workflows, roles
+3. **Agent Recommendations** - Review suggested agents
+4. **Task Recommendations** - Review suggested tasks
+5. **Generate Blueprint** - Save to `.squad-design.yaml`
+6. **Create from Blueprint** - `*create-squad my-squad --from-design`
+
+### Blueprint Format
+
+```yaml
+# .squad-design.yaml
+metadata:
+  domain: casting
+  created: 2025-12-26T10:00:00Z
+  source_docs:
+    - ./docs/prd/casting-system.md
+
+recommended_agents:
+  - name: casting-coordinator
+    role: Coordinates casting workflows
+    confidence: 0.92
+
+recommended_tasks:
+  - name: process-submission
+    description: Process actor submission
+    agent: casting-coordinator
+    confidence: 0.88
+```
+
+---
+
+## Validating Squads
+
+### Basic Validation
+
+```bash
+@squad-creator
+*validate-squad my-squad
+```
+
+### Strict Mode (for CI/CD)
+
+```bash
+*validate-squad my-squad --strict
+```
+
+Treats warnings as errors.
+
+### Validation Checks
+
+| Check | Description |
+|-------|-------------|
+| **Manifest Schema** | squad.yaml against JSON Schema |
+| **Directory Structure** | Required folders exist |
+| **Task Format** | Tasks follow TASK-FORMAT-SPEC-V1 |
+| **Agent Definitions** | Agents have required fields |
+| **Dependencies** | Referenced files exist |
+
+### Validation Output
+
+```
+Validating squad: my-squad
+═══════════════════════════
+
+✅ Manifest: Valid
+✅ Structure: Complete
+✅ Tasks: 3/3 valid
+✅ Agents: 2/2 valid
+⚠️ Warnings:
+   - README.md is minimal (consider expanding)
+
+Summary: VALID (3 warnings)
+```
+
+### Programmatic Validation
+
+```javascript
+const { SquadValidator } = require('./.aios-core/development/scripts/squad');
+
+const validator = new SquadValidator({ strict: false });
+const result = await validator.validate('./squads/my-squad');
+
+console.log(result);
+// { valid: true, errors: [], warnings: [...], suggestions: [...] }
+```
+
+---
+
+## Publishing & Distribution
+
+### Level 1: Local (Private)
+
+Squads in `./squads/` are automatically available to your project.
+
+```bash
+# List local squads
+*list-squads
+```
+
+### Level 2: aios-squads Repository (Public)
+
+```bash
+@squad-creator
+
+# Validate first
+*validate-squad my-squad --strict
+
+# Publish to GitHub
+*publish-squad ./squads/my-squad
+```
+
+This creates a PR to [SynkraAI/aios-squads](https://github.com/SynkraAI/aios-squads).
+
+### Level 3: Synkra Marketplace
+
+```bash
+# Set up authentication
+export SYNKRA_API_TOKEN="your-token"
+
+# Sync to marketplace
+*sync-squad-synkra ./squads/my-squad --public
+```
+
+### Downloading Squads
+
+```bash
+@squad-creator
+
+# List available squads
+*download-squad --list
+
+# Download specific squad
+*download-squad etl-squad
+
+# Download specific version
+*download-squad etl-squad@2.0.0
+```
+
+---
+
+## Migration from Legacy Format
+
+### Detecting Legacy Squads
+
+Legacy squads use `config.yaml` instead of `squad.yaml` and may be missing:
+- `aios.type` field
+- `aios.minVersion` field
+- Task-first structure
+
+### Migration Command
+
+```bash
+@squad-creator
+
+# Preview changes
+*migrate-squad ./squads/legacy-squad --dry-run
+
+# Execute migration
+*migrate-squad ./squads/legacy-squad
+
+# Verbose output
+*migrate-squad ./squads/legacy-squad --verbose
+```
+
+### Migration Steps
+
+1. **Backup** - Creates `.backup/pre-migration-{timestamp}/`
+2. **Rename** - `config.yaml` → `squad.yaml`
+3. **Add Fields** - `aios.type`, `aios.minVersion`
+4. **Restructure** - Organize into task-first layout
+5. **Validate** - Run validation on migrated squad
+
+### Rollback
+
+```bash
+# Restore from backup
+cp -r ./squads/my-squad/.backup/pre-migration-*/. ./squads/my-squad/
+```
+
+See [Squad Migration Guide](./squad-migration.md) for detailed scenarios.
+
+---
+
+## Squad Loader & Resolution
+
+### Resolution Chain
+
+The Squad Loader resolves squads in this order:
+
+```
+1. Local     → ./squads/{name}/
+2. npm       → node_modules/@aios-squads/{name}/
+3. Workspace → ../{name}/ (monorepo)
+4. Registry  → api.synkra.dev/squads/{name}
+```
+
+### Programmatic Usage
+
+```javascript
+const { SquadLoader } = require('./.aios-core/development/scripts/squad');
+
+const loader = new SquadLoader({
+  squadsPath: './squads',
+  verbose: false
+});
+
+// Resolve squad path
+const { path, manifestPath } = await loader.resolve('my-squad');
+
+// Load manifest
+const manifest = await loader.loadManifest('./squads/my-squad');
+
+// List all local squads
+const squads = await loader.listLocal();
+// [{ name: 'my-squad', path: './squads/my-squad', manifestPath: '...' }]
+```
+
+### Error Handling
+
+```javascript
+const { SquadLoader, SquadLoaderError } = require('./.aios-core/development/scripts/squad');
+
+try {
+  await loader.resolve('non-existent');
+} catch (error) {
+  if (error instanceof SquadLoaderError) {
+    console.error(`[${error.code}] ${error.message}`);
+    console.log(`Suggestion: ${error.suggestion}`);
+  }
+}
+```
+
+### Error Codes
+
+| Code | Description | Solution |
+|------|-------------|----------|
+| `SQUAD_NOT_FOUND` | Squad directory not found | Create with `*create-squad` |
+| `MANIFEST_NOT_FOUND` | No manifest file | Create `squad.yaml` |
+| `YAML_PARSE_ERROR` | Invalid YAML syntax | Use YAML linter |
+| `PERMISSION_DENIED` | File permission error | Check `chmod 644` |
+
+---
+
+## Troubleshooting
+
+### "Squad not found"
+
+```bash
+# Check squads directory exists
+ls ./squads/
+
+# Verify manifest
+cat ./squads/my-squad/squad.yaml
+
+# Check resolution
+@squad-creator
+*list-squads
+```
+
+### Validation Errors
+
+```bash
+# Get detailed errors
+*validate-squad my-squad --verbose
+
+# Common fixes:
+# - name: must be kebab-case
+# - version: must be semver (x.y.z)
+# - aios.type: must be "squad"
+# - aios.minVersion: must be valid semver
+```
+
+### YAML Parse Errors
+
+```bash
+# Validate YAML syntax online or with:
+npx js-yaml ./squads/my-squad/squad.yaml
+```
+
+Common issues:
+- Incorrect indentation (use 2 spaces)
+- Missing quotes around special characters
+- Tabs instead of spaces
+
+### Migration Failures
+
+```bash
+# Check backup exists
+ls ./squads/my-squad/.backup/
+
+# Restore and retry
+cp -r ./squads/my-squad/.backup/pre-migration-*/. ./squads/my-squad/
+*migrate-squad ./squads/my-squad --verbose
+```
+
+### Publishing Errors
+
+```bash
+# Check GitHub authentication
+gh auth status
+
+# Check squad validation
+*validate-squad my-squad --strict
+
+# Check for naming conflicts
+*download-squad --list | grep my-squad
+```
+
+---
+
+## FAQ
+
+### What's the difference between a Squad and an Expansion Pack?
+
+**Squads** are the new standard (AIOS 2.1+) replacing Expansion Packs. Squads have:
+- Task-first architecture
+- JSON Schema validation
+- Three-level distribution
+- Better tooling (`@squad-creator`)
+
+### Can I use Squads from different sources together?
+
+Yes. The Squad Loader resolves from multiple sources. Local squads take precedence.
+
+### How do I update a published Squad?
+
+1. Update version in `squad.yaml` (semver)
+2. Run `*validate-squad --strict`
+3. Re-publish: `*publish-squad` or `*sync-squad-synkra`
+
+### Can Squads depend on other Squads?
+
+Yes, declare in `dependencies.squads`:
+
+```yaml
+dependencies:
+  squads:
+    - etl-squad@^2.0.0
+```
+
+### How do I make a Squad private?
+
+- **Level 1**: Keep in `./squads/` (not committed) - add to `.gitignore`
+- **Level 3**: Sync with `--private` flag: `*sync-squad-synkra my-squad --private`
+
+### What's the minimum AIOS version for Squads?
+
+Squads require AIOS 2.1.0+. Set in manifest:
+
+```yaml
+aios:
+  minVersion: "2.1.0"
+```
+
+### How do I test my Squad before publishing?
+
+```bash
+# 1. Validate structure
+*validate-squad my-squad --strict
+
+# 2. Test locally
+@my-agent  # Activate squad agent
+*my-task   # Run squad task
+
+# 3. Run squad tests (if defined)
+npm test -- tests/squads/my-squad/
+```
+
+---
+
+## Related Resources
+
+- [TASK-FORMAT-SPECIFICATION-V1](../../.aios-core/docs/standards/TASK-FORMAT-SPECIFICATION-V1.md)
+- [Contributing Squads Guide](./contributing-squads.md)
+- [Squad Migration Guide](./squad-migration.md)
+- [Squads API Reference](../api/squads-api.md)
+- [@squad-creator Agent](../../.aios-core/development/agents/squad-creator.md)
+- [aios-squads Repository](https://github.com/SynkraAI/aios-squads)
+
+---
+
+## Getting Help
+
+- [GitHub Discussions](https://github.com/SynkraAI/aios-core/discussions)
+- [Issue Tracker](https://github.com/SynkraAI/aios-core/issues)
+
+---
+
+*AIOS Squads: Equipes de AI agents trabalhando com você*
+
+**Version:** 2.0.0 | **Updated:** 2025-12-26 | **Story:** SQS-8

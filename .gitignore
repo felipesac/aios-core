@@ -142,6 +142,7 @@ aios-core/*.map
 # External projects (separate repositories)
 aios-guide-app/
 examples/
+!docs/examples/
 supabase/
 
 # Output directories (generated artifacts)
