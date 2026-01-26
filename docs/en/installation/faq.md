@@ -609,7 +609,5 @@ projectStatus:
 
 ## Related Documentation
 
-- [Quick Start Guide](./v2.1-quick-start.md)
 - [Troubleshooting Guide](./troubleshooting.md)
-- [Migration Guide v2.0 to v2.1](./migration-v2.0-to-v2.1.md)
 - [Coding Standards](../framework/coding-standards.md)

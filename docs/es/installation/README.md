@@ -21,10 +21,8 @@ Este directorio contiene documentación completa de instalación y configuració
 
 | Documento | Descripción | Audiencia |
 |----------|-------------|----------|
-| [Guía de Inicio Rápido](./v2.1-quick-start.md) | Tutorial completo de instalación | Nuevos usuarios |
 | [Solución de Problemas](./troubleshooting.md) | Problemas comunes y soluciones | Todos los usuarios |
 | [Preguntas Frecuentes](./faq.md) | Preguntas frecuentes | Todos los usuarios |
-| [Guía de Migración](./migration-v2.0-to-v2.1.md) | Actualización desde v2.0 | Usuarios existentes |
 
 ---
 
@@ -36,7 +34,6 @@ Este directorio contiene documentación completa de instalación y configuració
 npx @synkra/aios-core install
 ```
 
-Consulte la [Guía de Inicio Rápido](./v2.1-quick-start.md) para instrucciones detalladas.
 
 ### Actualización
 
@@ -44,7 +41,6 @@ Consulte la [Guía de Inicio Rápido](./v2.1-quick-start.md) para instrucciones 
 npx @synkra/aios-core install --force-upgrade
 ```
 
-Consulte la [Guía de Migración](./migration-v2.0-to-v2.1.md) para cambios importantes y procedimiento de actualización.
 
 ### ¿Tiene Problemas?
 

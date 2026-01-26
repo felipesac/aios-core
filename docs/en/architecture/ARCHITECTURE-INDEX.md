@@ -1,7 +1,7 @@
 # AIOS Architecture Documentation Index
 
 **Version:** 2.1.1
-**Last Updated:** 2025-12-14
+**Last Updated:** 2026-01-26
 **Status:** Official Reference
 
 ---
@@ -19,17 +19,13 @@ This index provides navigation to all architecture documentation for AIOS v2.1.
 ```
 docs/architecture/
 ├── ARCHITECTURE-INDEX.md     # This file
-├── mcp-system-diagrams.md    # MCP architecture diagrams
-├── mcp-api-keys-management.md # API key management
 ├── high-level-architecture.md # System overview
 ├── module-system.md          # 4-module architecture
-├── multi-repo-strategy.md    # Repository structure
-├── decisions/                # Architectural decisions (ADRs)
-└── [deprecated]              # source-tree.md, coding-standards.md, tech-stack.md
-                              # (use docs/framework/ versions instead)
+├── mcp-system-diagrams.md    # MCP architecture diagrams
+├── memory-layer.md           # Memory system architecture
+├── adr/                      # Architectural Decision Records
+└── [framework/]              # See docs/framework/ for standards
 ```
-
-> **Archived Analysis:** Legacy MCP optimization docs (1MCP) moved to `.github/deprecated-docs/architecture/analysis/`
 
 ---
 
@@ -41,59 +37,53 @@ docs/architecture/
 |----------|-------------|--------|
 | [High-Level Architecture](./high-level-architecture.md) | Overview of AIOS v2.1 architecture | ✅ Current |
 | [Module System](./module-system.md) | 4-module modular architecture | ✅ Current |
-| [Multi-Repo Strategy](./multi-repo-strategy.md) | 3 public + 2 private repos | ✅ Current |
-| [Multi-Repo Strategy (PT-BR)](./multi-repo-strategy-pt.md) | Portuguese version | ✅ Current |
+| [Memory Layer](./memory-layer.md) | Memory system architecture | ✅ Current |
 
 ### MCP & Integrations
 
 | Document | Description | Status |
 |----------|-------------|--------|
 | [MCP System Diagrams](./mcp-system-diagrams.md) | MCP architecture diagrams | ✅ Current |
-| [MCP API Keys Management](./mcp-api-keys-management.md) | API key management | ✅ Current |
 
-> **Note:** MCP management is handled via Docker MCP Toolkit (Story 5.11). Use `@devops` agent with `*setup-mcp-docker` for configuration. Legacy 1MCP docs archived in `.github/deprecated-docs/`.
+> **Note:** MCP management is handled via Docker MCP Toolkit (Story 5.11). Use `@devops` agent with `*setup-mcp-docker` for configuration.
 
 ### Agent System
 
 | Document | Description | Status |
 |----------|-------------|--------|
 | [Agent Responsibility Matrix](./agent-responsibility-matrix.md) | Agent roles and responsibilities | ✅ Current |
-| [Agent Tool Integration](./agent-tool-integration-guide.md) | Tool integration guide | ✅ Current |
 | [Agent Config Audit](./agent-config-audit.md) | Configuration audit | ✅ Current |
 
-### Tools & Scripts
+### Tools & Utilities
 
 | Document | Description | Status |
 |----------|-------------|--------|
 | [Utility Integration Guide](./utility-integration-guide.md) | Utility integration | ✅ Current |
-| [Scripts Consolidation](./analysis/scripts-consolidation-analysis.md) | Scripts analysis | ✅ Current |
-| [Internal Tools Analysis](./internal-tools-analysis.md) | Tools analysis | ✅ Current |
+| [CI/CD](./ci-cd.md) | CI/CD pipeline documentation | ✅ Current |
 
-### Squad System (formerly Squads)
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [Squads Structure](./analysis/Squads-structure-inventory.md) | Structure inventory | ⚠️ Update terminology |
-| [Squads Dependencies](./analysis/Squads-dependency-analysis.md) | Dependency analysis | ⚠️ Update terminology |
-| [Architect Validation](./architect-Squad-rearchitecture.md) | Rearchitecture | ⚠️ Update terminology |
-
-### Migration & Strategy
+### Health Check System (HCS)
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [Repository Migration Plan](./repository-migration-plan.md) | Migration execution plan | ✅ Current |
-| [Repository Strategy Analysis](./analysis/repository-strategy-analysis.md) | Strategy analysis | ✅ Current |
-| [Subdirectory Migration](./analysis/subdirectory-migration-impact-analysis.md) | Impact analysis | ✅ Current |
-| [Dependency Resolution](./dependency-resolution-plan.md) | Dependency resolution | ✅ Current |
+| [HCS Check Specifications](./hcs-check-specifications.md) | Health check specs | ✅ Current |
+| [HCS Execution Modes](./hcs-execution-modes.md) | Execution modes | ✅ Current |
+| [HCS Self-Healing Spec](./hcs-self-healing-spec.md) | Self-healing specification | ✅ Current |
 
-### Special Topics
+### Squad System
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [Synkra Rebranding](./SYNKRA-REBRANDING-SPECIFICATION.md) | Framework vs Product naming | ✅ Current |
-| [CodeRabbit Integration](./coderabbit-integration-decisions.md) | Code review integration | ✅ Current |
-| [Memory Layer](./memory-layer.md) | Memory system architecture | ✅ Current |
-| [Hybrid Ops PV Mind](./hybrid-ops-pv-mind-integration.md) | PV Mind integration | ✅ Current |
+| [Squad Improvement Analysis](./squad-improvement-analysis.md) | Improvement analysis | ✅ Current |
+| [Squad Improvement Approach](./squad-improvement-recommended-approach.md) | Recommended approach | ✅ Current |
+
+### Architectural Decision Records (ADR)
+
+| Document | Description | Status |
+|----------|-------------|--------|
+| [ADR COLLAB-1](./adr/ADR-COLLAB-1-current-state-audit.md) | Current state audit | ✅ Current |
+| [ADR COLLAB-2](./adr/ADR-COLLAB-2-proposed-configuration.md) | Proposed configuration | ✅ Current |
+| [ADR HCS](./adr/adr-hcs-health-check-system.md) | Health Check System | ✅ Current |
+| [ADR Isolated VM](./adr/adr-isolated-vm-decision.md) | Isolated VM decision | ✅ Current |
 
 ### Reference Documents (Official in docs/framework/)
 
@@ -103,26 +93,14 @@ docs/architecture/
 | [Coding Standards](../framework/coding-standards.md) | Code standards | ✅ Current |
 | [Source Tree](../framework/source-tree.md) | Project structure | ✅ Current |
 
-> **Note:** These are linked to `docs/framework/` which is the official location. The copies in `docs/architecture/` are deprecated.
+> **Note:** These are linked to `docs/framework/` which is the official location.
 
-### Analysis Documents (analysis/)
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [Tools System Analysis](./analysis/tools-system-analysis-log.md) | Analysis log | 📦 Archive candidate |
-| [Tools System Gap Analysis](./analysis/tools-system-gap-analysis.md) | Gap analysis | 📦 Archive candidate |
-
-### Legacy & Archived
+### Research & Analysis
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [Introduction](./introduction.md) | Original intro (v2.0) | 📦 Archive candidate |
-| [MVP Components](./mvp-components.md) | MVP components (v2.0) | 📦 Archive candidate |
-| [Tools System Brownfield](./tools-system-brownfield.md) | Brownfield analysis | 📦 Archive candidate |
-| [Tools System Schema](./tools-system-schema-refinement.md) | Schema refinement | 📦 Archive candidate |
-| [Tools System Handoff](./tools-system-handoff.md) | Handoff notes | 📦 Archive candidate |
-| [Technical Review Greeting](./technical-review-greeting-system-unification.md) | Greeting system | 📦 Archive candidate |
-| [Schema Comparison](./schema-comparison-sqlite-supabase.md) | DB schema comparison | 📦 Archive candidate |
+| [Contribution Workflow Research](./contribution-workflow-research.md) | Contribution analysis | ✅ Current |
+| [Introduction](./introduction.md) | Original intro (v2.0) | 📦 Legacy |
 
 ---
 
@@ -176,32 +154,18 @@ docs/architecture/
 ### Quick Start (30 min)
 1. [High-Level Architecture](./high-level-architecture.md)
 2. [Module System](./module-system.md)
-3. [Multi-Repo Strategy](./multi-repo-strategy.md)
+3. [Framework README](../framework/README.md)
 
 ### Deep Dive (2-3 hours)
 1. All Quick Start documents
 2. [Agent Responsibility Matrix](./agent-responsibility-matrix.md)
 3. [MCP System Diagrams](./mcp-system-diagrams.md)
-4. [CodeRabbit Integration](./coderabbit-integration-decisions.md)
-5. [Tech Stack](./tech-stack.md)
+4. [Tech Stack](../framework/tech-stack.md)
 
 ### Complete Mastery (1-2 days)
 1. All documents in this index
-2. Related standards in `.aios-core/docs/standards/`
-3. Implementation stories in `docs/stories/v2.1/`
-
----
-
-## 🔗 Related Documentation
-
-### Standards (`.aios-core/docs/standards/`)
-- [AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md](../../.aios-core/docs/standards/AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md)
-- [QUALITY-GATES-SPECIFICATION.md](../../.aios-core/docs/standards/QUALITY-GATES-SPECIFICATION.md)
-- [STORY-TEMPLATE-V2-SPECIFICATION.md](../../.aios-core/docs/standards/STORY-TEMPLATE-V2-SPECIFICATION.md)
-
-### Stories
-- [Sprint 5 - OSR Stories](../stories/v2.1/sprint-5/)
-- [Sprint 6 - Release Stories](../stories/v2.1/sprint-6/)
+2. ADR documents for architectural decisions
+3. HCS documentation for health check system
 
 ---
 
@@ -211,10 +175,10 @@ docs/architecture/
 |--------|---------|
 | ✅ Current | Up-to-date with v2.1 |
 | ⚠️ Update needed | Needs terminology or content update |
-| 📦 Archive candidate | Should be moved to `_archived/` |
+| 📦 Legacy | Historical reference |
 | 🆕 New | Recently created |
 
 ---
 
-**Last Updated:** 2025-12-14
+**Last Updated:** 2026-01-26
 **Maintainer:** @architect (Aria)

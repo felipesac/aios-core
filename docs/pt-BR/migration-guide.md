@@ -277,7 +277,7 @@ Se você encontrar problemas não cobertos aqui:
 1. **Verificar Logs**: Revise `.aios-core/logs/upgrade.log`
 2. **Issues no GitHub**: [github.com/SynkraAI/aios-core/issues](https://github.com/SynkraAI/aios-core/issues)
 3. **Comunidade Discord**: [discord.gg/gk8jAdXWmj](https://discord.gg/gk8jAdXWmj)
-4. **Documentação**: [diretório docs](./README.md)
+4. **Documentação**: [diretório docs](./getting-started.md)
 
 ## Notas Específicas por Versão
 

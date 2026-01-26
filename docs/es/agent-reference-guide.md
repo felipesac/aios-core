@@ -515,8 +515,6 @@ Todos los agentes aplican:
 
 - [Diagrama de Workflow](../.claude/commands/hybridOps/docs/workflow-diagram.md) - Representacion visual del workflow de 9 fases
 - [Workflow YAML](../.claude/commands/hybridOps/workflows/hybrid-ops-pv.yaml) - Configuracion de orquestacion de workflow
-- [Story 1.8](./stories/1.8-phase-3-workflow-orchestration.md) - Implementacion de orquestacion de workflow
-- [Story 1.9](./stories/1.9-missing-pv-agents.md) - Creacion de agentes faltantes (esta implementacion)
 
 ---
 

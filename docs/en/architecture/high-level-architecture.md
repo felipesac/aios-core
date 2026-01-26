@@ -341,7 +341,6 @@
 ## Related Documents
 
 - [Module System](./module-system.md) - Detailed module architecture
-- [Multi-Repo Strategy](./multi-repo-strategy.md) - Repository organization
 - [ARCHITECTURE-INDEX.md](./ARCHITECTURE-INDEX.md) - Full documentation index
 - [AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md](../../.aios-core/docs/standards/AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md) - Complete framework guide
 

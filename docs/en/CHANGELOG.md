@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - CodeRabbit integration for automated code review
   - Contextual greetings with project status
 - **Documentation Suite**:
-  - Quick Start Guide (`docs/installation/v2.1-quick-start.md`)
   - Troubleshooting Guide with 23 documented issues
   - FAQ with 22 Q&As
   - Migration Guide v2.0 to v2.1
@@ -90,7 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrading from 2.0.x to 2.1.x
 
-See [Migration Guide](./installation/migration-v2.0-to-v2.1.md) for detailed instructions.
 
 **Quick upgrade:**
 
@@ -107,7 +105,6 @@ npx @synkra/aios-core install --force-upgrade
 
 ## Links
 
-- [Installation Guide](./installation/v2.1-quick-start.md)
 - [Troubleshooting](./installation/troubleshooting.md)
 - [FAQ](./installation/faq.md)
 - [GitHub Repository](https://github.com/SynkraAI/aios-core)

@@ -24,7 +24,6 @@ y este proyecto sigue [Versionado Semantico](https://semver.org/spec/v2.0.0.html
   - Integracion con CodeRabbit para revision automatizada de codigo
   - Saludos contextuales con estado del proyecto
 - **Suite de Documentacion**:
-  - Guia de Inicio Rapido (`docs/installation/v2.1-quick-start.md`)
   - Guia de Solucion de Problemas con 23 problemas documentados
   - FAQ con 22 preguntas y respuestas
   - Guia de Migracion v2.0 a v2.1
@@ -92,7 +91,6 @@ y este proyecto sigue [Versionado Semantico](https://semver.org/spec/v2.0.0.html
 
 ### Actualizar de 2.0.x a 2.1.x
 
-Consulta la [Guia de Migracion](./installation/migration-v2.0-to-v2.1.md) para instrucciones detalladas.
 
 **Actualizacion rapida:**
 
@@ -109,7 +107,6 @@ npx @synkra/aios-core install --force-upgrade
 
 ## Enlaces
 
-- [Guia de Instalacion](./installation/v2.1-quick-start.md)
 - [Solucion de Problemas](./installation/troubleshooting.md)
 - [FAQ](./installation/faq.md)
 - [Repositorio GitHub](https://github.com/SynkraAI/aios-core)

@@ -343,7 +343,6 @@
 ## Documentos Relacionados
 
 - [Sistema de Módulos](./module-system.md) - Arquitetura detalhada dos módulos
-- [Estratégia Multi-Repo](./multi-repo-strategy.md) - Organização dos repositórios
 - [ARCHITECTURE-INDEX.md](./ARCHITECTURE-INDEX.md) - Índice completo da documentação
 - [AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md](../../.aios-core/docs/standards/AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md) - Guia completo do framework
 

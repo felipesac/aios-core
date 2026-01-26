@@ -722,6 +722,4 @@ ls -la .aios-core/
 
 ## Related Documentation
 
-- [Quick Start Guide](./v2.1-quick-start.md)
 - [FAQ](./faq.md)
-- [Migration Guide](./migration-v2.0-to-v2.1.md)

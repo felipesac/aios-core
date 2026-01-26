@@ -347,7 +347,6 @@ The auto-refresh pauses when:
 ## Related Documentation
 
 - [Quality Gates Guide](./quality-gates.md)
-- [CodeRabbit Integration](./coderabbit/README.md)
 - [Story 3.11a: Metrics Collector](../stories/v2.1/sprint-3/story-3.11a-metrics-collector.md)
 - [Story 3.11b: Dashboard UI](../stories/v2.1/sprint-3/story-3.11b-quality-dashboard-ui.md)
 

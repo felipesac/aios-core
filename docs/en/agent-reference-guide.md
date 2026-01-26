@@ -509,8 +509,6 @@ All agents enforce:
 
 - [Workflow Diagram](../.claude/commands/hybridOps/docs/workflow-diagram.md) - Visual representation of 9-phase workflow
 - [Workflow YAML](../.claude/commands/hybridOps/workflows/hybrid-ops-pv.yaml) - Workflow orchestration configuration
-- [Story 1.8](./stories/1.8-phase-3-workflow-orchestration.md) - Workflow orchestration implementation
-- [Story 1.9](./stories/1.9-missing-pv-agents.md) - Missing agent creation (this implementation)
 
 ---
 

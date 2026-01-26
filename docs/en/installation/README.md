@@ -15,10 +15,8 @@ This directory contains comprehensive installation and setup documentation for S
 
 | Document | Description | Audience |
 |----------|-------------|----------|
-| [Quick Start Guide](./v2.1-quick-start.md) | Complete installation walkthrough | New users |
 | [Troubleshooting](./troubleshooting.md) | Common issues and solutions | All users |
 | [FAQ](./faq.md) | Frequently asked questions | All users |
-| [Migration Guide](./migration-v2.0-to-v2.1.md) | Upgrading from v2.0 | Existing users |
 
 ---
 
@@ -30,7 +28,6 @@ This directory contains comprehensive installation and setup documentation for S
 npx @synkra/aios-core install
 ```
 
-See [Quick Start Guide](./v2.1-quick-start.md) for detailed instructions.
 
 ### Upgrading
 
@@ -38,7 +35,6 @@ See [Quick Start Guide](./v2.1-quick-start.md) for detailed instructions.
 npx @synkra/aios-core install --force-upgrade
 ```
 
-See [Migration Guide](./migration-v2.0-to-v2.1.md) for breaking changes and upgrade procedure.
 
 ### Having Issues?
 

@@ -69,7 +69,6 @@ Use o agente DevOps: `@devops` e então `*setup-mcp-docker`
 | Guia | Propósito | Tempo | Público |
 |------|-----------|-------|---------|
 | **[Template Engine v2](./template-engine-v2.md)** | Motor de geração de documentos | 10 min | Desenvolvedores |
-| **[Integração CodeRabbit](./coderabbit/README.md)** | Setup de code review por IA | 15 min | QA, DevOps |
 
 ### Navegação Rápida (v2.1)
 
@@ -92,7 +91,6 @@ Use o agente DevOps: `@devops` e então `*setup-mcp-docker`
 → [`template-engine-v2.md`](./template-engine-v2.md) (10 min)
 
 **...configurar integração CodeRabbit**
-→ [`coderabbit/README.md`](./coderabbit/README.md) (15 min)
 
 **...configurar servidores MCP globais**
 → [`mcp-global-setup.md`](./mcp-global-setup.md) (10 min)

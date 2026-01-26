@@ -353,7 +353,6 @@ La auto-actualización se pausa cuando:
 ## Documentación Relacionada
 
 - [Guía de Quality Gates](./quality-gates.md)
-- [Integración con CodeRabbit](./coderabbit/README.md)
 - [Story 3.11a: Recolector de Métricas](../stories/v2.1/sprint-3/story-3.11a-metrics-collector.md)
 - [Story 3.11b: Dashboard UI](../stories/v2.1/sprint-3/story-3.11b-quality-dashboard-ui.md)
 

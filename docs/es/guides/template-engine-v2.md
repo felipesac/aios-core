@@ -459,7 +459,6 @@ console.log('Validation result:', validation);
 ## Documentación Relacionada
 
 - [Guía de Quality Gates](./quality-gates.md)
-- [Integración CodeRabbit](./coderabbit/README.md)
 - [Story 3.6: Template Engine Core](../stories/v2.1/sprint-3/story-3.6-template-engine-core.md)
 
 ---

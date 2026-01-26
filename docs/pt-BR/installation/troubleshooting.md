@@ -728,6 +728,4 @@ ls -la .aios-core/
 
 ## Documentação Relacionada
 
-- [Guia de Início Rápido](./v2.1-quick-start.md)
 - [FAQ](./faq.md)
-- [Guia de Migração](./migration-v2.0-to-v2.1.md)

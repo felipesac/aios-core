@@ -495,7 +495,7 @@ examples:
 ### Learning Resources
 
 - **[Meta-Agent Commands Reference](./meta-agent-commands.md)**: Complete command list
-- **[Architecture Overview](./architecture.md)**: Technical deep dive
+- **[Architecture Overview](./core-architecture.md)**: Technical deep dive
 - **[Troubleshooting Guide](./troubleshooting.md)**: Common issues and solutions
 - **[Video Tutorials](https://@synkra/aios-core.dev/tutorials)**: Visual learning
 

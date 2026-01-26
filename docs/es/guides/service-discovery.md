@@ -512,7 +512,6 @@ await registry.load(true);
 
 - [Arquitectura del Sistema de Módulos](../architecture/module-system.md)
 - [Guía de Quality Gates](./quality-gates.md)
-- [README del Registro de Servicios](./.aios-core/core/registry/README.md)
 
 ---
 

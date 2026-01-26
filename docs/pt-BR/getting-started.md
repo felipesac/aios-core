@@ -501,7 +501,7 @@ examples:
 ### Recursos de Aprendizado
 
 - **[Referência de Comandos do Meta-Agent](./meta-agent-commands.md)**: Lista completa de comandos
-- **[Visão Geral da Arquitetura](./architecture.md)**: Aprofundamento técnico
+- **[Visão Geral da Arquitetura](./core-architecture.md)**: Aprofundamento técnico
 - **[Guia de Solução de Problemas](./troubleshooting.md)**: Problemas comuns e soluções
 - **[Tutoriais em Vídeo](https://@synkra/aios-core.dev/tutorials)**: Aprendizado visual
 
