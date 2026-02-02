@@ -14,7 +14,7 @@ const {
   isBinaryFile,
   normalizeLineEndings,
   removeBOM,
-} = require('../../src/installer/file-hasher');
+} = require('../../packages/installer/src/installer/file-hasher');
 
 describe('file-hasher', () => {
   let tempDir;

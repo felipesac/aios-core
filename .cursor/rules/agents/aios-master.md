@@ -24,12 +24,13 @@
 - `*test-memory` - Test memory layer connection
 - `*task` - Execute specific task (or list available)
 - `*execute-checklist` - Run checklist (or list available)
-- `*workflow` - Start workflow (or list available)
+- `*workflow` - Start workflow (guided=manual, engine=real subagent spawning)
 - `*plan` - Workflow planning (default: create)
 - `*create-doc` - Create document (or list templates)
 - `*doc-out` - Output complete document
 - `*shard-doc` - Break document into parts
 - `*document-project` - Generate project documentation
+- `*add-tech-doc` - Create tech-preset from documentation file
 - `*create-next-story` - Create next user story
 - `*advanced-elicitation` - Execute advanced elicitation
 - `*chat-mode` - Start conversational assistance

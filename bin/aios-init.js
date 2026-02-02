@@ -66,7 +66,7 @@ const { detectRepositoryContext } = resolveAiosCoreModule(
 // Brownfield upgrade module (Story 6.18)
 let brownfieldUpgrader;
 try {
-  brownfieldUpgrader = require('../src/installer/brownfield-upgrader');
+  brownfieldUpgrader = require('../packages/installer/src/installer/brownfield-upgrader');
 } catch (_err) {
   // Module may not be available in older installations
   brownfieldUpgrader = null;
@@ -810,7 +810,7 @@ See .aios-core/user-guide.md for complete documentation.
 
   let validationPassed = true;
   try {
-    const { PostInstallValidator } = require('../src/installer/post-install-validator');
+    const { PostInstallValidator } = require('../packages/installer/src/installer/post-install-validator');
     const validator = new PostInstallValidator(context.projectRoot, context.frameworkLocation, {
       verifyHashes: false,
       verbose: false,

@@ -10,8 +10,8 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const { generateIDEConfigs } = require('../../src/wizard/ide-config-generator');
-const { getIDEConfig, getIDEKeys } = require('../../src/config/ide-configs');
+const { generateIDEConfigs } = require('../../packages/installer/src/wizard/ide-config-generator');
+const { getIDEConfig, getIDEKeys } = require('../../packages/installer/src/config/ide-configs');
 
 describe('Wizard IDE Flow Integration', () => {
   const testDir = path.join(__dirname, '..', '..', '.test-temp-integration');
@@ -76,7 +76,7 @@ describe('Wizard IDE Flow Integration', () => {
       expect(await fs.pathExists(path.join(testDir, '.cursor', 'rules.md'))).toBe(true);
       expect(await fs.pathExists(path.join(testDir, '.windsurfrules'))).toBe(true);
       expect(await fs.pathExists(path.join(testDir, '.github', 'copilot-instructions.md'))).toBe(
-        true
+        true,
       );
 
       // Verify agent folders were created
@@ -238,13 +238,13 @@ describe('Wizard IDE Flow Integration', () => {
 
       const copilotContent = await fs.readFile(
         path.join(testDir, '.github', 'copilot-instructions.md'),
-        'utf8'
+        'utf8',
       );
       expect(typeof copilotContent).toBe('string');
 
       const antigravityContent = await fs.readFile(
         path.join(testDir, '.antigravity', 'rules.md'),
-        'utf8'
+        'utf8',
       );
       expect(typeof antigravityContent).toBe('string');
     });

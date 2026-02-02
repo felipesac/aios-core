@@ -250,7 +250,9 @@ describe('MasterOrchestrator', () => {
         await orchestrator.executeEpic(3);
 
         const statePath = orchestrator.statePath;
-        expect(statePath).toContain('.aios/master-orchestrator/TEST-001.json');
+        // Normalize path separators for cross-platform compatibility (Windows uses \, Unix uses /)
+        const normalizedPath = statePath.replace(/\\/g, '/');
+        expect(normalizedPath).toContain('.aios/master-orchestrator/TEST-001.json');
         expect(await fs.pathExists(statePath)).toBe(true);
       });
 

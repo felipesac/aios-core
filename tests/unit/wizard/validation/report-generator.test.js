@@ -3,7 +3,7 @@
  * Story 1.8 - Task 1.8.5 (QA Fix - Coverage Improvement)
  */
 
-const { generateReport } = require('../../../../src/wizard/validation/report-generator');
+const { generateReport } = require('../../../../packages/installer/src/wizard/validation/report-generator');
 
 describe('Report Generator', () => {
   beforeEach(() => {

@@ -19,7 +19,7 @@ const {
   showSection,
   showCancellation,
   estimateTimeRemaining,
-} = require('../../src/wizard/feedback');
+} = require('../../packages/installer/src/wizard/feedback');
 
 // Mock ora and cli-progress
 jest.mock('ora');

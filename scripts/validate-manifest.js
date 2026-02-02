@@ -18,7 +18,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
-const { hashFile } = require('../src/installer/file-hasher');
+const { hashFile } = require('../packages/installer/src/installer/file-hasher');
 const {
   scanDirectory,
   FOLDERS_TO_COPY,

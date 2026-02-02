@@ -3,7 +3,7 @@
  * Story 1.8 - Complete wizard flow including validation
  */
 
-const { validateInstallation } = require('../../src/wizard/validation');
+const { validateInstallation } = require('../../packages/installer/src/wizard/validation');
 
 describe('Wizard Validation Flow', () => {
   it('should validate complete installation successfully', async () => {

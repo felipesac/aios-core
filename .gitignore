@@ -74,9 +74,6 @@ sync-*.sh                     # Agent sync scripts
 .windsurf/
 !.windsurf/rules/
 !.windsurf/rules/agents/
-.trae/
-!.trae/rules/
-!.trae/rules/agents/
 .cursor/rules/                # Cursor IDE personal rules and configurations
 !.cursor/rules/agents/
 
@@ -227,7 +224,7 @@ test-sample-*.md
 # PROPRIETARY/INTERNAL CONTENT (Story TD-5)
 # ============================================
 # Content that is NOT part of the public aios-core framework
-# These are AllFluence-specific methodologies and business documents
+# These are SynkraAI-specific methodologies and business documents
 
 # Proprietary Process Mapping Frameworks (Pedro Valério methodology)
 docs/standards/

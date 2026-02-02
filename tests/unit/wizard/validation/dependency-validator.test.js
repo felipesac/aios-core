@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const childProcess = require('child_process');
-const { validateDependencies } = require('../../../../src/wizard/validation/validators/dependency-validator');
+const { validateDependencies } = require('../../../../packages/installer/src/wizard/validation/validators/dependency-validator');
 
 // Mock dependencies
 jest.mock('fs');

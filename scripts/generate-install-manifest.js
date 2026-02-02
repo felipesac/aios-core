@@ -14,7 +14,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
-const { hashFile, hashString } = require('../src/installer/file-hasher');
+const { hashFile, hashString } = require('../packages/installer/src/installer/file-hasher');
 
 // Import FOLDERS_TO_COPY from installer (same source of truth)
 const FOLDERS_TO_COPY = [

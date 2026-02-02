@@ -12,7 +12,7 @@ const {
   validateConfigContent,
   generateTemplateVariables,
   generateIDEConfigs,
-} = require('../../../src/wizard/ide-config-generator');
+} = require('../../../packages/installer/src/wizard/ide-config-generator');
 
 describe('IDE Config Generator', () => {
   describe('renderTemplate', () => {

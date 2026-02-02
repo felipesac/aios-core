@@ -6,23 +6,23 @@
  */
 
 const inquirer = require('inquirer');
-const { runWizard } = require('../../src/wizard/index');
+const { runWizard } = require('../../packages/installer/src/wizard/index');
 const {
   installDependencies,
   detectPackageManager,
-} = require('../../src/installer/dependency-installer');
+} = require('../../packages/installer/src/installer/dependency-installer');
 const {
   configureEnvironment,
 } = require('../../packages/installer/src/config/configure-environment');
-const { generateIDEConfigs } = require('../../src/wizard/ide-config-generator');
-const { installAiosCore, hasPackageJson } = require('../../src/installer/aios-core-installer');
+const { generateIDEConfigs } = require('../../packages/installer/src/wizard/ide-config-generator');
+const { installAiosCore, hasPackageJson } = require('../../packages/installer/src/installer/aios-core-installer');
 
 // Mock dependencies
 jest.mock('inquirer');
-jest.mock('../../src/installer/dependency-installer');
+jest.mock('../../packages/installer/src/installer/dependency-installer');
 jest.mock('../../packages/installer/src/config/configure-environment');
-jest.mock('../../src/wizard/ide-config-generator');
-jest.mock('../../src/installer/aios-core-installer');
+jest.mock('../../packages/installer/src/wizard/ide-config-generator');
+jest.mock('../../packages/installer/src/installer/aios-core-installer');
 jest.mock('../../bin/modules/mcp-installer', () => ({
   installProjectMCPs: jest.fn().mockResolvedValue({
     success: true,
@@ -31,7 +31,7 @@ jest.mock('../../bin/modules/mcp-installer', () => ({
     errors: [],
   }),
 }));
-jest.mock('../../src/wizard/validation', () => ({
+jest.mock('../../packages/installer/src/wizard/validation', () => ({
   validateInstallation: jest.fn().mockResolvedValue({
     valid: true,
     errors: [],
@@ -40,7 +40,7 @@ jest.mock('../../src/wizard/validation', () => ({
   displayValidationReport: jest.fn().mockResolvedValue(),
   provideTroubleshooting: jest.fn().mockResolvedValue(),
 }));
-jest.mock('../../src/wizard/feedback', () => ({
+jest.mock('../../packages/installer/src/wizard/feedback', () => ({
   showWelcome: jest.fn(),
   showCompletion: jest.fn(),
   showCancellation: jest.fn(),
@@ -296,7 +296,7 @@ describe('Wizard Integration - Story 1.7', () => {
       await runWizard();
 
       expect(consoleLogSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Installing dependencies')
+        expect.stringContaining('Installing dependencies'),
       );
       expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('installed'));
     });

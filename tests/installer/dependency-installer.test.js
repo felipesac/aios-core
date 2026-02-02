@@ -16,7 +16,7 @@ const {
   executeInstall,
   categorizeError,
   installWithRetry,
-} = require('../../src/installer/dependency-installer');
+} = require('../../packages/installer/src/installer/dependency-installer');
 
 // Mock dependencies
 jest.mock('fs');

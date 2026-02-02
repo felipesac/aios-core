@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const yaml = require('js-yaml');
-const { validateConfigs } = require('../../../../src/wizard/validation/validators/config-validator');
+const { validateConfigs } = require('../../../../packages/installer/src/wizard/validation/validators/config-validator');
 
 // Mock dependencies
 jest.mock('fs');

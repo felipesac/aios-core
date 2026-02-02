@@ -108,7 +108,9 @@ describe('Dashboard Integration (Story 0.8)', () => {
 
     it('should return status path', () => {
       const statusPath = dashboard.getStatusPath();
-      expect(statusPath).toContain('.aios/dashboard/status.json');
+      // Normalize path separators for cross-platform compatibility (Windows uses \, Unix uses /)
+      const normalizedPath = statusPath.replace(/\\/g, '/');
+      expect(normalizedPath).toContain('.aios/dashboard/status.json');
     });
   });
 

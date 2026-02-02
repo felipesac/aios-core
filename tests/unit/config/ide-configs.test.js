@@ -14,7 +14,7 @@ const {
   getIDEConfig,
   isValidIDE,
   getIDEChoices,
-} = require('../../../src/config/ide-configs');
+} = require('../../../packages/installer/src/config/ide-configs');
 
 describe('IDE Configs', () => {
   describe('IDE_CONFIGS', () => {

@@ -15,8 +15,8 @@ const {
   buildFileMap,
   isUserModified,
   formatUpgradeReport,
-} = require('../../src/installer/brownfield-upgrader');
-const { hashFile } = require('../../src/installer/file-hasher');
+} = require('../../packages/installer/src/installer/brownfield-upgrader');
+const { hashFile } = require('../../packages/installer/src/installer/file-hasher');
 
 describe('brownfield-upgrader', () => {
   let tempDir;

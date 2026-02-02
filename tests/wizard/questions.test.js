@@ -12,7 +12,7 @@ const {
   getEnvironmentQuestions,
   buildQuestionSequence,
   getQuestionById,
-} = require('../../src/wizard/questions');
+} = require('../../packages/installer/src/wizard/questions');
 
 describeIntegration('questions', () => {
   describeIntegration('getProjectTypeQuestion', () => {

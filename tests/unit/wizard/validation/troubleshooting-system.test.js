@@ -4,7 +4,7 @@
  */
 
 const inquirer = require('inquirer');
-const { offerTroubleshooting } = require('../../../../src/wizard/validation/troubleshooting-system');
+const { offerTroubleshooting } = require('../../../../packages/installer/src/wizard/validation/troubleshooting-system');
 
 // Mock inquirer
 jest.mock('inquirer');

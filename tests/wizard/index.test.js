@@ -5,12 +5,12 @@
  * Tests wizard flow, welcome/completion messages, and cancellation handling
  */
 
-const { runWizard } = require('../../src/wizard/index');
+const { runWizard } = require('../../packages/installer/src/wizard/index');
 const inquirer = require('inquirer');
 
 // Mock dependencies
 jest.mock('inquirer');
-jest.mock('../../src/wizard/feedback');
+jest.mock('../../packages/installer/src/wizard/feedback');
 
 // Mock Story 1.6 environment configuration (added for wizard integration)
 jest.mock('../../packages/installer/src/config/configure-environment', () => ({
@@ -44,7 +44,7 @@ describeIntegration('wizard/index', () => {
   describeIntegration('runWizard', () => {
     test('shows welcome message', async () => {
       inquirer.prompt = jest.fn().mockResolvedValue({ projectType: 'greenfield' });
-      const { showWelcome } = require('../../src/wizard/feedback');
+      const { showWelcome } = require('../../packages/installer/src/wizard/feedback');
 
       await runWizard();
 
@@ -67,7 +67,7 @@ describeIntegration('wizard/index', () => {
 
     test('shows completion message on success', async () => {
       inquirer.prompt = jest.fn().mockResolvedValue({ projectType: 'greenfield' });
-      const { showCompletion } = require('../../src/wizard/feedback');
+      const { showCompletion } = require('../../packages/installer/src/wizard/feedback');
 
       await runWizard();
 
@@ -192,12 +192,12 @@ describeIntegration('wizard/index', () => {
 
   describeIntegration('Integration Contract (Story 1.1)', () => {
     test('exports runWizard function', () => {
-      const wizard = require('../../src/wizard/index');
+      const wizard = require('../../packages/installer/src/wizard/index');
       expect(typeof wizard.runWizard).toBe('function');
     });
 
     test('runWizard is async function', () => {
-      const wizard = require('../../src/wizard/index');
+      const wizard = require('../../packages/installer/src/wizard/index');
       const result = wizard.runWizard();
       expect(result).toBeInstanceOf(Promise);
       
@@ -207,7 +207,7 @@ describeIntegration('wizard/index', () => {
 
     test('matches integration contract signature', async () => {
       // Contract: exports.runWizard = async function() { ... }
-      const wizard = require('../../src/wizard/index');
+      const wizard = require('../../packages/installer/src/wizard/index');
       
       inquirer.prompt = jest.fn().mockResolvedValue({ projectType: 'greenfield' });
 

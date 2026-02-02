@@ -13,7 +13,7 @@ const {
   sanitizeShellInput,
   INPUT_LIMITS,
   ALLOWED_PROJECT_TYPES,
-} = require('../../src/wizard/validators');
+} = require('../../packages/installer/src/wizard/validators');
 
 describe('validators', () => {
   describe('validateProjectType', () => {

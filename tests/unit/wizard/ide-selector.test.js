@@ -8,8 +8,8 @@
 const {
   validateIDESelection,
   getIDESelectionQuestion,
-} = require('../../../src/wizard/ide-selector');
-const { getIDEKeys } = require('../../../src/config/ide-configs');
+} = require('../../../packages/installer/src/wizard/ide-selector');
+const { getIDEKeys } = require('../../../packages/installer/src/config/ide-configs');
 
 describe('IDE Selector', () => {
   describe('validateIDESelection', () => {

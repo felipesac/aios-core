@@ -4,7 +4,7 @@
  */
 
 const fs = require('fs');
-const { validateMCPs, runHealthCheck } = require('../../../../src/wizard/validation/validators/mcp-health-checker');
+const { validateMCPs, runHealthCheck } = require('../../../../packages/installer/src/wizard/validation/validators/mcp-health-checker');
 
 // Mock dependencies
 jest.mock('fs');
