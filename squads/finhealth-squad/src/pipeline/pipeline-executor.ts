@@ -290,7 +290,31 @@ export class PipelineExecutor {
       return match && match[1] === step.id;
     });
 
-    if (!handler || handler.action !== 'retry') return lastResult;
+    if (!handler) return lastResult;
+
+    // Handle non-retry actions
+    if (handler.action === 'notify') {
+      console.log(`[Pipeline] Notification: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`);
+      return lastResult;
+    }
+
+    if (handler.action === 'alert') {
+      console.error(`[Pipeline] ALERT: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`, {
+        stepId: step.id,
+        severity: 'high',
+      });
+      return lastResult;
+    }
+
+    if (handler.action === 'pause') {
+      console.warn(`[Pipeline] Step "${step.id}" paused after failure — manual intervention may be required`);
+      return {
+        ...lastResult,
+        metadata: { ...lastResult.metadata, paused: true },
+      };
+    }
+
+    if (handler.action !== 'retry') return lastResult;
 
     const maxRetries = handler.maxRetries || 1;
 

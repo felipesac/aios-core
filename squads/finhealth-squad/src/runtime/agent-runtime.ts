@@ -48,6 +48,8 @@ export interface RuntimeConfig {
   openaiApiKey?: string;
   model?: string;
   verbose?: boolean;
+  timeout?: number;
+  maxRetries?: number;
 }
 
 /**
@@ -69,7 +71,11 @@ export class AgentRuntime {
       throw new Error('OpenAI API key not provided. Set OPENAI_API_KEY environment variable.');
     }
 
-    this.openai = new OpenAI({ apiKey });
+    this.openai = new OpenAI({
+      apiKey,
+      timeout: config.timeout || 30_000,
+      maxRetries: config.maxRetries ?? 2,
+    });
   }
 
   /**
