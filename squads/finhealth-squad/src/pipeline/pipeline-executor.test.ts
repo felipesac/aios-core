@@ -505,6 +505,61 @@ describe('PipelineExecutor', () => {
   });
 
   // ========================================================================
+  // execute — error resilience
+  // ========================================================================
+
+  describe('execute() — error resilience', () => {
+    it('should catch thrown errors from executeTask and produce failure result', async () => {
+      setupWorkflowFiles({ 'two-step': TWO_STEP_YAML });
+      const runtime = createMockRuntime(() => {
+        throw new Error('Unexpected runtime crash');
+      });
+
+      const executor = new PipelineExecutor(runtime, {
+        workflowsPath: '/test/workflows',
+        sleepFn: noopSleep,
+      });
+      await executor.initialize();
+
+      const result = await executor.execute({
+        workflowName: 'two-step',
+        parameters: { accountId: 'acc-001' },
+      });
+
+      // Should not throw — pipeline catches the error
+      expect(result.success).toBe(false);
+      expect(result.stepResults[0].success).toBe(false);
+      expect(result.stepResults[0].error).toContain('Unexpected runtime crash');
+    });
+
+    it('should skip dependent steps when a step throws', async () => {
+      setupWorkflowFiles({ 'two-step': TWO_STEP_YAML });
+      let callCount = 0;
+      const runtime = createMockRuntime(() => {
+        callCount++;
+        if (callCount === 1) throw new Error('step-a threw');
+        return { success: true, output: { value: 'ok' } };
+      });
+
+      const executor = new PipelineExecutor(runtime, {
+        workflowsPath: '/test/workflows',
+        sleepFn: noopSleep,
+      });
+      await executor.initialize();
+
+      const result = await executor.execute({
+        workflowName: 'two-step',
+        parameters: { accountId: 'acc-001' },
+      });
+
+      expect(result.stepResults[0].success).toBe(false);
+      expect(result.stepResults[1].skipped).toBe(true);
+      expect(result.metadata.failedSteps).toBe(1);
+      expect(result.metadata.skippedSteps).toBe(1);
+    });
+  });
+
+  // ========================================================================
   // execute — verbose logging
   // ========================================================================
 

@@ -93,9 +93,10 @@ export abstract class BaseScraper<TData> {
         warnings.push('Scraped data failed validation');
         warnings.push(...validation.warnings);
       }
-    } catch (error: any) {
-      errors.push(`Scraping error: ${error.message || error}`);
-      this.deps.logger.error(`[${name}] Cheerio scraping failed: ${error.message || error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      errors.push(`Scraping error: ${msg}`);
+      this.deps.logger.error(`[${name}] Cheerio scraping failed: ${msg}`);
     }
 
     // Stage 3: Fallback to LLM
@@ -111,8 +112,9 @@ export abstract class BaseScraper<TData> {
 
         return this.buildResult(true, 'llm_fallback', fallbackData, errors, warnings, true);
       }
-    } catch (fallbackError: any) {
-      errors.push(`Fallback error: ${fallbackError.message || fallbackError}`);
+    } catch (fallbackError: unknown) {
+      const msg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+      errors.push(`Fallback error: ${msg}`);
     }
 
     // Complete failure
@@ -163,8 +165,9 @@ export abstract class BaseScraper<TData> {
           warnings,
         };
       }
-    } catch (error: any) {
-      warnings.push(`Validation API error: ${error.message || error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      warnings.push(`Validation API error: ${msg}`);
     }
 
     return { isValid: warnings.length < 2, warnings };

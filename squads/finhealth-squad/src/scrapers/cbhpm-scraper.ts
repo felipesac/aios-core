@@ -186,7 +186,7 @@ Include common procedures across different specialties.`,
   protected parseFallbackResponse(content: string): CbhpmData {
     const parsed = JSON.parse(content);
 
-    const procedures: CbhpmProcedure[] = (parsed.procedures || []).map((p: any) => ({
+    const procedures: CbhpmProcedure[] = (parsed.procedures || []).map((p: Record<string, unknown>) => ({
       codigo: String(p.codigo || ''),
       descricao: String(p.descricao || ''),
       porte: String(p.porte || ''),
@@ -230,8 +230,9 @@ Include common procedures across different specialties.`,
     };
   }
 
-  protected mergeWithExisting(existingRaw: any, newData: CbhpmData): CbhpmData {
-    const existingProcs: CbhpmProcedure[] = existingRaw.procedures || [];
+  protected mergeWithExisting(existingRaw: unknown, newData: CbhpmData): CbhpmData {
+    const raw = existingRaw as Record<string, unknown>;
+    const existingProcs: CbhpmProcedure[] = (raw.procedures || []) as CbhpmProcedure[];
     const mergedProcs = new Map<string, CbhpmProcedure>();
 
     for (const proc of existingProcs) mergedProcs.set(proc.codigo, proc);
@@ -239,7 +240,7 @@ Include common procedures across different specialties.`,
 
     return {
       procedures: Array.from(mergedProcs.values()).sort((a, b) => a.codigo.localeCompare(b.codigo)),
-      portes: { ...(existingRaw.portes || {}), ...newData.portes },
+      portes: { ...((raw.portes || {}) as Record<string, PorteInfo>), ...newData.portes },
       uch_valor: newData.uch_valor,
     };
   }

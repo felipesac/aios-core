@@ -112,11 +112,11 @@ export class AgentRuntime {
 
     // Extract YAML front matter if present
     const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    let metadata: Record<string, any> = {};
+    let metadata: Record<string, unknown> = {};
 
     if (yamlMatch) {
       try {
-        metadata = yaml.load(yamlMatch[1]) as Record<string, any>;
+        metadata = yaml.load(yamlMatch[1]) as Record<string, unknown>;
       } catch (e) {
         // No valid YAML front matter
       }
@@ -236,11 +236,12 @@ export class AgentRuntime {
           tokensUsed: response.usage?.total_tokens,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       return {
         success: false,
         output: null,
-        errors: [error.message],
+        errors: [message],
         metadata: {
           agent: input.agentId,
           task: input.taskName,

@@ -259,12 +259,24 @@ export class PipelineExecutor {
     }
 
     // Execute task
-    let taskResult = await this.runtime.executeTask({
-      agentId: step.agent,
-      taskName: step.task,
-      parameters: resolvedInput as Record<string, any>,
-      context: ctx.context,
-    });
+    let taskResult: TaskResult;
+    try {
+      taskResult = await this.runtime.executeTask({
+        agentId: step.agent,
+        taskName: step.task,
+        parameters: resolvedInput as Record<string, unknown>,
+        context: ctx.context,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error(`[Pipeline] Step "${step.id}" threw: ${message}`);
+      taskResult = {
+        success: false,
+        output: { error: message },
+        errors: [message],
+        metadata: { failedAt: new Date().toISOString(), stepId: step.id },
+      };
+    }
 
     // Record success/failure in circuit breaker
     if (cb) {

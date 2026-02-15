@@ -155,7 +155,7 @@ Return at least 20 procedures.`,
     const parsed = JSON.parse(content);
     const procedures = parsed.procedures || parsed.data || (Array.isArray(parsed) ? parsed : []);
 
-    return procedures.map((p: any) => {
+    return procedures.map((p: Record<string, unknown>) => {
       const codigo = String(p.codigo || p.code || '');
       return {
         codigo,
@@ -200,8 +200,9 @@ Return at least 20 procedures.`,
     };
   }
 
-  protected mergeWithExisting(existingRaw: any, newData: SigtapProcedure[]): SigtapProcedure[] {
-    const existing = existingRaw.procedures || [];
+  protected mergeWithExisting(existingRaw: unknown, newData: SigtapProcedure[]): SigtapProcedure[] {
+    const raw = existingRaw as Record<string, unknown>;
+    const existing = (raw.procedures || []) as SigtapProcedure[];
     return mergeSigtapProcedures(existing, newData);
   }
 }

@@ -192,10 +192,11 @@ export function parsePaymentXml(
   try {
     const parser = new XMLParser(PARSER_OPTIONS);
     parsed = parser.parse(xmlContent.replace(/^\uFEFF/, ''));
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
     return {
       success: false,
-      errors: [`Payment XML parsing error: ${e.message}`],
+      errors: [`Payment XML parsing error: ${msg}`],
       warnings,
       detectedFormat: 'generic',
       itemCount: 0,
@@ -352,7 +353,7 @@ export function normalizePaymentItem(
 ): PaymentItem {
   const mapping = FIELD_MAPPINGS[format];
 
-  const resolveField = (candidates: string[]): any => {
+  const resolveField = (candidates: string[]): unknown => {
     for (const field of candidates) {
       if (raw[field] !== undefined) return raw[field];
     }

@@ -112,14 +112,15 @@ export class BillingAgent {
     }
 
     // Parse XML
-    let parsedXml: any;
+    let parsedXml: Record<string, unknown>;
     try {
       parsedXml = this.xmlParser.parse(xml);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
       return {
         success: false,
-        output: { isValid: false, errors: [`Invalid XML: ${e.message}`] },
-        errors: [`XML parsing error: ${e.message}`],
+        output: { isValid: false, errors: [`Invalid XML: ${msg}`] },
+        errors: [`XML parsing error: ${msg}`],
       };
     }
 
@@ -366,7 +367,7 @@ export class BillingAgent {
   /**
    * Extract procedures from TISS XML data
    */
-  private extractProcedures(tissData: any): Array<{
+  private extractProcedures(tissData: unknown): Array<{
     code: string;
     description: string;
     quantity: number;
@@ -374,26 +375,29 @@ export class BillingAgent {
   }> {
     const procedures: Array<{ code: string; description: string; quantity: number; value: number }> = [];
 
-    const findProcedures = (obj: any) => {
+    const findProcedures = (obj: unknown): void => {
       if (!obj || typeof obj !== 'object') return;
+      const record = obj as Record<string, unknown>;
 
-      if (obj.procedimentoExecutado) {
-        const procs = Array.isArray(obj.procedimentoExecutado)
-          ? obj.procedimentoExecutado
-          : [obj.procedimentoExecutado];
+      if (record.procedimentoExecutado) {
+        const procs = Array.isArray(record.procedimentoExecutado)
+          ? record.procedimentoExecutado
+          : [record.procedimentoExecutado];
 
         for (const proc of procs) {
+          const p = proc as Record<string, unknown>;
+          const procedimento = p.procedimento as Record<string, unknown> | undefined;
           procedures.push({
-            code: proc.procedimento?.codigoProcedimento || '',
-            description: proc.procedimento?.descricaoProcedimento || '',
-            quantity: parseInt(proc.quantidadeExecutada) || 1,
-            value: parseFloat(proc.valorTotal) || 0,
+            code: String(procedimento?.codigoProcedimento || ''),
+            description: String(procedimento?.descricaoProcedimento || ''),
+            quantity: parseInt(String(p.quantidadeExecutada)) || 1,
+            value: parseFloat(String(p.valorTotal)) || 0,
           });
         }
       }
 
-      for (const key of Object.keys(obj)) {
-        findProcedures(obj[key]);
+      for (const key of Object.keys(record)) {
+        findProcedures(record[key]);
       }
     };
 
@@ -404,12 +408,14 @@ export class BillingAgent {
   /**
    * Find field in nested object
    */
-  private findInObject(obj: any, field: string): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- XML traversal returns dynamic structures
+  private findInObject(obj: unknown, field: string): any {
     if (!obj || typeof obj !== 'object') return undefined;
-    if (obj[field] !== undefined) return obj[field];
+    const record = obj as Record<string, unknown>;
+    if (record[field] !== undefined) return record[field];
 
-    for (const key of Object.keys(obj)) {
-      const result = this.findInObject(obj[key], field);
+    for (const key of Object.keys(record)) {
+      const result = this.findInObject(record[key], field);
       if (result !== undefined) return result;
     }
 

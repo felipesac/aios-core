@@ -148,10 +148,10 @@ Return at least 20 common procedures.`,
     const parsed = JSON.parse(content);
     const procedures = parsed.procedures || parsed.data || (Array.isArray(parsed) ? parsed : []);
 
-    return procedures.map((p: any) => ({
+    return procedures.map((p: Record<string, unknown>) => ({
       codigo: String(p.codigo || p.code || ''),
       descricao: String(p.descricao || p.description || ''),
-      tipo: p.tipo || p.type || inferProcedureType(String(p.codigo || p.code || '')),
+      tipo: (p.tipo || p.type || inferProcedureType(String(p.codigo || p.code || ''))) as string,
     }));
   }
 
@@ -169,8 +169,9 @@ Return at least 20 common procedures.`,
     };
   }
 
-  protected mergeWithExisting(existingRaw: any, newData: TussProcedure[]): TussProcedure[] {
-    const existing = existingRaw.procedures || [];
+  protected mergeWithExisting(existingRaw: unknown, newData: TussProcedure[]): TussProcedure[] {
+    const raw = existingRaw as Record<string, unknown>;
+    const existing = (raw.procedures || []) as TussProcedure[];
     return mergeTussProcedures(existing, newData);
   }
 }

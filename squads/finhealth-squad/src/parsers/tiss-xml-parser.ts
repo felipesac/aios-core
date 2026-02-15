@@ -120,15 +120,16 @@ export function parseTissXml(xmlContent: string): ParseTissResult {
   // Strip BOM if present
   const cleanXml = xmlContent.replace(/^\uFEFF/, '');
 
-  let parsed: Record<string, any>;
+  let parsed: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any -- XML parser output
   try {
     const parser = new XMLParser(PARSER_OPTIONS);
     parsed = parser.parse(cleanXml);
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
     return {
       success: false,
       guias: [],
-      errors: [`XML parsing error: ${e.message}`],
+      errors: [`XML parsing error: ${msg}`],
       warnings,
     };
   }
@@ -175,8 +176,9 @@ export function parseTissXml(xmlContent: string): ParseTissResult {
     for (const node of guiaArray) {
       try {
         guias.push(extractGuia(node, tipo));
-      } catch (e: any) {
-        warnings.push(`Failed to extract ${tipo} guide: ${e.message}`);
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        warnings.push(`Failed to extract ${tipo} guide: ${msg}`);
       }
     }
   }
@@ -365,13 +367,15 @@ export function extractGuia(guiaNode: Record<string, any>, tipo: TissGuiaType): 
 /**
  * Recursively find a field in a nested object.
  */
-export function findInObject(obj: any, field: string): any {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- XML traversal returns dynamic structures
+export function findInObject(obj: unknown, field: string): any {
   if (!obj || typeof obj !== 'object') return undefined;
-  if (obj[field] !== undefined) return obj[field];
+  const record = obj as Record<string, unknown>;
+  if (record[field] !== undefined) return record[field];
 
-  for (const key of Object.keys(obj)) {
+  for (const key of Object.keys(record)) {
     if (key.startsWith('@_')) continue; // Skip XML attributes
-    const result = findInObject(obj[key], field);
+    const result = findInObject(record[key], field);
     if (result !== undefined) return result;
   }
 

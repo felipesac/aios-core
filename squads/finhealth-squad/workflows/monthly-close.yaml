@@ -48,8 +48,8 @@ steps:
     agent: auditor-agent
     input:
       status: "pending"
-      dateFrom: "{{computedMonth.start}}"
-      dateTo: "{{computedMonth.end}}"
+      dateFrom: "{{input.year}}-{{input.month}}-01"
+      dateTo: "{{input.year}}-{{input.month}}-28"
       batchSize: 500
     output:
       auditedAccounts: "{{result.accounts}}"
