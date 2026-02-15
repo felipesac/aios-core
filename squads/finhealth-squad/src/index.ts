@@ -19,6 +19,27 @@ export * from './parsers/payment-xml-parser';
 // Validators
 export * from './validators/tiss-validator';
 
+// Scrapers
+export { AnsScraper } from './scrapers/ans-scraper';
+export { CbhpmScraper } from './scrapers/cbhpm-scraper';
+export { DatasusScraper } from './scrapers/datasus-scraper';
+export { ScraperManager, createScraperManager } from './scrapers/scraper-manager';
+export type {
+  ScrapeResult,
+  ScrapeSource,
+  ScraperConfig,
+  ScraperManagerConfig,
+  ScraperManagerResult,
+  HttpClient,
+  LlmClient,
+  FileSystem as ScraperFileSystem,
+  TussProcedure,
+  CbhpmProcedure,
+  PorteInfo,
+  CbhpmData,
+  SigtapProcedure,
+} from './scrapers/types';
+
 // Pipeline
 export { PipelineExecutor } from './pipeline/pipeline-executor';
 export type {
