@@ -197,7 +197,7 @@ async function runExample() {
     console.log(`  ✓ Loaded agents: ${runtime.listAgents().join(', ')}`);
 
     // Step 3: Initialize billing agent
-    const billingAgent = new BillingAgent(runtime);
+    const billingAgent = new BillingAgent(runtime, 'example-org-id');
 
     // Step 4: Generate TISS guide
     console.log('\n📝 Generating TISS Guide...\n');

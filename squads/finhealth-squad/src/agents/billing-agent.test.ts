@@ -22,8 +22,8 @@ const { mockAccountRepo, mockProcedureRepo } = vi.hoisted(() => ({
 
 vi.mock('../database/supabase-client', () => {
   return {
-    MedicalAccountRepository: class { constructor() { return mockAccountRepo; } },
-    ProcedureRepository: class { constructor() { return mockProcedureRepo; } },
+    MedicalAccountRepository: class { constructor(_orgId: string) { return mockAccountRepo; } },
+    ProcedureRepository: class { constructor(_orgId: string) { return mockProcedureRepo; } },
   };
 });
 
@@ -167,7 +167,7 @@ describe('BillingAgent', () => {
       success: true,
       output: { analysis: 'AI analysis result' },
     });
-    agent = new BillingAgent(mockRuntime);
+    agent = new BillingAgent(mockRuntime, 'test-org-id');
   });
 
   // ========================================================================

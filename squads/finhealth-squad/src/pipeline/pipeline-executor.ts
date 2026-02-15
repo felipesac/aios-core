@@ -78,6 +78,7 @@ export class PipelineExecutor {
   async execute(input: {
     workflowName: string;
     parameters: Record<string, unknown>;
+    context?: Record<string, unknown>;
   }): Promise<PipelineResult> {
     const startTime = Date.now();
     const workflow = this.workflows.get(input.workflowName);
@@ -125,7 +126,7 @@ export class PipelineExecutor {
     const sortedSteps = topologicalSort(workflow.steps);
 
     // Init context
-    const ctx: PipelineContext = { input: parameters, steps: {} };
+    const ctx: PipelineContext = { input: parameters, steps: {}, context: input.context };
     const stepResults: StepResult[] = [];
     const errors: string[] = [];
 
@@ -248,6 +249,7 @@ export class PipelineExecutor {
       agentId: step.agent,
       taskName: step.task,
       parameters: resolvedInput as Record<string, any>,
+      context: ctx.context,
     });
 
     // Handle failure with error handlers
@@ -308,6 +310,7 @@ export class PipelineExecutor {
         agentId: step.agent,
         taskName: step.task,
         parameters: resolvedInput as Record<string, any>,
+        context: ctx.context,
       });
 
       if (result.success) return result;

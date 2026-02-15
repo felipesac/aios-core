@@ -21,6 +21,7 @@ export interface Patient {
   email?: string;
   address?: Record<string, any>;
   health_insurance_id?: string;
+  organization_id: string;
   created_at: string;
   updated_at: string;
 }
@@ -162,9 +163,11 @@ export function getSupabaseClient(): SupabaseClient {
  */
 export class MedicalAccountRepository {
   private client: SupabaseClient;
+  private organizationId: string;
 
-  constructor() {
+  constructor(organizationId: string) {
     this.client = getSupabaseClient();
+    this.organizationId = organizationId;
   }
 
   async findById(id: string): Promise<MedicalAccount | null> {
@@ -172,6 +175,7 @@ export class MedicalAccountRepository {
       .from('medical_accounts')
       .select('*')
       .eq('id', id)
+      .eq('organization_id', this.organizationId)
       .single();
 
     if (error) throw error;
@@ -183,6 +187,7 @@ export class MedicalAccountRepository {
       .from('medical_accounts')
       .select('*')
       .eq('account_number', accountNumber)
+      .eq('organization_id', this.organizationId)
       .single();
 
     if (error && error.code !== 'PGRST116') throw error;
@@ -194,6 +199,7 @@ export class MedicalAccountRepository {
       .from('medical_accounts')
       .select('*')
       .eq('status', 'pending')
+      .eq('organization_id', this.organizationId)
       .order('created_at', { ascending: true })
       .limit(limit);
 
@@ -204,7 +210,7 @@ export class MedicalAccountRepository {
   async create(account: Omit<MedicalAccount, 'id' | 'created_at' | 'updated_at'>): Promise<MedicalAccount> {
     const { data, error } = await this.client
       .from('medical_accounts')
-      .insert(account as any)
+      .insert({ ...account, organization_id: this.organizationId } as any)
       .select()
       .single();
 
@@ -217,6 +223,7 @@ export class MedicalAccountRepository {
       .from('medical_accounts')
       .update(updates as any)
       .eq('id', id)
+      .eq('organization_id', this.organizationId)
       .select()
       .single();
 
@@ -255,9 +262,11 @@ export class MedicalAccountRepository {
  */
 export class ProcedureRepository {
   private client: SupabaseClient;
+  private organizationId: string;
 
-  constructor() {
+  constructor(organizationId: string) {
     this.client = getSupabaseClient();
+    this.organizationId = organizationId;
   }
 
   async findByAccountId(accountId: string): Promise<Procedure[]> {
@@ -265,6 +274,7 @@ export class ProcedureRepository {
       .from('procedures')
       .select('*')
       .eq('medical_account_id', accountId)
+      .eq('organization_id', this.organizationId)
       .order('created_at', { ascending: true });
 
     if (error) throw error;
@@ -274,7 +284,7 @@ export class ProcedureRepository {
   async create(procedure: Omit<Procedure, 'id' | 'created_at'>): Promise<Procedure> {
     const { data, error } = await this.client
       .from('procedures')
-      .insert(procedure as any)
+      .insert({ ...procedure, organization_id: this.organizationId } as any)
       .select()
       .single();
 
@@ -283,9 +293,10 @@ export class ProcedureRepository {
   }
 
   async createMany(procedures: Omit<Procedure, 'id' | 'created_at'>[]): Promise<Procedure[]> {
+    const withOrgId = procedures.map((p) => ({ ...p, organization_id: this.organizationId }));
     const { data, error } = await this.client
       .from('procedures')
-      .insert(procedures as any)
+      .insert(withOrgId as any)
       .select();
 
     if (error) throw error;
@@ -298,9 +309,11 @@ export class ProcedureRepository {
  */
 export class GlosaRepository {
   private client: SupabaseClient;
+  private organizationId: string;
 
-  constructor() {
+  constructor(organizationId: string) {
     this.client = getSupabaseClient();
+    this.organizationId = organizationId;
   }
 
   async findByAccountId(accountId: string): Promise<Glosa[]> {
@@ -308,6 +321,7 @@ export class GlosaRepository {
       .from('glosas')
       .select('*')
       .eq('medical_account_id', accountId)
+      .eq('organization_id', this.organizationId)
       .order('priority_score', { ascending: false });
 
     if (error) throw error;
@@ -319,6 +333,7 @@ export class GlosaRepository {
       .from('glosas')
       .select('*')
       .eq('appeal_status', 'pending')
+      .eq('organization_id', this.organizationId)
       .order('priority_score', { ascending: false })
       .limit(limit);
 
@@ -329,7 +344,7 @@ export class GlosaRepository {
   async create(glosa: Omit<Glosa, 'id' | 'created_at' | 'updated_at'>): Promise<Glosa> {
     const { data, error } = await this.client
       .from('glosas')
-      .insert(glosa as any)
+      .insert({ ...glosa, organization_id: this.organizationId } as any)
       .select()
       .single();
 
@@ -346,6 +361,7 @@ export class GlosaRepository {
         appeal_sent_at: status === 'sent' ? new Date().toISOString() : undefined,
       } as any)
       .eq('id', id)
+      .eq('organization_id', this.organizationId)
       .select()
       .single();
 

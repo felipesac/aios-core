@@ -112,7 +112,7 @@ describe.skipIf(shouldSkip)('BillingAgent Integration [LIVE LLM]', () => {
     // Dynamic import after mocks are set up
     const mod = await import('../../src/agents/billing-agent');
     BillingAgent = mod.BillingAgent;
-    agent = new BillingAgent(runtime);
+    agent = new BillingAgent(runtime, 'test-org-id');
   });
 
   // ========================================================================

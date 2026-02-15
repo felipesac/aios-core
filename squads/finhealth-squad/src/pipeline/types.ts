@@ -104,6 +104,7 @@ export interface NotificationConfig {
 export interface PipelineContext {
   input: Record<string, unknown>;
   steps: Record<string, StepResult>;
+  context?: Record<string, unknown>;
 }
 
 // ============================================================================

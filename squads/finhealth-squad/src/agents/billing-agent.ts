@@ -62,10 +62,10 @@ export class BillingAgent {
   private xmlParser: XMLParser;
   private xmlBuilder: XMLBuilder;
 
-  constructor(runtime: AgentRuntime) {
+  constructor(runtime: AgentRuntime, organizationId: string) {
     this.runtime = runtime;
-    this.accountRepo = new MedicalAccountRepository();
-    this.procedureRepo = new ProcedureRepository();
+    this.accountRepo = new MedicalAccountRepository(organizationId);
+    this.procedureRepo = new ProcedureRepository(organizationId);
 
     this.xmlParser = new XMLParser({
       ignoreAttributes: false,

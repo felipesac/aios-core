@@ -112,7 +112,7 @@ describe('supabase-client', () => {
   describe('MedicalAccountRepository', () => {
     async function createRepo() {
       const mod = await import('./supabase-client');
-      return new mod.MedicalAccountRepository();
+      return new mod.MedicalAccountRepository('test-org-id');
     }
 
     const mockAccount = {
@@ -278,7 +278,7 @@ describe('supabase-client', () => {
   describe('ProcedureRepository', () => {
     async function createRepo() {
       const mod = await import('./supabase-client');
-      return new mod.ProcedureRepository();
+      return new mod.ProcedureRepository('test-org-id');
     }
 
     const mockProc = {
@@ -351,7 +351,7 @@ describe('supabase-client', () => {
   describe('GlosaRepository', () => {
     async function createRepo() {
       const mod = await import('./supabase-client');
-      return new mod.GlosaRepository();
+      return new mod.GlosaRepository('test-org-id');
     }
 
     const mockGlosa = {

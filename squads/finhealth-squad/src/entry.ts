@@ -205,11 +205,18 @@ async function main(): Promise<void> {
   } else {
     // --- Task mode (existing behavior) ---
     const input = validateTaskInput(rawObj);
+
+    // Extract organizationId from context for multi-tenant isolation
+    const organizationId = input.context?.organizationId as string | undefined;
+    if (!organizationId) {
+      console.warn('[Entry] No organizationId in context — DB operations will not be tenant-scoped');
+    }
+
     const taskInput: TaskInput = {
       agentId: input.agentId,
       taskName: input.taskName,
       parameters: input.parameters as Record<string, any>,
-      context: input.context as Record<string, any>,
+      context: { ...input.context, organizationId } as Record<string, any>,
     };
 
     let result: TaskResult;
