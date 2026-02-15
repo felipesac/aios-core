@@ -162,6 +162,62 @@ export const selectActiveSession = (state: MonitorState): MonitorSession | undef
   return state.sessions.find((s) => s.status === 'active');
 };
 
+export const selectCurrentCommand = (state: MonitorState) => {
+  // Find the most recent tool event to derive current command status
+  const preToolUses = state.events.filter((e) => e.type === 'PreToolUse');
+  const postToolUses = state.events.filter((e) => e.type === 'PostToolUse');
+
+  for (const pre of preToolUses) {
+    const matchingPost = postToolUses.find(
+      (post) =>
+        post.tool_name === pre.tool_name &&
+        post.session_id === pre.session_id &&
+        post.timestamp > pre.timestamp
+    );
+    if (!matchingPost) {
+      return {
+        name: pre.tool_name || 'unknown',
+        status: 'running' as const,
+        startedAt: pre.timestamp,
+      };
+    }
+  }
+
+  // Return the most recent completed command if any
+  if (postToolUses.length > 0) {
+    const latest = postToolUses[0];
+    return {
+      name: latest.tool_name || 'unknown',
+      status: (latest.is_error ? 'error' : 'complete') as 'error' | 'complete',
+      startedAt: latest.timestamp,
+    };
+  }
+
+  return undefined;
+};
+
+export const selectActiveAgent = (state: MonitorState) => {
+  // Find the active session's agent
+  const activeSession = state.sessions.find((s) => s.status === 'active');
+  if (activeSession?.aios_agent) {
+    return {
+      id: activeSession.aios_agent,
+      name: activeSession.aios_agent,
+    };
+  }
+
+  // Fallback: check recent events for agent info
+  const recentEvent = state.events.find((e) => e.aios_agent);
+  if (recentEvent?.aios_agent) {
+    return {
+      id: recentEvent.aios_agent,
+      name: recentEvent.aios_agent,
+    };
+  }
+
+  return undefined;
+};
+
 export const selectCurrentTool = (state: MonitorState): MonitorEvent | undefined => {
   // Find the most recent PreToolUse that doesn't have a matching PostToolUse
   const preToolUses = state.events.filter((e) => e.type === 'PreToolUse');

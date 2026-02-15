@@ -239,3 +239,33 @@ export const AGENT_STATUS_COLORS: Record<AgentStatus, string> = {
   waiting: 'bg-yellow-500',
   error: 'bg-red-500',
 };
+
+// ============ Squad Types ============
+
+export interface SquadSummary {
+  name: string;
+  version: string;
+  description: string;
+  slashPrefix: string;
+  agents: string[];
+  tasks: string[];
+  workflows: string[];
+  tags: string[];
+}
+
+export interface SquadTaskExecution {
+  success: boolean;
+  output: unknown;
+  errors?: string[];
+  metadata?: Record<string, unknown>;
+  executedAt: string;
+}
+
+export interface AgentInfo {
+  name: string;
+  displayName: string;
+  capabilities: string[];
+  type: 'core' | 'squad';
+  squadName?: string;
+  squadAgentId?: string;
+}

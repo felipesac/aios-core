@@ -110,6 +110,37 @@ class SquadExecutor {
   }
 
   /**
+   * Execute a squad workflow (pipeline)
+   *
+   * @param {string} squadName - Squad name (e.g., 'finhealth-squad')
+   * @param {string} workflowName - Workflow to execute (e.g., 'tiss-validation')
+   * @param {Object} [parameters={}] - Workflow parameters
+   * @returns {Promise<Object>} Workflow result { success, output, errors?, metadata? }
+   */
+  async executeWorkflow(squadName, workflowName, parameters = {}) {
+    const startTime = Date.now();
+    this._log(`Executing workflow ${squadName}:${workflowName}`);
+
+    const squadPath = await this._resolveSquadPath(squadName);
+    const entryPoint = path.join(squadPath, ENTRY_POINT_FILE);
+
+    const payload = JSON.stringify({ workflowName, parameters });
+    const result = await this._spawnAndCommunicate(entryPoint, payload, squadPath);
+
+    result.metadata = {
+      ...result.metadata,
+      squadName,
+      workflowName,
+      duration: Date.now() - startTime,
+      bridge: 'squad-executor',
+      mode: 'workflow',
+    };
+
+    this._log(`Workflow ${squadName}:${workflowName} completed in ${Date.now() - startTime}ms`);
+    return result;
+  }
+
+  /**
    * Create an executor function compatible with AgentInvoker's executor interface
    *
    * @returns {Function} executor(agent, task, context) → Promise<result>

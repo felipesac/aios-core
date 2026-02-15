@@ -138,9 +138,10 @@ async function collectQAMetrics(): Promise<QAMetrics> {
 
   // Recent gotchas (last 7 days)
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const recentGotchas = gotchasList.filter((g: { createdAt?: string }) => {
-    if (!g.createdAt) return false;
-    return new Date(g.createdAt).getTime() > weekAgo;
+  const recentGotchas = gotchasList.filter((g) => {
+    const entry = g as Record<string, unknown>;
+    if (!entry.createdAt || typeof entry.createdAt !== 'string') return false;
+    return new Date(entry.createdAt).getTime() > weekAgo;
   }).length;
 
   // Generate daily trend from history
