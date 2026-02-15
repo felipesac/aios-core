@@ -1,20 +1,19 @@
 status:
   branch: main
   modifiedFiles:
-    - .aios-core/core/execution/subagent-dispatcher.js
-    - .aios-core/core/health-check/checks/services/index.js
-    - bin/aios-init.js
-    - .aios-core/core/execution/parallel-executor.js
-    - .aios-core/core/health-check/checks/services/gemini-cli.js
-  modifiedFilesTotalCount: 15
+    - .aios/project-status.yaml
+    - docs/projects/
+  modifiedFilesTotalCount: 2
   recentCommits:
-    - 'fix: align PR #63 workflows with AIOS standards'
     - >-
-      feat(workflows): add design-system-build-quality and
-      story-development-cycle (#63)
+      feat(finhealth-squad): add report/appeal output templates with pure TS
+      renderers [Item 10]
+    - >-
+      feat(finhealth-squad): add data scrapers with BaseScraper pattern and DI
+      [Item 9]
   currentEpic: null
   currentStory: null
-  lastUpdate: '2026-02-03T19:10:54.583Z'
+  lastUpdate: '2026-02-15T02:52:54.426Z'
   isGitRepo: true
-timestamp: 1770145854584
+timestamp: 1771123974428
 ttl: 60
