@@ -23,6 +23,9 @@ import {
   resolveValue,
   evaluateCondition,
 } from './template-engine';
+import { logger } from '../logger';
+import { CircuitBreaker } from './circuit-breaker';
+import { isRetryable } from './error-classifier';
 
 // ============================================================================
 // Config
@@ -33,6 +36,8 @@ export interface PipelineExecutorConfig {
   verbose?: boolean;
   /** Injectable sleep for testability (defaults to real setTimeout) */
   sleepFn?: (ms: number) => Promise<void>;
+  /** Optional circuit breaker for agent failure protection */
+  circuitBreaker?: CircuitBreaker;
 }
 
 // ============================================================================
@@ -58,9 +63,7 @@ export class PipelineExecutor {
     this.workflows = loadWorkflowsFromDir(this.config.workflowsPath);
 
     if (this.config.verbose) {
-      console.log(
-        `[Pipeline] Loaded ${this.workflows.size} workflows: ${[...this.workflows.keys()].join(', ')}`,
-      );
+      logger.info(`[Pipeline] Loaded ${this.workflows.size} workflows: ${[...this.workflows.keys()].join(', ')}`);
     }
   }
 
@@ -131,9 +134,7 @@ export class PipelineExecutor {
     const errors: string[] = [];
 
     if (this.config.verbose) {
-      console.log(
-        `[Pipeline] Executing "${workflow.name}" with ${sortedSteps.length} steps`,
-      );
+      logger.info(`[Pipeline] Executing "${workflow.name}" with ${sortedSteps.length} steps`);
     }
 
     // Execute each step in order
@@ -209,7 +210,7 @@ export class PipelineExecutor {
         const depResult = ctx.steps[dep];
         if (depResult && (depResult.skipped || !depResult.success)) {
           if (this.config.verbose) {
-            console.log(`[Pipeline] Skipping "${step.id}" — dependency "${dep}" not satisfied`);
+            logger.info(`[Pipeline] Skipping "${step.id}" — dependency "${dep}" not satisfied`);
           }
           return {
             stepId: step.id,
@@ -226,7 +227,7 @@ export class PipelineExecutor {
       const conditionMet = evaluateCondition(step.condition, ctx);
       if (!conditionMet) {
         if (this.config.verbose) {
-          console.log(`[Pipeline] Skipping "${step.id}" — condition not met`);
+          logger.info(`[Pipeline] Skipping "${step.id}" — condition not met`);
         }
         return {
           stepId: step.id,
@@ -241,7 +242,20 @@ export class PipelineExecutor {
     const resolvedInput = resolveObject(step.input, ctx);
 
     if (this.config.verbose) {
-      console.log(`[Pipeline] Executing step "${step.id}" (${step.agent}/${step.task})`);
+      logger.info(`[Pipeline] Executing step "${step.id}" (${step.agent}/${step.task})`);
+    }
+
+    // Circuit breaker check
+    const cb = this.config.circuitBreaker;
+    if (cb && !cb.canExecute(step.agent)) {
+      logger.warn(`[Pipeline] Circuit open for agent "${step.agent}" — skipping step "${step.id}"`);
+      return {
+        stepId: step.id,
+        success: false,
+        skipped: false,
+        output: {},
+        error: `Circuit breaker open for agent "${step.agent}"`,
+      };
     }
 
     // Execute task
@@ -251,6 +265,15 @@ export class PipelineExecutor {
       parameters: resolvedInput as Record<string, any>,
       context: ctx.context,
     });
+
+    // Record success/failure in circuit breaker
+    if (cb) {
+      if (taskResult.success) {
+        cb.recordSuccess(step.agent);
+      } else {
+        cb.recordFailure(step.agent);
+      }
+    }
 
     // Handle failure with error handlers
     if (!taskResult.success && errorHandlers) {
@@ -294,12 +317,12 @@ export class PipelineExecutor {
 
     // Handle non-retry actions
     if (handler.action === 'notify') {
-      console.log(`[Pipeline] Notification: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`);
+      logger.info(`[Pipeline] Notification: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`);
       return lastResult;
     }
 
     if (handler.action === 'alert') {
-      console.error(`[Pipeline] ALERT: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`, {
+      logger.error(`[Pipeline] ALERT: Step "${step.id}" failed — ${lastResult.errors?.[0] || 'Unknown error'}`, {
         stepId: step.id,
         severity: 'high',
       });
@@ -307,7 +330,7 @@ export class PipelineExecutor {
     }
 
     if (handler.action === 'pause') {
-      console.warn(`[Pipeline] Step "${step.id}" paused after failure — manual intervention may be required`);
+      logger.warn(`[Pipeline] Step "${step.id}" paused after failure — manual intervention may be required`);
       return {
         ...lastResult,
         metadata: { ...lastResult.metadata, paused: true },
@@ -316,6 +339,13 @@ export class PipelineExecutor {
 
     if (handler.action !== 'retry') return lastResult;
 
+    // Check if the error is retryable (permanent errors should not be retried)
+    const errorMsg = lastResult.errors?.[0] || '';
+    if (!isRetryable(new Error(errorMsg))) {
+      logger.info(`[Pipeline] Error in step "${step.id}" is not retryable — skipping retry`);
+      return lastResult;
+    }
+
     const maxRetries = handler.maxRetries || 1;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -323,9 +353,7 @@ export class PipelineExecutor {
         handler.backoff === 'exponential' ? Math.pow(2, attempt) * 1000 : 1000;
 
       if (this.config.verbose) {
-        console.log(
-          `[Pipeline] Retrying step "${step.id}" (attempt ${attempt}/${maxRetries}, delay ${delay}ms)`,
-        );
+        logger.info(`[Pipeline] Retrying step "${step.id}" (attempt ${attempt}/${maxRetries}, delay ${delay}ms)`);
       }
 
       await this.sleepFn(delay);

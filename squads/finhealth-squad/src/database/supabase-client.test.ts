@@ -10,7 +10,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // ============================================================================
 
 const mockChain: any = {};
-const chainMethods = ['from', 'select', 'insert', 'update', 'eq', 'order', 'limit'];
+const chainMethods = ['from', 'select', 'insert', 'update', 'delete', 'eq', 'neq', 'order', 'limit'];
 
 for (const m of chainMethods) {
   mockChain[m] = vi.fn().mockReturnValue(mockChain);
@@ -436,6 +436,220 @@ describe('supabase-client', () => {
           appeal_text: 'Appeal text',
           appeal_status: 'in_progress',
           appeal_sent_at: undefined,
+        }));
+      });
+    });
+  });
+
+  // ========================================================================
+  // PaymentRepository
+  // ========================================================================
+
+  describe('PaymentRepository', () => {
+    async function createRepo() {
+      const mod = await import('./supabase-client');
+      return new mod.PaymentRepository('test-org-id');
+    }
+
+    const mockPayment = {
+      id: 'pay-001',
+      health_insurer_id: 'ins-001',
+      payment_date: '2024-06-01',
+      total_amount: 5000,
+      matched_amount: 0,
+      unmatched_amount: 5000,
+      reconciliation_status: 'pending',
+      metadata: {},
+      created_at: '2024-06-01T00:00:00Z',
+    };
+
+    describe('findById', () => {
+      it('should return payment when found', async () => {
+        setChainResult({ data: mockPayment, error: null });
+        const repo = await createRepo();
+        const result = await repo.findById('pay-001');
+        expect(result).toEqual(mockPayment);
+        expect(mockChain.from).toHaveBeenCalledWith('payments');
+        expect(mockChain.eq).toHaveBeenCalledWith('id', 'pay-001');
+      });
+
+      it('should throw on error', async () => {
+        setChainResult({ data: null, error: { message: 'DB error' } });
+        const repo = await createRepo();
+        await expect(repo.findById('pay-001')).rejects.toEqual({ message: 'DB error' });
+      });
+    });
+
+    describe('findByInsurerId', () => {
+      it('should return payments for insurer', async () => {
+        setChainResult({ data: [mockPayment], error: null }, false);
+        const repo = await createRepo();
+        const result = await repo.findByInsurerId('ins-001');
+        expect(result).toEqual([mockPayment]);
+        expect(mockChain.eq).toHaveBeenCalledWith('health_insurer_id', 'ins-001');
+      });
+    });
+
+    describe('findUnreconciled', () => {
+      it('should return unreconciled payments', async () => {
+        setChainResult({ data: [mockPayment], error: null }, false);
+        const repo = await createRepo();
+        const result = await repo.findUnreconciled();
+        expect(result).toEqual([mockPayment]);
+        expect(mockChain.neq).toHaveBeenCalledWith('reconciliation_status', 'reconciled');
+      });
+    });
+
+    describe('create', () => {
+      it('should insert and return payment', async () => {
+        setChainResult({ data: mockPayment, error: null });
+        const repo = await createRepo();
+        const result = await repo.create(mockPayment as any);
+        expect(result).toEqual(mockPayment);
+        expect(mockChain.insert).toHaveBeenCalled();
+      });
+    });
+
+    describe('updateReconciliation', () => {
+      it('should update reconciliation status', async () => {
+        setChainResult({ data: { ...mockPayment, reconciliation_status: 'reconciled' }, error: null });
+        const repo = await createRepo();
+        const result = await repo.updateReconciliation('pay-001', 'reconciled', 5000);
+        expect(result.reconciliation_status).toBe('reconciled');
+        expect(mockChain.update).toHaveBeenCalledWith(expect.objectContaining({
+          reconciliation_status: 'reconciled',
+          matched_amount: 5000,
+        }));
+      });
+    });
+  });
+
+  // ========================================================================
+  // HealthInsurerRepository
+  // ========================================================================
+
+  describe('HealthInsurerRepository', () => {
+    async function createRepo() {
+      const mod = await import('./supabase-client');
+      return new mod.HealthInsurerRepository();
+    }
+
+    const mockInsurer = {
+      id: 'ins-001',
+      ans_code: '123456',
+      name: 'Test Insurer',
+      tiss_version: '3.05.00',
+      config: {},
+      active: true,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    };
+
+    describe('findById', () => {
+      it('should return insurer when found', async () => {
+        setChainResult({ data: mockInsurer, error: null });
+        const repo = await createRepo();
+        const result = await repo.findById('ins-001');
+        expect(result).toEqual(mockInsurer);
+        expect(mockChain.from).toHaveBeenCalledWith('health_insurers');
+      });
+    });
+
+    describe('findByAnsCode', () => {
+      it('should return insurer by ANS code', async () => {
+        setChainResult({ data: mockInsurer, error: null });
+        const repo = await createRepo();
+        const result = await repo.findByAnsCode('123456');
+        expect(result).toEqual(mockInsurer);
+        expect(mockChain.eq).toHaveBeenCalledWith('ans_code', '123456');
+      });
+
+      it('should return null when PGRST116', async () => {
+        setChainResult({ data: null, error: { code: 'PGRST116', message: 'Not found' } });
+        const repo = await createRepo();
+        const result = await repo.findByAnsCode('000000');
+        expect(result).toBeNull();
+      });
+    });
+
+    describe('findAll', () => {
+      it('should return active insurers', async () => {
+        setChainResult({ data: [mockInsurer], error: null }, false);
+        const repo = await createRepo();
+        const result = await repo.findAll();
+        expect(result).toEqual([mockInsurer]);
+        expect(mockChain.eq).toHaveBeenCalledWith('active', true);
+      });
+    });
+  });
+
+  // ========================================================================
+  // PatientRepository
+  // ========================================================================
+
+  describe('PatientRepository', () => {
+    async function createRepo() {
+      const mod = await import('./supabase-client');
+      return new mod.PatientRepository('test-org-id');
+    }
+
+    const mockPatient = {
+      id: 'pat-001',
+      name: 'Maria Silva',
+      cpf: '12345678901',
+      organization_id: 'test-org-id',
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    };
+
+    describe('findById', () => {
+      it('should return patient when found', async () => {
+        setChainResult({ data: mockPatient, error: null });
+        const repo = await createRepo();
+        const result = await repo.findById('pat-001');
+        expect(result).toEqual(mockPatient);
+        expect(mockChain.from).toHaveBeenCalledWith('patients');
+        expect(mockChain.eq).toHaveBeenCalledWith('organization_id', 'test-org-id');
+      });
+    });
+
+    describe('findByCpf', () => {
+      it('should return patient by CPF', async () => {
+        setChainResult({ data: mockPatient, error: null });
+        const repo = await createRepo();
+        const result = await repo.findByCpf('12345678901');
+        expect(result).toEqual(mockPatient);
+        expect(mockChain.eq).toHaveBeenCalledWith('cpf', '12345678901');
+      });
+
+      it('should return null when PGRST116', async () => {
+        setChainResult({ data: null, error: { code: 'PGRST116', message: 'Not found' } });
+        const repo = await createRepo();
+        const result = await repo.findByCpf('00000000000');
+        expect(result).toBeNull();
+      });
+    });
+
+    describe('create', () => {
+      it('should insert and return patient', async () => {
+        setChainResult({ data: mockPatient, error: null });
+        const repo = await createRepo();
+        const result = await repo.create(mockPatient as any);
+        expect(result).toEqual(mockPatient);
+        expect(mockChain.insert).toHaveBeenCalled();
+      });
+    });
+
+    describe('anonymize', () => {
+      it('should anonymize patient PII', async () => {
+        mockChain.then = (resolve: any) => Promise.resolve({ data: null, error: null }).then(resolve);
+        const repo = await createRepo();
+        await repo.anonymize('pat-001');
+        expect(mockChain.update).toHaveBeenCalledWith(expect.objectContaining({
+          name: expect.stringContaining('Paciente Anonimizado'),
+          cpf: null,
+          birth_date: null,
+          email: null,
         }));
       });
     });

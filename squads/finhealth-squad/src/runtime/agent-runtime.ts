@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import { config } from 'dotenv';
+import { logger } from '../logger';
 
 // Load environment variables
 config();
@@ -96,11 +97,11 @@ export class AgentRuntime {
       this.agents.set(agentId, agent);
 
       if (this.config.verbose) {
-        console.log(`[Runtime] Loaded agent: ${agentId}`);
+        logger.info(`[Runtime] Loaded agent: ${agentId}`);
       }
     }
 
-    console.log(`[Runtime] Initialized with ${this.agents.size} agents`);
+    logger.info(`[Runtime] Initialized with ${this.agents.size} agents`);
   }
 
   /**
@@ -190,7 +191,7 @@ export class AgentRuntime {
     const startTime = Date.now();
 
     if (this.config.verbose) {
-      console.log(`[Runtime] Executing task: ${input.taskName} with agent: ${input.agentId}`);
+      logger.info(`[Runtime] Executing task: ${input.taskName} with agent: ${input.agentId}`);
     }
 
     try {

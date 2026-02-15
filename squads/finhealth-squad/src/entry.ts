@@ -18,6 +18,7 @@
 
 import { AgentRuntime, createRuntime, TaskInput, TaskResult } from './runtime/agent-runtime';
 import { PipelineExecutor } from './pipeline/pipeline-executor';
+import { logger } from './logger';
 import * as path from 'path';
 
 // ============================================================================
@@ -209,7 +210,7 @@ async function main(): Promise<void> {
     // Extract organizationId from context for multi-tenant isolation
     const organizationId = input.context?.organizationId as string | undefined;
     if (!organizationId) {
-      console.warn('[Entry] No organizationId in context — DB operations will not be tenant-scoped');
+      logger.warn('[Entry] No organizationId in context — DB operations will not be tenant-scoped');
     }
 
     const taskInput: TaskInput = {

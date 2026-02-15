@@ -370,4 +370,194 @@ export class GlosaRepository {
   }
 }
 
+/**
+ * Database repository class for payments
+ */
+export class PaymentRepository {
+  private client: SupabaseClient;
+  private organizationId: string;
+
+  constructor(organizationId: string) {
+    this.client = getSupabaseClient();
+    this.organizationId = organizationId;
+  }
+
+  async findById(id: string): Promise<Payment | null> {
+    const { data, error } = await this.client
+      .from('payments')
+      .select('*')
+      .eq('id', id)
+      .eq('organization_id', this.organizationId)
+      .single();
+
+    if (error) throw error;
+    return data as Payment;
+  }
+
+  async findByInsurerId(insurerId: string): Promise<Payment[]> {
+    const { data, error } = await this.client
+      .from('payments')
+      .select('*')
+      .eq('health_insurer_id', insurerId)
+      .eq('organization_id', this.organizationId)
+      .order('payment_date', { ascending: false });
+
+    if (error) throw error;
+    return (data || []) as Payment[];
+  }
+
+  async findUnreconciled(limit = 100): Promise<Payment[]> {
+    const { data, error } = await this.client
+      .from('payments')
+      .select('*')
+      .neq('reconciliation_status', 'reconciled')
+      .eq('organization_id', this.organizationId)
+      .order('payment_date', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return (data || []) as Payment[];
+  }
+
+  async create(payment: Omit<Payment, 'id' | 'created_at'>): Promise<Payment> {
+    const { data, error } = await this.client
+      .from('payments')
+      .insert({ ...payment, organization_id: this.organizationId } as any)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Payment;
+  }
+
+  async updateReconciliation(id: string, status: string, matchedAmount: number): Promise<Payment> {
+    const { data, error } = await this.client
+      .from('payments')
+      .update({
+        reconciliation_status: status,
+        matched_amount: matchedAmount,
+        reconciled_at: status === 'reconciled' ? new Date().toISOString() : undefined,
+      } as any)
+      .eq('id', id)
+      .eq('organization_id', this.organizationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Payment;
+  }
+}
+
+/**
+ * Database repository class for health insurers
+ */
+export class HealthInsurerRepository {
+  private client: SupabaseClient;
+
+  constructor() {
+    this.client = getSupabaseClient();
+  }
+
+  async findById(id: string): Promise<HealthInsurer | null> {
+    const { data, error } = await this.client
+      .from('health_insurers')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data as HealthInsurer;
+  }
+
+  async findByAnsCode(code: string): Promise<HealthInsurer | null> {
+    const { data, error } = await this.client
+      .from('health_insurers')
+      .select('*')
+      .eq('ans_code', code)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data as HealthInsurer | null;
+  }
+
+  async findAll(): Promise<HealthInsurer[]> {
+    const { data, error } = await this.client
+      .from('health_insurers')
+      .select('*')
+      .eq('active', true)
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+    return (data || []) as HealthInsurer[];
+  }
+}
+
+/**
+ * Database repository class for patients
+ */
+export class PatientRepository {
+  private client: SupabaseClient;
+  private organizationId: string;
+
+  constructor(organizationId: string) {
+    this.client = getSupabaseClient();
+    this.organizationId = organizationId;
+  }
+
+  async findById(id: string): Promise<Patient | null> {
+    const { data, error } = await this.client
+      .from('patients')
+      .select('*')
+      .eq('id', id)
+      .eq('organization_id', this.organizationId)
+      .single();
+
+    if (error) throw error;
+    return data as Patient;
+  }
+
+  async findByCpf(cpf: string): Promise<Patient | null> {
+    const { data, error } = await this.client
+      .from('patients')
+      .select('*')
+      .eq('cpf', cpf)
+      .eq('organization_id', this.organizationId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data as Patient | null;
+  }
+
+  async create(patient: Omit<Patient, 'id' | 'created_at' | 'updated_at'>): Promise<Patient> {
+    const { data, error } = await this.client
+      .from('patients')
+      .insert({ ...patient, organization_id: this.organizationId } as any)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Patient;
+  }
+
+  async anonymize(id: string): Promise<void> {
+    const shortId = id.slice(0, 8);
+    const { error } = await this.client
+      .from('patients')
+      .update({
+        name: `Paciente Anonimizado ${shortId}`,
+        cpf: null,
+        birth_date: null,
+        gender: null,
+        phone: null,
+        email: null,
+        address: {},
+        external_id: null,
+      } as any)
+      .eq('id', id)
+      .eq('organization_id', this.organizationId);
+
+    if (error) throw error;
+  }
+}
+
 export default getSupabaseClient;
