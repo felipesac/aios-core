@@ -40,6 +40,63 @@ export type {
   SigtapProcedure,
 } from './scrapers/types';
 
+// Templates
+export { TemplateManager, createTemplateManager } from './templates/template-manager';
+export {
+  renderAppeal,
+  createDefaultDateProvider,
+  createDefaultIdGenerator,
+  getAppealTypeLabel,
+} from './templates/appeal-renderer';
+export {
+  renderReport,
+  renderKpiDashboard,
+  renderSection,
+  getReportLevelLabel,
+} from './templates/report-renderer';
+export {
+  formatCurrency,
+  formatDate,
+  formatDateIso,
+  formatPercent,
+  renderMarkdownTable,
+  heading,
+  kvList,
+  kvLine,
+  joinSections,
+  bulletList,
+  numberedList,
+  blockquote,
+  horizontalRule,
+  escapeMarkdown,
+} from './templates/template-helpers';
+export type {
+  OutputFormat,
+  RenderResult,
+  RenderMetadata,
+  TemplateType,
+  TemplateManagerDeps,
+  DateProvider,
+  IdGenerator,
+  AppealType,
+  AppealRenderInput,
+  AppealGlosaData,
+  AppealGlosaItem,
+  AppealGuiaData,
+  AppealOperadoraData,
+  AppealEvidencia,
+  AppealNorma,
+  AppealArgumento,
+  AppealAnexo,
+  ReportLevel,
+  ReportRenderInput,
+  ReportKeyMetrics,
+  ReportSection as ReportSectionType,
+  ReportTable,
+  ReportChartReference,
+  ReportComparativo,
+} from './templates/types';
+
 // Pipeline
 export { PipelineExecutor } from './pipeline/pipeline-executor';
 export type {
