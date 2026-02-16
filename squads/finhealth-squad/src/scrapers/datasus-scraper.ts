@@ -163,9 +163,9 @@ Return at least 20 procedures.`,
         grupo: p.grupo || codigo.substring(0, 2),
         subgrupo: p.subgrupo || codigo.substring(2, 4),
         forma_organizacao: p.forma_organizacao || '01',
-        valor_sh: parseFloat(p.valor_sh) || 0,
-        valor_sp: parseFloat(p.valor_sp) || 0,
-        valor_total: parseFloat(p.valor_total) || 0,
+        valor_sh: parseFloat(String(p.valor_sh)) || 0,
+        valor_sp: parseFloat(String(p.valor_sp)) || 0,
+        valor_total: parseFloat(String(p.valor_total)) || 0,
         complexidade: p.complexidade || inferComplexidade(codigo),
       };
     });

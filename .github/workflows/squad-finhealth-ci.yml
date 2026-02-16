@@ -1,0 +1,142 @@
+name: FinHealth Squad CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['squads/finhealth-squad/**']
+  pull_request:
+    branches: [main]
+    paths: ['squads/finhealth-squad/**']
+  workflow_dispatch:
+
+concurrency:
+  group: finhealth-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: squads/finhealth-squad
+
+jobs:
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: squads/finhealth-squad/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: TypeScript Type Checking
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: squads/finhealth-squad/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+
+  test:
+    name: Vitest (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: ['20']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: squads/finhealth-squad/package-lock.json
+
+      - run: npm ci
+      - run: npm run test:run
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: squads/finhealth-squad/package-lock.json
+
+      - run: npm ci
+      - run: npm run build
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [lint, typecheck, test, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t finhealth-squad .
+
+      - name: Verify image runs
+        run: |
+          echo '{}' | docker run --rm -i finhealth-squad || EXIT_CODE=$?
+          if [ "${EXIT_CODE:-0}" -eq 2 ]; then
+            echo "Image built and ran successfully (exit 2 = invalid input, expected)"
+          elif [ "${EXIT_CODE:-0}" -eq 0 ]; then
+            echo "Image built and ran successfully"
+          else
+            echo "Unexpected exit code: ${EXIT_CODE:-0}"
+            exit 1
+          fi
+
+  summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, build]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "=== FinHealth Squad CI Summary ==="
+          echo "  Lint:      ${{ needs.lint.result }}"
+          echo "  TypeCheck: ${{ needs.typecheck.result }}"
+          echo "  Test:      ${{ needs.test.result }}"
+          echo "  Build:     ${{ needs.build.result }}"
+
+          FAILED=false
+          for job in lint typecheck test build; do
+            result=$(eval echo "\${{ needs.${job}.result }}")
+            if [ "$result" == "failure" ]; then
+              FAILED=true
+            fi
+          done
+
+          if [ "$FAILED" == "true" ]; then
+            echo "One or more jobs failed"
+            exit 1
+          fi
+          echo "All checks passed"
+        working-directory: .

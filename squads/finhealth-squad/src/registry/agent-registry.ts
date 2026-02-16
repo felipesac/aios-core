@@ -91,9 +91,10 @@ export class AgentRegistry {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private register(
     agentId: string,
-    instance: Record<string, unknown>,
+    instance: any,
     taskMap: Record<string, string>,
   ): void {
     this.agents.set(agentId, {

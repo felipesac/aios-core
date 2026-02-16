@@ -150,8 +150,8 @@ export class AgentRuntime {
     }
 
     return {
-      name: metadata.name || nameMatch?.[1] || path.basename(filePath, '.md'),
-      role: metadata.role || roleMatch?.[1]?.trim() || 'AI Agent',
+      name: (metadata.name as string) || nameMatch?.[1] || path.basename(filePath, '.md'),
+      role: (metadata.role as string) || roleMatch?.[1]?.trim() || 'AI Agent',
       capabilities,
       commands,
       context: content,

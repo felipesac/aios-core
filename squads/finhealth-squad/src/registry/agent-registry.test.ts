@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('../database/supabase-client', () => {
-  const mockRepo = { findById: vi.fn(), findPendingAccounts: vi.fn().mockResolvedValue([]), findByAccountId: vi.fn().mockResolvedValue([]), findUnreconciled: vi.fn().mockResolvedValue([]), findPendingAppeals: vi.fn().mockResolvedValue([]), findByDateRange: vi.fn().mockResolvedValue([]), updateAuditScore: vi.fn(), updateReconciliation: vi.fn(), updateRiskScore: vi.fn(), updateAppeal: vi.fn(), create: vi.fn(), findById: vi.fn() };
+  const mockRepo = { findById: vi.fn(), findPendingAccounts: vi.fn().mockResolvedValue([]), findByAccountId: vi.fn().mockResolvedValue([]), findUnreconciled: vi.fn().mockResolvedValue([]), findPendingAppeals: vi.fn().mockResolvedValue([]), findByDateRange: vi.fn().mockResolvedValue([]), updateAuditScore: vi.fn(), updateReconciliation: vi.fn(), updateRiskScore: vi.fn(), updateAppeal: vi.fn(), create: vi.fn() };
   return {
     MedicalAccountRepository: class { constructor() { return mockRepo; } },
     ProcedureRepository: class { constructor() { return mockRepo; } },
