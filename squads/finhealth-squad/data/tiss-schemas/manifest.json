@@ -1,0 +1,52 @@
+{
+  "version": "3.03.01",
+  "source": "ANS - Agência Nacional de Saúde Suplementar (gov.br/ans)",
+  "downloaded_at": "2026-02-16T18:01:29.615Z",
+  "schemas": [
+    {
+      "filename": "tissAssinaturaDigital_v1.01.xsd",
+      "sha256": "d17465216249d66aa764a85fbd45febf5924fbe60518355d97aa9a423125a126",
+      "sizeBytes": 1252
+    },
+    {
+      "filename": "tissComplexTypesV3_03_01.xsd",
+      "sha256": "360505df5f6839a7dbd1d6cda88e43c27212484e79fe2173ad05f4242e3aaca7",
+      "sizeBytes": 59050
+    },
+    {
+      "filename": "tissGuiasV3_03_01.xsd",
+      "sha256": "47af7044d73575f88b1d5d8ef20e4c10fc5821c93dd395afdc92fd7401c19861",
+      "sizeBytes": 64192
+    },
+    {
+      "filename": "tissMonitoramentoQualidadeV3_03_01.xsd",
+      "sha256": "26b24e02687ecd6d133f996a0deca805c7e9f852c03f66506f53447e87e7a546",
+      "sizeBytes": 6752
+    },
+    {
+      "filename": "tissMonitoramentoV3_03_01.xsd",
+      "sha256": "f8c466d28dde186b54f419b5261f2444889ff1964f8ebbd3571b969af0dc4a97",
+      "sizeBytes": 23795
+    },
+    {
+      "filename": "tissSimpleTypesV3_03_01.xsd",
+      "sha256": "81aad69c68add6bbc48bbe00e3e7bc65a0233f93d43d683ebd522e77b1368971",
+      "sizeBytes": 147401
+    },
+    {
+      "filename": "tissV3_03_01.xsd",
+      "sha256": "821b04aa3385726628640dc9bf2fd464a4eb71f7b81a2ffc94d0518cdd9922ef",
+      "sizeBytes": 5883
+    },
+    {
+      "filename": "tissWebServicesV3_03_01.xsd",
+      "sha256": "cff617c22e779ceab3c4af5f56118629effe203db21fb2ccfa0a10e0176b8dc7",
+      "sizeBytes": 13873
+    },
+    {
+      "filename": "xmldsig-core-schema.xsd",
+      "sha256": "364578c0d99c0705899daa74f3fdb011af3859e0eaef9f4fa960f3dfd412867a",
+      "sizeBytes": 10555
+    }
+  ]
+}

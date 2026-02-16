@@ -179,7 +179,7 @@ Return at least 20 procedures.`,
         version: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
         last_update: new Date().toISOString(),
         procedure_count: data.length,
-        note: 'Auto-updated by DATASUS Scraper',
+        note: 'Synced from DATASUS official sources',
       },
       procedures: data,
       grupos: [

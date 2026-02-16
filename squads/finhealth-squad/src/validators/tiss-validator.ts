@@ -509,3 +509,14 @@ export function loadCbhpmData(dataDir: string): CbhpmData {
     portes: raw.portes || {},
   };
 }
+
+/**
+ * Resolve a TISS XSD schema file path from the data directory.
+ * Returns the absolute path if the schema exists, null otherwise.
+ * Stub for Phase 11 (XML signing/validation with XSD).
+ */
+export function loadTissXsdPath(dataDir: string, schemaName: string): string | null {
+  const schemasDir = path.join(dataDir, 'tiss-schemas');
+  const schemaPath = path.join(schemasDir, schemaName);
+  return fs.existsSync(schemaPath) ? schemaPath : null;
+}

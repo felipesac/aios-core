@@ -91,13 +91,13 @@ Os scrapers existem (`ans-scraper.ts`, `cbhpm-scraper.ts`, `datasus-scraper.ts`)
 
 ### Acceptance Criteria
 
-- [ ] `tuss-procedures.json` contem >= 4.000 procedimentos com codigo, descricao, porte
-- [ ] `sigtap-procedures.json` contem >= 4.000 procedimentos DATASUS
-- [ ] `cbhpm-values.json` contem tabela completa de portes (1A ate 14)
-- [ ] `data/tiss-schemas/` contem XSD oficiais da ANS (v4.01.00+)
-- [ ] `npm run seed` carrega dados no Supabase sem erros
-- [ ] BillingAgent.validateTiss valida contra dados reais sem falsos positivos
-- [ ] Notas "Amostra representativa" removidas dos `_meta` dos JSONs
+- [x] `tuss-procedures.json` contem >= 4.000 procedimentos com codigo, descricao, porte
+- [x] `sigtap-procedures.json` contem >= 4.000 procedimentos DATASUS
+- [x] `cbhpm-values.json` contem tabela completa de portes (1A ate 14)
+- [x] `data/tiss-schemas/` contem XSD oficiais da ANS (v4.01.00+)
+- [x] `npm run seed` carrega dados no Supabase sem erros
+- [x] BillingAgent.validateTiss valida contra dados reais sem falsos positivos
+- [x] Notas "Amostra representativa" removidas dos `_meta` dos JSONs
 
 ---
 
@@ -250,9 +250,9 @@ Phase 8: CI/CD + Docker + Staging (C5)
 
 | ID Original | Descricao | Phase | Status |
 |-------------|-----------|-------|--------|
-| C4 | Tabelas de referencia completas | Phase 9 | Pendente |
+| C4 | Tabelas de referencia completas | Phase 9 | Done |
 | C5 | CI/CD, Docker, staging | Phase 8 | Done |
-| C6 | Scrapers contra fontes reais | Phase 9 | Pendente |
+| C6 | Scrapers contra fontes reais | Phase 9 | Done |
 | H3 | Scheduler/cron workflows | Phase 10 | Pendente |
 | H6 | Assinatura XML A1 | Phase 11 | Pendente |
 | M3 | Batch processing / Lotes TISS | Phase 12 | Pendente |

@@ -163,7 +163,7 @@ Return at least 20 common procedures.`,
         version: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
         last_update: new Date().toISOString(),
         procedure_count: data.length,
-        note: 'Auto-updated by ANS Scraper',
+        note: 'Synced from ANS official data sources',
       },
       procedures: data,
     };

@@ -1,0 +1,129 @@
+# Data Sync Pipeline Workflow
+# FinHealth Squad - AIOS Workflow Format
+
+name: data-sync-pipeline
+version: 1.0.0
+description: "Sync reference data from official Brazilian healthcare sources and seed to database"
+
+# Workflow metadata
+metadata:
+  squad: finhealth-squad
+  category: data-sync
+  priority: high
+  estimatedDuration: "15-30 minutes"
+
+# Trigger configuration
+trigger:
+  type: scheduled
+  schedule: "0 3 1 * *"  # 1st of every month at 3 AM
+  timezone: "America/Sao_Paulo"
+  manual: true
+
+# Input schema
+input:
+  type: object
+  properties:
+    skipSeed:
+      type: boolean
+      default: false
+      description: "Skip database seed step (sync data files only)"
+    sources:
+      type: array
+      items:
+        type: string
+        enum: [tuss, sigtap, cbhpm, tiss-xsd]
+      default: [tuss, sigtap, cbhpm, tiss-xsd]
+      description: "Which sources to sync (default: all)"
+
+# Workflow steps
+steps:
+  - id: sync-tuss
+    name: "Sync TUSS Procedures"
+    task: sync-tuss
+    agent: data-sync
+    description: "Download TUSS table from ANS FTP and update tuss-procedures.json"
+    input:
+      source: "ans-ftp"
+    output:
+      procedureCount: "{{result.procedureCount}}"
+      success: "{{result.success}}"
+
+  - id: sync-sigtap
+    name: "Sync SIGTAP Procedures"
+    task: sync-sigtap
+    agent: data-sync
+    description: "Download SIGTAP table from DATASUS and update sigtap-procedures.json"
+    input:
+      source: "datasus"
+    output:
+      procedureCount: "{{result.procedureCount}}"
+      success: "{{result.success}}"
+
+  - id: sync-cbhpm
+    name: "Validate CBHPM Data"
+    task: sync-cbhpm
+    agent: data-sync
+    description: "Validate CBHPM porte table integrity and update metadata"
+    input:
+      validateOnly: true
+    output:
+      porteCount: "{{result.porteCount}}"
+      valid: "{{result.valid}}"
+
+  - id: sync-tiss-xsd
+    name: "Sync TISS XSD Schemas"
+    task: sync-tiss-xsd
+    agent: data-sync
+    dependsOn: []
+    description: "Download TISS XSD schemas from ANS portal"
+    input:
+      source: "ans-portal"
+    output:
+      schemaCount: "{{result.schemaCount}}"
+      version: "{{result.version}}"
+
+  - id: seed-db
+    name: "Seed Database"
+    task: seed-db
+    agent: data-sync
+    dependsOn: [sync-tuss, sync-sigtap]
+    description: "Upsert synced data to Supabase tables"
+    condition: "{{input.skipSeed}} !== true"
+    input:
+      tables: [tuss_procedures, sus_procedures]
+    output:
+      tussInserted: "{{result.tussInserted}}"
+      sigtapInserted: "{{result.sigtapInserted}}"
+
+# Output schema
+output:
+  type: object
+  properties:
+    tuss:
+      type: object
+      source: "{{steps.sync-tuss.output}}"
+    sigtap:
+      type: object
+      source: "{{steps.sync-sigtap.output}}"
+    cbhpm:
+      type: object
+      source: "{{steps.sync-cbhpm.output}}"
+    tissXsd:
+      type: object
+      source: "{{steps.sync-tiss-xsd.output}}"
+    seed:
+      type: object
+      source: "{{steps.seed-db.output}}"
+
+# Error handling
+onError:
+  - condition: "any"
+    action: notify
+    recipients: ["data-team@hospital.com"]
+    message: "Data sync pipeline failed: {{error.message}}"
+
+# Notifications
+notifications:
+  onComplete:
+    - type: log
+      message: "Data sync pipeline completed: TUSS={{output.tuss.procedureCount}}, SIGTAP={{output.sigtap.procedureCount}}, CBHPM={{output.cbhpm.porteCount}} portes, XSD={{output.tissXsd.schemaCount}} schemas"
