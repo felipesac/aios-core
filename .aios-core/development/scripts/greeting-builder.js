@@ -20,7 +20,7 @@
  * @see docs/architecture/greeting-system.md for full architecture documentation
  * @see generate-greeting.js for CLI wrapper
  *
- * Performance: <150ms (hard limit with timeout protection)
+ * Performance: <600ms (hard limit with timeout protection)
  * Fallback: Simple greeting on any error
  */
 
@@ -34,7 +34,7 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 
-const GREETING_TIMEOUT = 150; // 150ms hard limit
+const GREETING_TIMEOUT = 600; // 600ms hard limit (Windows git spawns ~90ms each)
 
 // Valid user profile values (Story 10.1)
 const VALID_USER_PROFILES = ['bob', 'advanced'];
@@ -134,7 +134,8 @@ class GreetingBuilder {
     // Use pre-loaded values if available, otherwise load
     const sessionType = context.sessionType || (await this._safeDetectSessionType(context));
 
-    const projectStatus = context.projectStatus || (await this._safeLoadProjectStatus());
+    // Use 'in' check to avoid re-loading when caller already attempted (even if result was null)
+    const projectStatus = ('projectStatus' in context) ? context.projectStatus : (await this._safeLoadProjectStatus());
 
     // gitConfig always loads (fast, cached)
     const gitConfig = await this._safeCheckGitConfig();

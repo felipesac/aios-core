@@ -21,7 +21,7 @@ class ProjectStatusLoader {
   constructor(rootPath = null) {
     this.rootPath = rootPath || process.cwd();
     this.cacheFile = path.join(this.rootPath, '.aios', 'project-status.yaml');
-    this.cacheTTL = 60; // seconds
+    this.cacheTTL = 300; // seconds (5 minutes - aligned with git-config-detector)
 
     // Load config values (QA Fix: Issue 6.1.2.4-I1)
     this.config = this.loadConfig();
@@ -120,6 +120,7 @@ class ProjectStatusLoader {
       await execa('git', ['rev-parse', '--is-inside-work-tree'], {
         cwd: this.rootPath,
         stderr: 'ignore',
+        timeout: 2000,
       });
       return true;
     } catch (error) {
@@ -137,6 +138,7 @@ class ProjectStatusLoader {
       // Try modern git command first (git >= 2.22)
       const { stdout } = await execa('git', ['branch', '--show-current'], {
         cwd: this.rootPath,
+        timeout: 2000,
       });
       return stdout.trim();
     } catch (error) {
@@ -144,6 +146,7 @@ class ProjectStatusLoader {
       try {
         const { stdout } = await execa('git', ['rev-parse', '--abbrev-ref', 'HEAD'], {
           cwd: this.rootPath,
+          timeout: 2000,
         });
         return stdout.trim();
       } catch (fallbackError) {
@@ -161,6 +164,7 @@ class ProjectStatusLoader {
     try {
       const { stdout } = await execa('git', ['status', '--porcelain'], {
         cwd: this.rootPath,
+        timeout: 3000,
       });
 
       if (!stdout) return { files: [], totalCount: 0 };
@@ -195,6 +199,7 @@ class ProjectStatusLoader {
         ['log', `-${this.maxRecentCommits}`, '--oneline', '--no-decorate'],
         {
           cwd: this.rootPath,
+          timeout: 2000,
         }
       );
 

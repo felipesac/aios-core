@@ -12,8 +12,8 @@
  * - Uses GreetingBuilder for contextual greeting
  *
  * Performance Targets:
- * - With cache: <100ms
- * - Without cache: <200ms
+ * - With cache: <700ms
+ * - Without cache: <1500ms
  * - Fallback: <20ms
  *
  * Usage:
@@ -40,7 +40,7 @@ const { loadProjectStatus } = require('../../../.aios-core/infrastructure/script
 
 const SQUADS_PATH = './squads';
 const REGISTRY_PATH = './squads/squad-creator/data/squad-registry.yaml';
-const TIMEOUT_MS = 200;
+const TIMEOUT_MS = 1500;
 
 /**
  * Load agent definition from squad
@@ -353,7 +353,7 @@ async function generateSquadGreeting(squadName, agentName) {
     parts.push(greeting);
 
     const duration = Date.now() - startTime;
-    if (duration > 150) {
+    if (duration > 500) {
       console.warn(`[generate-squad-greeting] Slow generation: ${duration}ms`);
     }
 

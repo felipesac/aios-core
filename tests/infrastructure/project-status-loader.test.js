@@ -77,8 +77,8 @@ describe('ProjectStatusLoader', () => {
       expect(defaultLoader.rootPath).toBe(process.cwd());
     });
 
-    it('should set default cache TTL to 60 seconds', () => {
-      expect(loader.cacheTTL).toBe(60);
+    it('should set default cache TTL to 300 seconds', () => {
+      expect(loader.cacheTTL).toBe(300);
     });
 
     it('should load config and apply settings', () => {

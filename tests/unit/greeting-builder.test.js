@@ -300,18 +300,18 @@ describe('GreetingBuilder', () => {
   });
 
   describe('Performance and Fallback', () => {
-    test('should complete within timeout (150ms)', async () => {
+    test('should complete within timeout (600ms)', async () => {
       const startTime = Date.now();
       await builder.buildGreeting(mockAgent, {});
       const endTime = Date.now();
 
-      expect(endTime - startTime).toBeLessThan(150);
+      expect(endTime - startTime).toBeLessThan(600);
     });
 
     test('should fallback to simple greeting on timeout', async () => {
-      // Mock slow operation
+      // Mock slow operation (must exceed GREETING_TIMEOUT of 600ms)
       loadProjectStatus.mockImplementation(() =>
-        new Promise(resolve => setTimeout(resolve, 200)),
+        new Promise(resolve => setTimeout(resolve, 700)),
       );
 
       const greeting = await builder.buildGreeting(mockAgent, {});
