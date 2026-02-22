@@ -1,0 +1,465 @@
+# Content Editing Workflow
+# Peter McKinnon's efficient editing process: Import -> Cull -> Edit -> Color -> Export -> Deliver
+
+workflow:
+  id: "mckinnon-content-editing-workflow"
+  name: "Content Editing Workflow"
+  description: "Full photo/video editing workflow from import to delivery, following Peter McKinnon's efficient and intentional editing process"
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Peter McKinnon (Photo Editing Expert)"
+  created_date: "2026-02-02"
+  last_modified: "2026-02-02"
+  tags:
+    - photo-editing
+    - video-editing
+    - color-grading
+    - workflow
+    - lightroom
+    - premiere
+    - peter-mckinnon
+
+philosophy:
+  mantra: "The edit should match the moment. Always."
+  principles:
+    - "Edit the feeling, not the photo"
+    - "Film wasn't perfect. That's what made it beautiful."
+    - "Preset is the starting point, not the destination"
+    - "Local adjustments are where amateurs become pros"
+    - "Consistency is key"
+
+inputs:
+  content_path:
+    type: "string"
+    description: "Path to RAW files or video footage"
+    required: true
+
+  project_name:
+    type: "string"
+    description: "Project name for organization"
+    required: true
+
+  content_type:
+    type: "enum"
+    options: ["photo", "video", "both"]
+    description: "Type of content being edited"
+    required: true
+    default: "photo"
+
+  intended_mood:
+    type: "enum"
+    options:
+      - "joyful_bright"
+      - "nostalgic_warm"
+      - "moody_dramatic"
+      - "serene_peaceful"
+      - "gritty_raw"
+      - "custom"
+    description: "Target mood for the edit"
+    required: true
+
+  output_platforms:
+    type: "array"
+    options: ["instagram", "youtube", "web", "print", "client"]
+    description: "Platforms for export"
+    required: true
+
+steps:
+  - id: "step_1_import"
+    name: "Import & Organize"
+    description: "Import content and organize into logical structure"
+    type: "manual"
+
+    tasks:
+      - "Import RAW files / video footage into editing software"
+      - "Create project folder structure: /[project_name]/raw, /edits, /exports"
+      - "Apply metadata preset (copyright, keywords)"
+      - "Create collections/bins by subject or location"
+      - "Backup original files to secondary location"
+
+    checklist:
+      - "[ ] All files imported successfully"
+      - "[ ] Folder structure created"
+      - "[ ] Copyright metadata applied"
+      - "[ ] Backup completed"
+
+    outputs:
+      organized_content: "All content imported and organized"
+
+    mckinnon_tip: "Good organization now saves hours later. Trust me."
+
+  - id: "step_2_cull"
+    name: "Cull & Select"
+    description: "Review all content and select best shots/clips"
+    type: "manual"
+
+    tasks:
+      - "First pass: Quick reject obvious failures (X key in Lightroom)"
+      - "Second pass: Pick candidates (P key for picks)"
+      - "Third pass: Rate picks 1-5 stars"
+      - "Identify hero shots (5 stars)"
+      - "Create 'Selects' collection/bin"
+
+    selection_criteria:
+      - "Emotion captured? (most important)"
+      - "Technical quality (focus, exposure, composition)"
+      - "Storytelling potential"
+      - "Variety in series (different angles, moments)"
+
+    checklist:
+      - "[ ] All content reviewed"
+      - "[ ] Rejects marked"
+      - "[ ] Picks identified"
+      - "[ ] Hero shots selected (top 10-20%)"
+      - "[ ] Selects collection created"
+
+    outputs:
+      selects_count: "Number of selected images/clips"
+      hero_count: "Number of hero shots identified"
+
+    mckinnon_tip: "Be ruthless. 100 good photos beat 1000 mediocre ones."
+
+  - id: "step_3_feel_first"
+    name: "Define the Feeling"
+    description: "Before touching any sliders, establish the emotional direction"
+    type: "elicit"
+
+    questions:
+      - question: "How did you FEEL when capturing this content?"
+        purpose: "Guides entire edit direction"
+
+      - question: "What 3 words describe the mood you want to convey?"
+        purpose: "Creates emotional anchor for decisions"
+
+      - question: "Is there a reference (film, photo, mood board) that captures this feeling?"
+        purpose: "Visual reference for direction"
+
+    mood_mapping:
+      joyful_bright:
+        edit_direction: "Lifted, warm, saturated but natural"
+        color_direction: "Warm tones, no heavy shadows"
+
+      nostalgic_warm:
+        edit_direction: "Faded highlights, lifted blacks, film-like"
+        color_direction: "Golden tones, blue shadows, grain"
+
+      moody_dramatic:
+        edit_direction: "High contrast, deep shadows, controlled"
+        color_direction: "Desaturated, teal/orange, strong vignette"
+
+      serene_peaceful:
+        edit_direction: "Soft, low contrast, airy"
+        color_direction: "Pastel, cool or neutral, minimal grain"
+
+      gritty_raw:
+        edit_direction: "Natural, documentary feel, authentic"
+        color_direction: "Desaturated, high contrast, no filters"
+
+    outputs:
+      mood_definition: "Documented emotional direction"
+      edit_direction: "Technical direction based on mood"
+
+    mckinnon_tip: "The feeling comes first. Always. Technique follows emotion."
+
+  - id: "step_4_base_edit"
+    name: "Base Edit Pass"
+    description: "Apply foundational edits to all selects"
+    type: "agent"
+    agent: "peter-mckinnon"
+    command: "*photo-edit"
+
+    tasks:
+      - "Apply preset or base settings to all selects"
+      - "First pass: Correct exposure only (5-10 sec per photo)"
+      - "First pass: Correct white balance only"
+      - "Sync base adjustments to similar shots"
+
+    base_settings:
+      tone_curve: "Lift black point (Output 5-10)"
+      highlights: "-30 to -50 (recover)"
+      shadows: "+15 to +30 (open)"
+      blacks: "+15 to +25 (lifted)"
+
+    checklist:
+      - "[ ] Preset/base applied to all selects"
+      - "[ ] Exposure corrected across selects"
+      - "[ ] White balance consistent"
+      - "[ ] Similar shots synced"
+
+    outputs:
+      base_edited_count: "Photos with base edit complete"
+
+    mckinnon_tip: "This is assembly line work. Save the craft for hero shots."
+
+  - id: "step_5_hero_edit"
+    name: "Hero Shot Deep Edit"
+    description: "Full editing treatment on hero shots"
+    type: "agent"
+    agent: "peter-mckinnon"
+    command: "*photo-edit"
+
+    tasks:
+      - "Identify top 10-20% as hero shots"
+      - "Apply full editing workflow to each hero"
+      - "Local adjustments (radial, graduated, brush)"
+      - "Fine-tune color grading"
+      - "Add film texture (grain, dehaze)"
+      - "Document before/after transformation"
+
+    hero_edit_process:
+      - "1. Refine exposure and tone curve"
+      - "2. Apply color grade (split toning, HSL)"
+      - "3. Add local adjustments (dodge/burn, subject focus)"
+      - "4. Add texture (grain, vignette)"
+      - "5. Final polish (clarity, vibrance)"
+      - "6. Compare before/after"
+
+    checklist:
+      - "[ ] All hero shots fully edited"
+      - "[ ] Local adjustments applied"
+      - "[ ] Color grade refined"
+      - "[ ] Grain/texture added"
+      - "[ ] Before/after documented"
+
+    outputs:
+      hero_edited_count: "Fully edited hero shots"
+
+    mckinnon_tip: "These are your portfolio pieces. Give them the time they deserve."
+
+  - id: "step_6_color_grade"
+    name: "Color Grading Pass"
+    description: "Ensure color consistency across entire set"
+    type: "agent"
+    agent: "peter-mckinnon"
+    command: "*color-grade"
+
+    tasks:
+      - "Create master grade based on hero shots"
+      - "Apply consistent split toning to all"
+      - "Verify skin tones (if applicable)"
+      - "Check color harmony across series"
+      - "Fine-tune outliers to match"
+
+    consistency_rules:
+      - "Same white balance temperature range"
+      - "Same split tone hue (saturation can vary)"
+      - "Same grain settings"
+      - "Same vignette intensity"
+
+    checklist:
+      - "[ ] Master grade established"
+      - "[ ] All photos match in color direction"
+      - "[ ] Skin tones natural (if applicable)"
+      - "[ ] No outliers in the set"
+
+    outputs:
+      color_grade_preset: "Saved color grade for future use"
+
+    mckinnon_tip: "View in grid/survey mode. Outliers should be obvious."
+
+  - id: "step_7_quality_check"
+    name: "Quality Validation"
+    description: "Final quality check before export"
+    type: "checklist"
+    checklist_file: "checklists/photo-edit-quality-checklist.md"
+
+    tasks:
+      - "Review each select at 100% zoom"
+      - "Check for dust spots, artifacts"
+      - "Verify crops are final"
+      - "Confirm all edits match the feeling defined in Step 3"
+      - "Run photo-edit-quality-checklist on heroes"
+
+    final_questions:
+      - "Does each photo tell its story?"
+      - "Would you be proud to share this work?"
+      - "Does the set feel cohesive?"
+
+    checklist:
+      - "[ ] All photos reviewed at 100%"
+      - "[ ] No technical issues remaining"
+      - "[ ] Quality checklist passed for heroes"
+      - "[ ] Set feels cohesive"
+
+    outputs:
+      quality_approved: true
+
+    mckinnon_tip: "If it looks good at 100%, zoom out. If it still looks good, you're done."
+
+  - id: "step_8_export"
+    name: "Export for Platforms"
+    description: "Export optimized files for each target platform"
+    type: "agent"
+    agent: "peter-mckinnon"
+
+    tasks:
+      - "Create export presets for each platform"
+      - "Export hero shots in all required formats"
+      - "Export remaining selects for primary platform"
+      - "Verify file naming convention"
+      - "Check file sizes are appropriate"
+
+    export_presets:
+      instagram:
+        format: "JPEG"
+        quality: "85%"
+        long_edge: "1080px"
+        color_space: "sRGB"
+
+      youtube_thumbnail:
+        format: "JPEG"
+        quality: "90%"
+        dimensions: "1920x1080"
+        color_space: "sRGB"
+
+      web_portfolio:
+        format: "JPEG"
+        quality: "80%"
+        long_edge: "2048px"
+        color_space: "sRGB"
+
+      print:
+        format: "TIFF"
+        quality: "100%"
+        resolution: "Native"
+        color_space: "Adobe RGB"
+
+      client_highres:
+        format: "JPEG"
+        quality: "100%"
+        resolution: "Native"
+        color_space: "sRGB"
+
+    checklist_file: "checklists/export-settings-checklist.md"
+
+    checklist:
+      - "[ ] Export presets configured"
+      - "[ ] Heroes exported for all platforms"
+      - "[ ] Selects exported for primary platform"
+      - "[ ] File naming consistent"
+      - "[ ] Export settings checklist passed"
+
+    outputs:
+      export_location: "outputs/{{project_name}}/exports/"
+      export_count: "Number of files exported"
+
+    mckinnon_tip: "Export presets save hours. Set up once, use forever."
+
+  - id: "step_9_deliver"
+    name: "Organize & Deliver"
+    description: "Prepare final deliverables and archive"
+    type: "manual"
+
+    tasks:
+      - "Organize exports into delivery folders"
+      - "Create gallery/preview if needed"
+      - "Prepare client delivery package"
+      - "Archive project files"
+      - "Backup to cloud/external drive"
+
+    delivery_structure:
+      client_delivery:
+        - "/High-Resolution/"
+        - "/Web-Ready/"
+        - "/README.txt (usage rights)"
+
+      personal_archive:
+        - "/RAW/"
+        - "/Edits (catalog/project)/"
+        - "/Exports/"
+        - "/Selects/"
+
+    checklist:
+      - "[ ] Delivery folders organized"
+      - "[ ] Client package ready (if applicable)"
+      - "[ ] Project archived"
+      - "[ ] Backup completed"
+      - "[ ] Before/after saved for portfolio"
+
+    outputs:
+      delivery_complete: true
+      archive_location: "Path to archived project"
+
+    mckinnon_tip: "Before/afters are content. Save them for your portfolio and socials."
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "All steps completed successfully"
+
+  edited_count:
+    type: "number"
+    description: "Total photos/videos edited"
+
+  hero_count:
+    type: "number"
+    description: "Number of fully edited hero shots"
+
+  export_location:
+    type: "string"
+    description: "Path to exported files"
+
+  color_grade_preset:
+    type: "string"
+    description: "Saved preset for future use"
+
+  mood_achieved:
+    type: "string"
+    description: "Confirmed mood/feeling of final edits"
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+  recovery_actions:
+    preset_failure: "Reset to base settings, rebuild"
+    export_failure: "Check disk space, verify settings"
+    color_mismatch: "Review in grid, resync from hero"
+
+quality_gates:
+  - gate: "Cull completion"
+    step: "step_2_cull"
+    criteria: "Selects identified"
+
+  - gate: "Mood definition"
+    step: "step_3_feel_first"
+    criteria: "Emotional direction documented"
+
+  - gate: "Hero edit quality"
+    step: "step_5_hero_edit"
+    criteria: "Quality checklist passed"
+
+  - gate: "Color consistency"
+    step: "step_6_color_grade"
+    criteria: "No outliers in survey view"
+
+  - gate: "Export verification"
+    step: "step_8_export"
+    criteria: "Export checklist passed"
+
+security:
+  authorization_required: false
+  audit_logging: true
+  backup_before_edit: true
+
+# ============================================================
+# McKINNON WORKFLOW SUMMARY
+# ============================================================
+#
+# 1. IMPORT - Get organized
+# 2. CULL - Be ruthless
+# 3. FEEL - Define the emotion
+# 4. BASE - Assembly line basics
+# 5. HERO - Craft the best
+# 6. COLOR - Unify the set
+# 7. CHECK - Quality control
+# 8. EXPORT - Right format, right platform
+# 9. DELIVER - Package and archive
+#
+# "The edit should match the moment. Always."
+# ============================================================

@@ -83,6 +83,10 @@ CLAUDE.md
 !.claude/commands/
 !.claude/commands/AIOS/
 !.claude/commands/AIOS/agents/
+!.claude/commands/squad-creator/
+!.claude/commands/content-distillery/
+!.claude/commands/design/
+!.claude/commands/minds/
 !.claude/CLAUDE.md
 !.claude/rules/
 .gemini
@@ -308,3 +312,5 @@ C:Users*
 *temp-catalog.txt
 .eslintcache
 .eslintcache
+
+.vercel

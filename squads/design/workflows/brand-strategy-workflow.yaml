@@ -1,0 +1,379 @@
+# Brand Strategy Workflow
+# Complete brand strategy development: audit → gap analysis → differentiation → naming → guidelines
+
+workflow:
+  id: "brand-strategy-complete"
+  name: "Complete Brand Strategy Development"
+  description: "Comprehensive brand strategy workflow using Neumeier methodology: charisma audit, brand gap analysis, Zag differentiation, naming validation, and portfolio strategy"
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Marty Neumeier (Brand Strategy Pioneer)"
+  created_date: "2026-02-02"
+  last_modified: "2026-02-02"
+  tags:
+    - brand-strategy
+    - differentiation
+    - zag
+    - brand-gap
+    - charisma
+    - neumeier
+
+inputs:
+  brand_name:
+    type: "string"
+    description: "Name of the brand to analyze"
+    required: true
+
+  category:
+    type: "string"
+    description: "Market category the brand operates in"
+    required: true
+
+  project_name:
+    type: "string"
+    description: "Project name for output organization"
+    required: true
+    default: "brand-strategy"
+
+  scope:
+    type: "enum"
+    description: "Scope of brand strategy work"
+    options:
+      - "full" # Complete workflow (all steps)
+      - "audit-only" # Just charisma audit and gap analysis
+      - "differentiation-only" # Just Zag differentiation
+    required: false
+    default: "full"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # PHASE 1: DISCOVERY & AUDIT
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_charisma_audit"
+    name: "Brand Charisma Audit"
+    phase: "Discovery"
+    type: "task"
+    task: "brand-charisma-audit"
+    description: |
+      Evaluate brand against the 5 pillars of charismatic brands:
+      Clarity, Differentiation, Authenticity, Relevance, Coherence.
+      Establishes baseline charisma score and identifies weaknesses.
+    inputs:
+      brand_name: "{{brand_name}}"
+      category: "{{category}}"
+    outputs:
+      charisma_scorecard: "outputs/brand-strategy/{{project_name}}/audit/charisma-scorecard.yaml"
+      charisma_report: "outputs/brand-strategy/{{project_name}}/audit/charisma-audit.md"
+    success_criteria:
+      - "All 5 pillars scored with evidence"
+      - "Total charisma score calculated"
+      - "Priority actions identified"
+    error_handling:
+      strategy: "fail"
+      message: "Cannot proceed without charisma baseline"
+
+  - id: "step_2_gap_analysis"
+    name: "Brand Gap Analysis"
+    phase: "Discovery"
+    type: "task"
+    task: "brand-gap-analysis"
+    description: |
+      Analyze the gap between company strategy and customer experience.
+      Identifies disconnects between left-brain strategy and right-brain creativity.
+      Creates bridge plan to close identified gaps.
+    inputs:
+      brand_name: "{{brand_name}}"
+      charisma_report: "{{step_1_charisma_audit.charisma_report}}"
+    outputs:
+      gap_audit: "outputs/brand-strategy/{{project_name}}/audit/brand-gap-audit.md"
+      gap_scorecard: "outputs/brand-strategy/{{project_name}}/audit/gap-scorecard.yaml"
+      bridge_plan: "outputs/brand-strategy/{{project_name}}/audit/bridge-plan.md"
+    success_criteria:
+      - "Gaps identified with specific evidence"
+      - "Gap severity quantified"
+      - "Bridge plan includes actions and owners"
+    error_handling:
+      strategy: "fail"
+      message: "Gap analysis is prerequisite for differentiation work"
+
+  - id: "step_3_validate_audit"
+    name: "Validate Audit with Brand Gap Checklist"
+    phase: "Discovery"
+    type: "checklist"
+    checklist: "brand-gap-checklist"
+    description: |
+      Validate that brand strategy covers all Brand Gap elements.
+      Ensures no critical gaps are missed before proceeding to differentiation.
+    inputs:
+      gap_audit: "{{step_2_gap_analysis.gap_audit}}"
+    outputs:
+      checklist_result: "outputs/brand-strategy/{{project_name}}/audit/gap-checklist-result.md"
+    success_criteria:
+      - "Checklist score is 75%+ (CAUTION or PASS)"
+    error_handling:
+      strategy: "warn"
+      on_fail: "Flag issues but proceed to differentiation"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2: DIFFERENTIATION STRATEGY
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_zag_differentiation"
+    name: "Zag Differentiation Analysis"
+    phase: "Differentiation"
+    type: "task"
+    task: "brand-differentiation"
+    description: |
+      Apply Neumeier's 17-step Zag methodology to find radical differentiation.
+      When everybody zigs, zag. Creates onlyness statement and differentiation strategy.
+    inputs:
+      brand_name: "{{brand_name}}"
+      category: "{{category}}"
+      charisma_report: "{{step_1_charisma_audit.charisma_report}}"
+      gap_audit: "{{step_2_gap_analysis.gap_audit}}"
+    outputs:
+      zag_analysis: "outputs/brand-strategy/{{project_name}}/differentiation/zag-analysis.md"
+      onlyness_statement: "outputs/brand-strategy/{{project_name}}/differentiation/onlyness-statement.md"
+      brandscape_map: "outputs/brand-strategy/{{project_name}}/differentiation/brandscape-map.yaml"
+      zag_implementation: "outputs/brand-strategy/{{project_name}}/differentiation/zag-implementation.md"
+    success_criteria:
+      - "All 17 checkpoints completed"
+      - "Onlyness statement validated"
+      - "Zag test passed (all 5 criteria)"
+    error_handling:
+      strategy: "fail"
+      message: "Differentiation is core to brand strategy"
+
+  - id: "step_5_validate_zag"
+    name: "Validate Differentiation with Zag Checklist"
+    phase: "Differentiation"
+    type: "checklist"
+    checklist: "zag-differentiation-checklist"
+    description: |
+      Ensure differentiation meets all 17 Zag checkpoints.
+      Validates onlyness statement is TRUE, RELEVANT, DEFENSIBLE, MOTIVATING.
+    inputs:
+      zag_analysis: "{{step_4_zag_differentiation.zag_analysis}}"
+      onlyness_statement: "{{step_4_zag_differentiation.onlyness_statement}}"
+    outputs:
+      checklist_result: "outputs/brand-strategy/{{project_name}}/differentiation/zag-checklist-result.md"
+    success_criteria:
+      - "Zag test: All 5 criteria PASS"
+      - "Onlyness validation: All 4 tests PASS"
+    error_handling:
+      strategy: "fail"
+      on_fail: "Return to step_4 and strengthen differentiation"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 3: NAMING & IDENTITY
+  # ---------------------------------------------------------------------------
+
+  - id: "step_6_name_evaluation"
+    name: "Brand Name Evaluation"
+    phase: "Naming"
+    type: "task"
+    task: "brand-naming"
+    description: |
+      Evaluate current brand name against Neumeier's 7 criteria.
+      If name hurts differentiation, generate and validate alternatives.
+      Ensures name supports the zag, not fights against it.
+    inputs:
+      brand_name: "{{brand_name}}"
+      onlyness_statement: "{{step_4_zag_differentiation.onlyness_statement}}"
+      tribe: "{{step_4_zag_differentiation.zag_analysis}}"
+    outputs:
+      naming_evaluation: "outputs/brand-strategy/{{project_name}}/naming/naming-evaluation.md"
+      naming_candidates: "outputs/brand-strategy/{{project_name}}/naming/naming-candidates.yaml"
+      naming_recommendation: "outputs/brand-strategy/{{project_name}}/naming/naming-recommendation.md"
+    success_criteria:
+      - "Current name assessed on 7 criteria"
+      - "Decision: Keep, modify, or change name"
+      - "If change needed: candidates provided"
+    error_handling:
+      strategy: "warn"
+      message: "Naming is important but workflow can continue"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 4: PORTFOLIO & ARCHITECTURE
+  # ---------------------------------------------------------------------------
+
+  - id: "step_7_portfolio_strategy"
+    name: "Brand Portfolio Strategy"
+    phase: "Architecture"
+    type: "task"
+    task: "brand-portfolio-strategy"
+    description: |
+      Structure brand architecture: branded house, house of brands, endorsed, or hybrid.
+      Defines brand roles, hierarchy rules, and governance model.
+      Only for multi-brand or complex brand situations.
+    condition: "{{has_multiple_brands}} == true"
+    inputs:
+      brand_name: "{{brand_name}}"
+      zag_analysis: "{{step_4_zag_differentiation.zag_analysis}}"
+    outputs:
+      portfolio_audit: "outputs/brand-strategy/{{project_name}}/architecture/portfolio-audit.yaml"
+      architecture_decision: "outputs/brand-strategy/{{project_name}}/architecture/architecture-decision.md"
+      brand_hierarchy: "outputs/brand-strategy/{{project_name}}/architecture/brand-hierarchy.yaml"
+      portfolio_governance: "outputs/brand-strategy/{{project_name}}/architecture/portfolio-governance.md"
+    success_criteria:
+      - "Architecture type selected with rationale"
+      - "Brand roles defined"
+      - "Governance model established"
+    error_handling:
+      strategy: "skip"
+      message: "Portfolio strategy optional for single-brand companies"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5: SYNTHESIS & DELIVERABLES
+  # ---------------------------------------------------------------------------
+
+  - id: "step_8_synthesis"
+    name: "Brand Strategy Synthesis"
+    phase: "Synthesis"
+    type: "synthesis"
+    description: |
+      Compile all findings into comprehensive brand strategy document.
+      Creates executive summary, detailed strategy, and implementation roadmap.
+    inputs:
+      charisma_report: "{{step_1_charisma_audit.charisma_report}}"
+      gap_audit: "{{step_2_gap_analysis.gap_audit}}"
+      zag_analysis: "{{step_4_zag_differentiation.zag_analysis}}"
+      onlyness_statement: "{{step_4_zag_differentiation.onlyness_statement}}"
+      naming_recommendation: "{{step_6_name_evaluation.naming_recommendation}}"
+      portfolio_governance: "{{step_7_portfolio_strategy.portfolio_governance}}"
+    outputs:
+      brand_strategy_doc: "outputs/brand-strategy/{{project_name}}/brand-strategy.md"
+      executive_summary: "outputs/brand-strategy/{{project_name}}/executive-summary.md"
+      implementation_roadmap: "outputs/brand-strategy/{{project_name}}/implementation-roadmap.md"
+    success_criteria:
+      - "All findings synthesized"
+      - "Executive summary is actionable"
+      - "Roadmap has clear phases and owners"
+    error_handling:
+      strategy: "fail"
+      message: "Synthesis is the primary deliverable"
+
+  - id: "step_9_handoff"
+    name: "Handoff to Execution Teams"
+    phase: "Handoff"
+    type: "handoff"
+    description: |
+      Prepare handoff documentation for execution teams:
+      - Design team: Visual identity brief
+      - Copy team: Verbal identity brief
+      - Product team: Experience design brief
+      - Marketing team: Communication strategy brief
+    inputs:
+      brand_strategy_doc: "{{step_8_synthesis.brand_strategy_doc}}"
+    outputs:
+      visual_brief: "outputs/brand-strategy/{{project_name}}/handoff/visual-identity-brief.md"
+      verbal_brief: "outputs/brand-strategy/{{project_name}}/handoff/verbal-identity-brief.md"
+      experience_brief: "outputs/brand-strategy/{{project_name}}/handoff/experience-design-brief.md"
+      communication_brief: "outputs/brand-strategy/{{project_name}}/handoff/communication-brief.md"
+    success_criteria:
+      - "All briefs created"
+      - "Each brief is self-contained and actionable"
+    error_handling:
+      strategy: "warn"
+      message: "Handoff documentation can be created later if needed"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "Brand strategy workflow completed successfully"
+    source: "step_8_synthesis.success"
+
+  charisma_score:
+    type: "number"
+    description: "Final charisma score (out of 25)"
+    source: "step_1_charisma_audit.charisma_scorecard"
+
+  onlyness_statement:
+    type: "string"
+    description: "Validated onlyness statement"
+    source: "step_4_zag_differentiation.onlyness_statement"
+
+  brand_strategy_doc:
+    type: "string"
+    description: "Path to comprehensive brand strategy document"
+    source: "step_8_synthesis.brand_strategy_doc"
+
+  implementation_roadmap:
+    type: "string"
+    description: "Path to implementation roadmap"
+    source: "step_8_synthesis.implementation_roadmap"
+
+# =============================================================================
+# ERROR HANDLING & GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+security:
+  authorization_required: false
+  audit_logging: true
+  sensitive_outputs:
+    - "competitive analysis"
+    - "tribe research data"
+    - "naming candidates (pre-trademark)"
+
+governance:
+  review_points:
+    - step: "step_3_validate_audit"
+      gate: "Proceed only if audit is complete and valid"
+
+    - step: "step_5_validate_zag"
+      gate: "Proceed only if differentiation is validated"
+
+    - step: "step_8_synthesis"
+      gate: "Final review before handoff"
+
+# =============================================================================
+# NEUMEIER PRINCIPLES
+# =============================================================================
+
+guiding_principles:
+  - name: "Different > Better"
+    application: "Focus on radical differentiation, not incremental improvement"
+
+  - name: "Bridge the Gap"
+    application: "Strategy and creativity must connect at every step"
+
+  - name: "Zag When They Zig"
+    application: "Find category conventions and break them (if it serves customers)"
+
+  - name: "Tribe Over Demographics"
+    application: "Build for passionate believers, not average consumers"
+
+  - name: "Customer Ownership"
+    application: "Brand belongs to customers - strategy enables their expression"
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  - "This workflow is based on Marty Neumeier's published frameworks"
+  - "Key sources: The Brand Gap, Zag, The Brand Flip"
+  - "Each step can be run independently using the corresponding task"
+  - "For urgent needs, use scope='audit-only' or scope='differentiation-only'"
+  - "Full workflow typically takes 2-4 weeks with stakeholder involvement"
+  - "Handoff to design team: Brad Frost (design system) for visual identity execution"
+  - "Handoff to copy team: David Ogilvy agent for verbal identity execution"

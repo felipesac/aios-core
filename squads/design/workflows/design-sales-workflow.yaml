@@ -1,0 +1,663 @@
+# design-sales-workflow
+#
+# Full sales process for design services using Chris Do methodology.
+# Lead → Qualify → Discover → Propose → Close → Onboard
+#
+# "Sales is not something you do TO someone. It's something you do FOR someone."
+# -- Chris Do
+
+metadata:
+  workflow_id: design-sales-workflow
+  agent: chris-do
+  category: sales
+  version: "1.0"
+  created: "2026-02-02"
+  description: |
+    Complete sales process for design services from initial lead
+    to project onboarding. Based on Chris Do's Sales for Creatives
+    framework and Win Without Pitching methodology.
+
+# ============================================================
+# WORKFLOW OVERVIEW
+# ============================================================
+
+overview:
+  stages:
+    - name: "1. LEAD"
+      description: "Initial inquiry received"
+      duration: "Day 0-1"
+      goal: "Respond and schedule qualification call"
+
+    - name: "2. QUALIFY"
+      description: "Determine if prospect is a fit"
+      duration: "Day 1-3"
+      goal: "Decide to proceed or decline"
+
+    - name: "3. DISCOVER"
+      description: "Deep diagnosis of problem and value"
+      duration: "Day 3-10"
+      goal: "Quantify problem cost and solution value"
+
+    - name: "4. PROPOSE"
+      description: "Present value-based options"
+      duration: "Day 10-14"
+      goal: "Present proposal and get decision"
+
+    - name: "5. CLOSE"
+      description: "Finalize agreement"
+      duration: "Day 14-21"
+      goal: "Signed contract and deposit received"
+
+    - name: "6. ONBOARD"
+      description: "Start the engagement"
+      duration: "Day 21-28"
+      goal: "Kick-off call completed, project started"
+
+  total_duration: "2-4 weeks typical"
+
+  critical_principles:
+    - "Diagnose before you prescribe"
+    - "Be a doctor, not a waiter"
+    - "The person asking questions controls the conversation"
+    - "Price is based on value, not time"
+    - "Present options, not ultimatums"
+
+# ============================================================
+# STAGE 1: LEAD
+# ============================================================
+
+stage_1_lead:
+  name: "LEAD"
+  trigger: "Initial inquiry received (email, form, referral, etc.)"
+
+  goals:
+    - Acknowledge inquiry within 24 hours
+    - Schedule qualification conversation
+    - Gather basic information
+
+  tasks:
+    - task_id: "1.1"
+      name: "Acknowledge inquiry"
+      description: "Respond promptly to show professionalism"
+      timing: "Within 24 hours"
+      template: |
+        Subject: Re: [Their subject] - Thanks for reaching out
+
+        Hi [Name],
+
+        Thank you for reaching out about [project type].
+
+        Before I can give you useful information, I'd like to understand
+        your situation better. Would you have 20 minutes for a brief call
+        this week?
+
+        Here are some times that work for me:
+        - [Option 1]
+        - [Option 2]
+        - [Option 3]
+
+        Or feel free to book directly: [scheduling link]
+
+        Looking forward to learning more.
+
+        [Your name]
+
+    - task_id: "1.2"
+      name: "Basic research"
+      description: "Quick research on prospect before call"
+      timing: "Before qualification call"
+      checklist:
+        - Company website review
+        - LinkedIn profile check
+        - Recent news/announcements
+        - Industry/competitive context
+
+    - task_id: "1.3"
+      name: "Schedule qualification call"
+      description: "Get a meeting on the calendar"
+      timing: "Within 3 days of inquiry"
+      duration: "15-20 minutes"
+
+  exit_criteria:
+    - Qualification call scheduled
+    - Basic research completed
+
+  proceed_to: "stage_2_qualify"
+
+# ============================================================
+# STAGE 2: QUALIFY
+# ============================================================
+
+stage_2_qualify:
+  name: "QUALIFY"
+  trigger: "Qualification call scheduled"
+
+  goals:
+    - Determine if prospect is worth pursuing
+    - Identify any red flags early
+    - Decide to proceed or decline
+
+  tasks:
+    - task_id: "2.1"
+      name: "Qualification call"
+      description: "Brief conversation to assess fit"
+      timing: "20-30 minutes"
+      questions:
+        problem:
+          - "What brought you to reach out today?"
+          - "What problem are you trying to solve?"
+          - "How long have you had this problem?"
+        urgency:
+          - "Why is this important now?"
+          - "What happens if you don't solve this?"
+        budget:
+          - "Do you have a budget range in mind?"
+          - "Have you done similar projects before?"
+        authority:
+          - "Who else is involved in this decision?"
+          - "What's your decision-making process?"
+        timeline:
+          - "When do you need this completed?"
+          - "What's driving that timeline?"
+
+    - task_id: "2.2"
+      name: "Score prospect"
+      description: "Use qualification checklist"
+      resource: "checklists/client-qualification-checklist.md"
+      scoring:
+        highly_qualified: "12-15 points"
+        qualified_with_concerns: "9-11 points"
+        marginal: "6-8 points"
+        not_qualified: "0-5 points"
+
+    - task_id: "2.3"
+      name: "Make decision"
+      description: "Proceed, clarify, or decline"
+      options:
+        proceed:
+          criteria: "Score 12+ or 9-11 with clarifiable gaps"
+          action: "Schedule discovery call"
+        clarify:
+          criteria: "Score 9-11 with questions"
+          action: "Get more information before deciding"
+        decline:
+          criteria: "Score 8 or below, or red flags"
+          action: "Politely decline, optionally refer"
+
+  decline_templates:
+    budget_mismatch: |
+      Thank you for considering me. Based on what you've shared,
+      my services may not align with your current budget. I'd recommend
+      [alternative] who might be better suited to your needs.
+
+    not_a_fit: |
+      I appreciate you thinking of me. After our conversation, I don't
+      think I'm the right fit for this project. You'd be better served
+      by someone who specializes in [area].
+
+  exit_criteria:
+    - Decision made (proceed/decline)
+    - If proceeding, discovery call scheduled
+
+  proceed_to: "stage_3_discover"
+
+# ============================================================
+# STAGE 3: DISCOVER
+# ============================================================
+
+stage_3_discover:
+  name: "DISCOVER"
+  trigger: "Prospect qualified, discovery call scheduled"
+
+  goals:
+    - Deep understanding of problem
+    - Quantify problem cost in dollars
+    - Quantify transformation value
+    - Identify all stakeholders
+    - Understand decision process
+
+  principle: |
+    "Be a doctor, not a waiter. Diagnose before you prescribe."
+
+    A patient says "give me aspirin." The doctor doesn't just hand
+    over aspirin. The doctor asks "where does it hurt?" Maybe
+    aspirin isn't the right solution.
+
+  tasks:
+    - task_id: "3.1"
+      name: "Discovery call"
+      description: "Deep diagnostic conversation"
+      timing: "45-60 minutes"
+      resource: "tasks/client-discovery-call.md"
+      structure:
+        opening: "2-3 minutes"
+        surface_questions: "5-7 minutes"
+        problem_questions: "10-12 minutes"
+        cost_questions: "8-10 minutes"
+        value_questions: "5-7 minutes"
+        commitment_questions: "5-7 minutes"
+        transition: "3-5 minutes"
+        next_steps: "3-5 minutes"
+
+      critical_rule: |
+        You talk: 20%
+        They talk: 80%
+
+    - task_id: "3.2"
+      name: "Document findings"
+      description: "Capture all discovery information"
+      template:
+        problem_statement: "[Clear articulation of the problem]"
+        problem_cost:
+          monthly: "$[X]"
+          annual: "$[X × 12]"
+        transformation_value:
+          annual: "$[Y]"
+          multi_year: "$[Y × 3]"
+        stakeholders: "[List all decision makers]"
+        decision_process: "[How they make decisions]"
+        timeline: "[When they need it]"
+        constraints: "[Any limitations]"
+
+    - task_id: "3.3"
+      name: "Calculate value"
+      description: "Determine value-based pricing"
+      resource: "tasks/design-pricing-strategy.md"
+      formula: |
+        PRICE = Value Created × (10-20%)
+
+        Example:
+        - Annual value created: $100,000
+        - Your share (15%): $15,000
+
+    - task_id: "3.4"
+      name: "Prepare options"
+      description: "Structure Goldilocks pricing"
+      structure:
+        premium:
+          name: "Complete Transformation"
+          price: "$[4-5X base]"
+          includes: "Everything + premium extras"
+        professional:
+          name: "Recommended Solution"
+          price: "$[2-2.5X base]"
+          includes: "Full solution, your ideal project"
+        essential:
+          name: "Core Problem"
+          price: "$[X base]"
+          includes: "Minimum viable solution"
+
+  exit_criteria:
+    - Problem quantified in dollars
+    - Value calculated
+    - Three pricing options structured
+    - Ready to create proposal
+
+  proceed_to: "stage_4_propose"
+
+# ============================================================
+# STAGE 4: PROPOSE
+# ============================================================
+
+stage_4_propose:
+  name: "PROPOSE"
+  trigger: "Discovery complete, pricing calculated"
+
+  goals:
+    - Create compelling proposal document
+    - Present proposal in live meeting
+    - Handle objections
+    - Get decision or clear next steps
+
+  principle: |
+    "Give them options, not ultimatums. Let them choose
+    the level of transformation."
+
+  tasks:
+    - task_id: "4.1"
+      name: "Create proposal"
+      description: "Write comprehensive proposal document"
+      resource: "tasks/design-proposal-creation.md"
+      sections:
+        - "Problem Understanding"
+        - "Success Vision"
+        - "Solution Approach"
+        - "Investment Options (3)"
+        - "ROI Justification"
+        - "Scope Definition"
+        - "Timeline"
+        - "Why Us"
+        - "Next Steps"
+
+    - task_id: "4.2"
+      name: "Internal review"
+      description: "Validate proposal before presenting"
+      resource: "checklists/value-pricing-checklist.md"
+      checklist:
+        - Problem clearly articulated?
+        - Value quantified in dollars?
+        - Three distinct options?
+        - Clear recommendation?
+        - ROI compelling?
+        - Scope crystal clear?
+
+    - task_id: "4.3"
+      name: "Schedule proposal presentation"
+      description: "Get all decision makers in the room"
+      requirements:
+        - All decision makers present
+        - Adequate time (45-60 min)
+        - Video call or in-person (not email)
+
+    - task_id: "4.4"
+      name: "Present proposal"
+      description: "Walk through proposal live"
+      presentation_flow:
+        1_problem: "Review their problem (confirm understanding)"
+        2_vision: "Paint success picture"
+        3_approach: "Explain your process"
+        4_options: "Present from Premium → Essential"
+        5_recommend: "Make clear recommendation"
+        6_roi: "Show the math"
+        7_silence: "STOP TALKING - let them process"
+        8_questions: "Address concerns"
+
+      critical_rules:
+        - Present highest price first (anchoring)
+        - Recommend one option clearly
+        - After stating price, BE SILENT
+        - Don't justify with hours
+        - Don't offer discounts preemptively
+
+    - task_id: "4.5"
+      name: "Handle objections"
+      description: "Address concerns professionally"
+      common_objections:
+        price_too_high:
+          response: |
+            "I understand. It's a significant investment. Help me
+            understand - what specifically feels out of reach?"
+          resource: "See objection_algorithms in agent"
+
+        need_to_think:
+          response: |
+            "Of course. What specifically would you like to think
+            through? I want to make sure I've addressed all your
+            concerns."
+
+        competitor_cheaper:
+          response: |
+            "That's fair. Let me ask: are you buying a deliverable,
+            or are you buying the solution to a $[X] problem?"
+
+    - task_id: "4.6"
+      name: "Get commitment"
+      description: "Clarify next steps"
+      outcomes:
+        yes: "Proceed to contract"
+        need_time: "Schedule specific follow-up date"
+        no: "Thank and part ways professionally"
+
+  exit_criteria:
+    - Proposal presented
+    - Decision or clear next steps
+
+  proceed_to: "stage_5_close"
+
+# ============================================================
+# STAGE 5: CLOSE
+# ============================================================
+
+stage_5_close:
+  name: "CLOSE"
+  trigger: "Client ready to proceed"
+
+  goals:
+    - Finalize agreement terms
+    - Get contract signed
+    - Collect deposit
+    - Schedule kick-off
+
+  tasks:
+    - task_id: "5.1"
+      name: "Prepare contract"
+      description: "Draft service agreement"
+      includes:
+        - Scope of work (from proposal)
+        - Payment terms
+        - Timeline and milestones
+        - Revision policy
+        - Change order process
+        - Ownership/licensing
+        - Cancellation terms
+        - Confidentiality
+
+    - task_id: "5.2"
+      name: "Review contract with client"
+      description: "Walk through key terms"
+      focus_areas:
+        - What's included (and not)
+        - Payment schedule
+        - Revision limits
+        - How changes are handled
+
+    - task_id: "5.3"
+      name: "Get signature"
+      description: "Formal agreement"
+      methods:
+        - Electronic signature (DocuSign, HelloSign)
+        - PDF signature
+        - Wet signature if required
+
+    - task_id: "5.4"
+      name: "Collect deposit"
+      description: "Receive initial payment"
+      typical_terms:
+        - "50% deposit to begin"
+        - "50% on completion"
+      alternatives:
+        - "40% / 30% / 30% for larger projects"
+        - "Monthly retainer for ongoing work"
+
+    - task_id: "5.5"
+      name: "Send confirmation"
+      description: "Welcome and next steps"
+      template: |
+        Subject: Welcome! Here's what happens next
+
+        Hi [Name],
+
+        Thank you for your trust in choosing to work together.
+        I've received your deposit and we're ready to begin!
+
+        Here's what happens next:
+
+        1. Kick-off call: [Date/Time]
+        2. What I need from you: [List any info/access needed]
+        3. First milestone: [Date]
+
+        Questions before we start? Just reply to this email.
+
+        Excited to get started!
+
+        [Your name]
+
+  exit_criteria:
+    - Contract signed
+    - Deposit received
+    - Kick-off scheduled
+
+  proceed_to: "stage_6_onboard"
+
+# ============================================================
+# STAGE 6: ONBOARD
+# ============================================================
+
+stage_6_onboard:
+  name: "ONBOARD"
+  trigger: "Contract signed and deposit received"
+
+  goals:
+    - Set clear expectations
+    - Gather necessary information
+    - Begin Phase 1 (IDENTIFY)
+    - Establish communication rhythm
+
+  tasks:
+    - task_id: "6.1"
+      name: "Kick-off call"
+      description: "Project initiation meeting"
+      timing: "Within 5 business days of deposit"
+      agenda:
+        - Introductions (if new stakeholders)
+        - Review project scope and timeline
+        - Clarify roles and responsibilities
+        - Establish communication preferences
+        - Gather access/materials needed
+        - Set first milestone expectations
+        - Answer any questions
+      duration: "45-60 minutes"
+
+    - task_id: "6.2"
+      name: "Set up project infrastructure"
+      description: "Create systems for collaboration"
+      items:
+        - Shared folder or workspace
+        - Communication channel (email/Slack)
+        - Project tracker (if applicable)
+        - Feedback collection method
+
+    - task_id: "6.3"
+      name: "Gather project materials"
+      description: "Collect everything needed"
+      typical_items:
+        - Brand assets and guidelines
+        - Access to relevant systems
+        - Stakeholder contact list
+        - Existing research/data
+        - Competitor examples
+
+    - task_id: "6.4"
+      name: "Begin IDENTIFY phase"
+      description: "Start the work"
+      first_actions:
+        - Schedule stakeholder interviews
+        - Begin research and analysis
+        - Document initial findings
+        - Prepare for first checkpoint
+
+    - task_id: "6.5"
+      name: "Confirm rhythm"
+      description: "Establish ongoing communication"
+      elements:
+        - Check-in frequency (weekly?)
+        - Status update format
+        - Feedback turnaround expectations
+        - Escalation process
+
+  exit_criteria:
+    - Kick-off completed
+    - All materials gathered
+    - Phase 1 work begun
+    - Communication rhythm established
+
+  project_handoff: |
+    At this point, the SALES workflow is complete.
+    The project continues with the IDEA Method:
+    - IDENTIFY → DESIGN → EXECUTE → AMPLIFY
+
+    Refer to agent operational_frameworks for project execution.
+
+# ============================================================
+# WORKFLOW METRICS
+# ============================================================
+
+metrics:
+  conversion_tracking:
+    lead_to_qualify: "% of leads that get qualification call"
+    qualify_to_discover: "% that proceed past qualification"
+    discover_to_propose: "% that get proposals"
+    propose_to_close: "% that become clients (win rate)"
+    close_to_onboard: "% that complete onboarding"
+
+  time_tracking:
+    avg_lead_to_qualify: "days"
+    avg_qualify_to_close: "days"
+    avg_sales_cycle: "total days lead to deposit"
+
+  value_tracking:
+    avg_project_value: "$"
+    win_rate_by_value_tier: "%"
+    close_rate_by_lead_source: "%"
+
+# ============================================================
+# WORKFLOW AUTOMATION OPPORTUNITIES
+# ============================================================
+
+automation_notes:
+  crm_integration:
+    - Track leads through stages
+    - Automated follow-up reminders
+    - Pipeline reporting
+
+  email_templates:
+    - Initial response
+    - Qualification scheduling
+    - Discovery scheduling
+    - Proposal follow-up
+    - Contract sending
+    - Welcome/onboarding
+
+  scheduling:
+    - Calendar integration for booking calls
+    - Automated reminders before calls
+    - Follow-up scheduling after calls
+
+  documents:
+    - Proposal generation from template
+    - Contract generation from template
+    - Automated invoice creation
+
+# ============================================================
+# RESOURCES
+# ============================================================
+
+resources:
+  tasks:
+    - "tasks/client-discovery-call.md"
+    - "tasks/design-pricing-strategy.md"
+    - "tasks/design-proposal-creation.md"
+    - "tasks/design-business-positioning.md"
+
+  checklists:
+    - "checklists/client-qualification-checklist.md"
+    - "checklists/value-pricing-checklist.md"
+
+  agent_frameworks:
+    - "Value-Based Pricing Framework"
+    - "IDEA Method"
+    - "Diagnosis Framework"
+    - "Sales for Creatives Framework"
+    - "Win Without Pitching Framework"
+    - "Goldilocks Pricing Framework"
+    - "Scope Defense Framework"
+
+# ============================================================
+# CHRIS DO WISDOM
+# ============================================================
+
+chris_do_quotes:
+  sales_philosophy:
+    - "Sales is not something you do TO someone. It's something you do FOR someone."
+    - "If you know you can solve their problem and don't help them buy, you're being unethical."
+    - "The person who asks the questions controls the conversation."
+
+  pricing_philosophy:
+    - "Price is a story you tell yourself."
+    - "Your price should be a fraction of the value you create."
+    - "If they say yes too quickly, you didn't charge enough."
+
+  positioning_philosophy:
+    - "You don't need more clients. You need better clients who pay more."
+    - "Stop chasing clients. Attract them."
+    - "Saying no to bad projects makes room for good ones."

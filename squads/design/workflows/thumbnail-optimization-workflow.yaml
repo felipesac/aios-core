@@ -1,0 +1,491 @@
+# Thumbnail Optimization Workflow
+# Full process: research -> design -> test -> iterate
+
+workflow:
+  id: "thumbnail-optimization-complete"
+  name: "Complete Thumbnail Optimization"
+  description: "End-to-end thumbnail optimization: competitor research, concept generation, A/B testing, and iteration based on CTR data"
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Paddy Galloway (YouTube Thumbnail Strategist)"
+  created_date: "2026-02-02"
+  last_modified: "2026-02-02"
+  tags:
+    - youtube
+    - thumbnail
+    - ctr-optimization
+    - ab-testing
+    - visual-psychology
+    - paddy-galloway
+
+inputs:
+  video_title:
+    type: "string"
+    description: "Title of the video to optimize thumbnail for"
+    required: true
+
+  video_topic:
+    type: "string"
+    description: "Main topic/hook of the video"
+    required: true
+
+  content_type:
+    type: "enum"
+    description: "Type of video content"
+    required: true
+    options:
+      - tutorial
+      - review
+      - story
+      - opinion
+      - educational
+      - entertainment
+
+  niche:
+    type: "string"
+    description: "Channel niche/category"
+    required: true
+
+  channel_ctr_average:
+    type: "number"
+    description: "Channel's average CTR percentage"
+    required: false
+    default: 5
+
+  has_existing_thumbnails:
+    type: "boolean"
+    description: "Does the channel have existing thumbnails to audit?"
+    required: false
+    default: false
+
+  face_available:
+    type: "boolean"
+    description: "Is creator face available for thumbnails?"
+    required: false
+    default: true
+
+# ============================================================
+# PHASE 1: RESEARCH
+# ============================================================
+
+steps:
+  - id: "step_1_swipe_analysis"
+    name: "Competitor Swipe Analysis"
+    type: "task"
+    task: "thumbnail-swipe-analysis"
+    description: "Analyze top-performing thumbnails in niche to extract winning patterns"
+    inputs:
+      niche: "{{niche}}"
+      channels_to_analyze: 5
+      thumbnails_per_channel: 5
+    outputs:
+      swipe_report: "outputs/thumbnails/{{video_title | slugify}}/research/swipe-analysis.yaml"
+      pattern_summary: "outputs/thumbnails/{{video_title | slugify}}/research/patterns.md"
+      differentiation_opportunities: "outputs/thumbnails/{{video_title | slugify}}/research/differentiation.md"
+    skip_if: "{{skip_research}}"
+    error_handling:
+      strategy: "warn"
+      message: "Swipe analysis skipped or failed. Proceeding with general best practices."
+
+  - id: "step_2_audit_existing"
+    name: "Audit Existing Thumbnails (Optional)"
+    type: "task"
+    task: "thumbnail-audit"
+    description: "Audit channel's existing thumbnails to identify patterns and issues"
+    condition: "{{has_existing_thumbnails}}"
+    inputs:
+      videos_to_audit: 10
+    outputs:
+      audit_report: "outputs/thumbnails/{{video_title | slugify}}/research/channel-audit.yaml"
+      improvement_opportunities: "outputs/thumbnails/{{video_title | slugify}}/research/improvements.md"
+    error_handling:
+      strategy: "skip"
+      message: "Audit skipped - no existing thumbnails or audit not needed"
+
+# ============================================================
+# PHASE 2: CONCEPT DESIGN
+# ============================================================
+
+  - id: "step_3_emotion_selection"
+    name: "Select Primary Emotion"
+    type: "decision"
+    description: "Apply Emotion Hierarchy Framework to select optimal emotion"
+    inputs:
+      content_type: "{{content_type}}"
+    logic:
+      tutorial:
+        primary: "curiosidade"
+        secondary: "aspiracao"
+        ctr_boost: "+100-150%"
+      review:
+        primary: "curiosidade"
+        secondary: "controversia"
+        ctr_boost: "+100-200%"
+      story:
+        primary: "curiosidade"
+        secondary: null
+        ctr_boost: "+150-300%"
+      opinion:
+        primary: "controversia"
+        secondary: "curiosidade"
+        ctr_boost: "+100-200%"
+      educational:
+        primary: "curiosidade"
+        secondary: "medo"
+        ctr_boost: "+100-200%"
+      entertainment:
+        primary: "curiosidade"
+        secondary: "controversia"
+        ctr_boost: "+100-200%"
+    outputs:
+      primary_emotion: "{{logic[content_type].primary}}"
+      secondary_emotion: "{{logic[content_type].secondary}}"
+
+  - id: "step_4_concept_generation"
+    name: "Generate Concept Batch"
+    type: "task"
+    task: "thumbnail-design"
+    description: "Generate 10-20 thumbnail concepts using frameworks"
+    inputs:
+      video_title: "{{video_title}}"
+      video_topic: "{{video_topic}}"
+      content_type: "{{content_type}}"
+      primary_emotion: "{{step_3_emotion_selection.primary_emotion}}"
+      secondary_emotion: "{{step_3_emotion_selection.secondary_emotion}}"
+      face_available: "{{face_available}}"
+      niche_patterns: "{{step_1_swipe_analysis.pattern_summary}}"
+      differentiation_ideas: "{{step_1_swipe_analysis.differentiation_opportunities}}"
+    outputs:
+      concept_batch: "outputs/thumbnails/{{video_title | slugify}}/concepts/concept-batch.yaml"
+      glance_scores: "outputs/thumbnails/{{video_title | slugify}}/concepts/glance-scores.yaml"
+      production_requirements: "outputs/thumbnails/{{video_title | slugify}}/concepts/production-needs.md"
+    error_handling:
+      strategy: "fail"
+      message: "Concept generation is required. Cannot proceed without concepts."
+
+# ============================================================
+# PHASE 3: VALIDATION
+# ============================================================
+
+  - id: "step_5_internal_glance_test"
+    name: "Conduct Internal Glance Test"
+    type: "validation"
+    description: "Test concepts with Glance Test Framework (0.5 second rule)"
+    inputs:
+      concepts: "{{step_4_concept_generation.concept_batch}}"
+    validation_criteria:
+      layer_1_recognition:
+        max_score: 3
+        pass_threshold: 2
+        test: "Theme is immediately clear"
+      layer_2_emotion:
+        max_score: 3
+        pass_threshold: 2
+        test: "Emotional response is triggered"
+      layer_3_curiosity:
+        max_score: 4
+        pass_threshold: 3
+        test: "Information gap creates click desire"
+      total:
+        max_score: 10
+        pass_threshold: 8
+        action_below: "Refazer conceito"
+    outputs:
+      scored_concepts: "outputs/thumbnails/{{video_title | slugify}}/validation/glance-test-results.yaml"
+      top_performers: "outputs/thumbnails/{{video_title | slugify}}/validation/top-5-concepts.yaml"
+    error_handling:
+      strategy: "fail"
+      message: "At least 3 concepts must score 8+/10 on Glance Test"
+
+  - id: "step_6_ctr_checklist"
+    name: "Validate CTR Elements"
+    type: "checklist"
+    checklist: "thumbnail-ctr-checklist"
+    description: "Validate top concepts against CTR optimization checklist"
+    inputs:
+      concepts: "{{step_5_internal_glance_test.top_performers}}"
+    outputs:
+      validated_concepts: "outputs/thumbnails/{{video_title | slugify}}/validation/ctr-validated.yaml"
+      issues_found: "outputs/thumbnails/{{video_title | slugify}}/validation/ctr-issues.md"
+    error_handling:
+      strategy: "warn"
+      message: "Some CTR checklist items failed. Review and fix before production."
+
+  - id: "step_7_technical_checklist"
+    name: "Validate Technical Requirements"
+    type: "checklist"
+    checklist: "thumbnail-technical-checklist"
+    description: "Ensure thumbnail meets all technical specifications"
+    inputs:
+      concepts: "{{step_6_ctr_checklist.validated_concepts}}"
+    validation_items:
+      - "File size under 2MB"
+      - "Resolution 1280x720 minimum"
+      - "Text readable at 160x90 mobile size"
+      - "Contrast tested in dark/light mode"
+      - "Face size 30-50% if present"
+    outputs:
+      production_ready: "outputs/thumbnails/{{video_title | slugify}}/validation/production-ready.yaml"
+    error_handling:
+      strategy: "fail"
+      message: "Technical requirements must pass before production"
+
+# ============================================================
+# PHASE 4: TEST PLANNING
+# ============================================================
+
+  - id: "step_8_ab_test_setup"
+    name: "Create A/B Test Plan"
+    type: "task"
+    task: "thumbnail-ab-testing"
+    description: "Structure the A/B testing plan with variants, triggers, and monitoring"
+    inputs:
+      validated_concepts: "{{step_7_technical_checklist.production_ready}}"
+      channel_ctr_average: "{{channel_ctr_average}}"
+      niche: "{{niche}}"
+    outputs:
+      test_plan: "outputs/thumbnails/{{video_title | slugify}}/testing/ab-test-plan.yaml"
+      test_sequence: "outputs/thumbnails/{{video_title | slugify}}/testing/test-sequence.md"
+      monitoring_schedule: "outputs/thumbnails/{{video_title | slugify}}/testing/monitoring.md"
+      swap_triggers: "outputs/thumbnails/{{video_title | slugify}}/testing/swap-triggers.md"
+    error_handling:
+      strategy: "fail"
+      message: "A/B test plan required. Cannot publish without test strategy."
+
+  - id: "step_9_define_benchmarks"
+    name: "Define CTR Benchmarks"
+    type: "calculation"
+    description: "Calculate target CTR, alarm threshold, and swap triggers"
+    inputs:
+      channel_average: "{{channel_ctr_average}}"
+      niche: "{{niche}}"
+    calculations:
+      niche_benchmarks:
+        entertainment: { average: 10, good: 12, excellent: 15 }
+        educational: { average: 6, good: 8, excellent: 12 }
+        tech_review: { average: 5, good: 7, excellent: 10 }
+        vlog: { average: 4, good: 6, excellent: 8 }
+        tutorial: { average: 5, good: 7, excellent: 10 }
+        opinion: { average: 6, good: 8, excellent: 12 }
+        story: { average: 5, good: 7, excellent: 10 }
+      target_ctr: "{{niche_benchmarks[niche].good}}"
+      alarm_threshold: "{{niche_benchmarks[niche].average * 0.8}}"
+      swap_trigger: "CTR below {{alarm_threshold}}% for 2 hours"
+    outputs:
+      benchmarks: "outputs/thumbnails/{{video_title | slugify}}/testing/benchmarks.yaml"
+
+# ============================================================
+# PHASE 5: PRODUCTION & PUBLISHING
+# ============================================================
+
+  - id: "step_10_production_brief"
+    name: "Generate Production Brief"
+    type: "document"
+    description: "Create comprehensive brief for thumbnail production"
+    template: |
+      # Thumbnail Production Brief
+
+      ## Video Information
+      - Title: {{video_title}}
+      - Topic: {{video_topic}}
+      - Content Type: {{content_type}}
+      - Niche: {{niche}}
+
+      ## Emotional Strategy
+      - Primary Emotion: {{step_3_emotion_selection.primary_emotion}}
+      - Secondary Emotion: {{step_3_emotion_selection.secondary_emotion}}
+
+      ## Top Concepts (by Glance Score)
+      {{step_5_internal_glance_test.top_performers}}
+
+      ## Production Requirements
+      {{step_4_concept_generation.production_requirements}}
+
+      ## Technical Specifications
+      - Resolution: 1920x1080 (minimum 1280x720)
+      - Format: PNG (text-heavy) or JPG (photo-heavy)
+      - File Size: Under 2MB
+      - Color Mode: RGB, sRGB profile
+
+      ## Test Plan
+      - Initial: Concept #1 (highest Glance score)
+      - Backup 1: Concept #2
+      - Backup 2: Concept #3
+      - Swap Trigger: {{step_9_define_benchmarks.benchmarks.swap_trigger}}
+
+      ## CTR Targets
+      - Target: {{step_9_define_benchmarks.benchmarks.target_ctr}}%
+      - Alarm: {{step_9_define_benchmarks.benchmarks.alarm_threshold}}%
+    outputs:
+      production_brief: "outputs/thumbnails/{{video_title | slugify}}/production/brief.md"
+
+  - id: "step_11_pre_upload_variants"
+    name: "Prepare Backup Variants"
+    type: "checkpoint"
+    description: "Ensure all backup variants are ready for rapid swap"
+    checklist:
+      - "All top 4+ variants are produced"
+      - "All variants meet technical specifications"
+      - "All variants are named clearly (v1, v2, v3, v4)"
+      - "All variants are backed up locally"
+      - "Swap process documented"
+    outputs:
+      variants_ready: true
+
+# ============================================================
+# PHASE 6: MONITORING & ITERATION
+# ============================================================
+
+  - id: "step_12_launch_monitoring"
+    name: "Launch and Monitor"
+    type: "monitoring"
+    description: "Monitor CTR during critical first hours"
+    schedule:
+      phase_1:
+        duration: "0-2h"
+        check_frequency: "30min"
+        decision_point: true
+        action_if_below_alarm: "Swap to Backup 1"
+      phase_2:
+        duration: "2-4h"
+        check_frequency: "60min"
+        decision_point: true
+        action_if_below_alarm: "Swap to Backup 2"
+      phase_3:
+        duration: "4-24h"
+        check_frequency: "2-4h"
+        decision_point: false
+        action: "Final swap opportunity"
+      phase_4:
+        duration: "24-48h"
+        action: "Final analysis and documentation"
+    metrics_to_track:
+      - "CTR percentage"
+      - "Impressions count"
+      - "Views count"
+      - "CTR trend (rising/falling/stable)"
+    outputs:
+      monitoring_log: "outputs/thumbnails/{{video_title | slugify}}/monitoring/ctr-log.yaml"
+
+  - id: "step_13_post_analysis"
+    name: "Post-Launch Analysis"
+    type: "analysis"
+    description: "Analyze final performance and document learnings"
+    timing: "48h after publish"
+    inputs:
+      monitoring_log: "{{step_12_launch_monitoring.monitoring_log}}"
+      test_plan: "{{step_8_ab_test_setup.test_plan}}"
+    analysis_questions:
+      - "Which variant won? Why?"
+      - "Was primary emotion effective?"
+      - "Did niche patterns apply?"
+      - "What surprised us?"
+      - "What will we do differently?"
+    outputs:
+      final_analysis: "outputs/thumbnails/{{video_title | slugify}}/analysis/final-report.md"
+      learnings: "outputs/thumbnails/{{video_title | slugify}}/analysis/learnings.yaml"
+
+  - id: "step_14_update_knowledge_base"
+    name: "Update Knowledge Base"
+    type: "documentation"
+    description: "Document learnings for future thumbnail optimization"
+    inputs:
+      learnings: "{{step_13_post_analysis.learnings}}"
+    documentation:
+      - "What worked in this niche"
+      - "What emotion performed best"
+      - "Effective color combinations"
+      - "Text strategies that worked"
+      - "Patterns to repeat"
+      - "Patterns to avoid"
+    outputs:
+      knowledge_update: "outputs/thumbnails/knowledge-base/{{niche}}/learnings.yaml"
+
+# ============================================================
+# WORKFLOW OUTPUTS
+# ============================================================
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "Full optimization workflow completed"
+    source: "step_14_update_knowledge_base.success"
+
+  swipe_analysis:
+    type: "file"
+    description: "Competitor swipe analysis report"
+    source: "step_1_swipe_analysis.swipe_report"
+
+  concept_batch:
+    type: "file"
+    description: "Generated concept batch with all variants"
+    source: "step_4_concept_generation.concept_batch"
+
+  test_plan:
+    type: "file"
+    description: "Complete A/B test plan"
+    source: "step_8_ab_test_setup.test_plan"
+
+  production_brief:
+    type: "file"
+    description: "Production brief for thumbnail creation"
+    source: "step_10_production_brief.production_brief"
+
+  final_ctr:
+    type: "number"
+    description: "Final CTR after 48h"
+    source: "step_13_post_analysis.final_analysis.final_ctr"
+
+  winning_variant:
+    type: "string"
+    description: "Which variant won the A/B test"
+    source: "step_13_post_analysis.final_analysis.winner"
+
+  learnings:
+    type: "file"
+    description: "Documented learnings for future optimization"
+    source: "step_13_post_analysis.learnings"
+
+# ============================================================
+# ERROR HANDLING & SECURITY
+# ============================================================
+
+global_error_handling:
+  on_error: "pause_and_notify"
+  notification:
+    enabled: true
+    channels:
+      - console
+  retry_policy:
+    max_retries: 2
+    retry_delay: "5min"
+
+security:
+  authorization_required: false
+  audit_logging: true
+  data_retention: "90 days"
+
+validation:
+  thumbnail_not_clickbait: "Emotion must match actual video content"
+  claims_truthful: "Numbers and claims must be accurate"
+  youtube_guidelines: "Must comply with YouTube Community Guidelines"
+
+# ============================================================
+# NOTES
+# ============================================================
+
+notes:
+  paddy_reminders:
+    - "The thumbnail you think will win almost never does. Test everything."
+    - "Pretty thumbnails get compliments. Ugly thumbnails that work get views."
+    - "The difference between 5% and 15% CTR is 100K vs 300K views."
+    - "If it doesn't work at 160x90 pixels, it doesn't work."
+    - "Thumbnail and title are ONE system. They complement, not repeat."
+
+  workflow_philosophy:
+    - "Research before creating - competitors tested thousands for you"
+    - "Generate many, test few, iterate based on data"
+    - "Data decides, not opinions"
+    - "Document learnings to compound knowledge over time"

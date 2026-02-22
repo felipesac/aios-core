@@ -1,0 +1,203 @@
+name: design
+version: "3.0.0"
+slash_prefix: "Design"
+title: "Design Squad - Elite Minds for Visual Design"
+description: "Complete design squad with 10 expert agents covering brand strategy, DesignOps, design business, logo design, thumbnails/YouTube, photography, design systems, and dark premium theme transformation. Zero database dependencies."
+author: "AIOS Team"
+icon: "🎨"
+type: specialist
+
+# Entry point for the squad
+entry_agent: design-chief
+
+# IMPORTANT: Core design system is 100% INDEPENDENT
+# Extended pipeline (audio/deploy/notify) has optional external dependencies
+independence: true
+independence_details: |
+  Core design system is completely self-contained:
+  - No database required
+  - Works with any codebase (React, Vue, HTML/CSS)
+  - All operations are filesystem-based
+
+  Extended pipeline (Premium LP end-to-end) has OPTIONAL dependencies:
+  - Vercel CLI (deploy)
+  - ffmpeg + OpenAI API (audio transcription)
+  - UazAPI (WhatsApp notification)
+
+# Optional tools (standard dev environment + extended pipeline)
+dependencies:
+  optional:
+    - name: Node.js
+      version: ">=18.0"
+      description: "For component generation and npm packages"
+      install: "https://nodejs.org/"
+    - name: npm/yarn/pnpm
+      description: "Package manager for installing component dependencies"
+    - name: Vercel CLI
+      description: "Deploy Premium LPs to Vercel (Phase 5)"
+      install: "npm i -g vercel"
+      check: "vercel --version"
+    - name: ffmpeg
+      description: "Audio conversion for Whisper transcription (Phase 0)"
+      install: "brew install ffmpeg"
+      check: "ffmpeg -version"
+    - name: OpenAI API
+      description: "Whisper transcription for audio briefs (Phase 0)"
+      check: "echo $OPENAI_API_KEY | head -c 10"
+
+# Environment variables
+environment:
+  required: []
+  optional:
+    - name: NODE_ENV
+      description: "Development/production mode"
+      default: "development"
+    - name: OPENAI_API_KEY
+      description: "OpenAI API key for Whisper transcription (Phase 0)"
+    - name: UAZAPI_BASE_URL
+      description: "UazAPI base URL for WhatsApp notifications (Phase 6)"
+    - name: UAZAPI_TOKEN
+      description: "UazAPI auth token for WhatsApp notifications (Phase 6)"
+
+# Agent Tier System
+tier_system:
+  tier_0_foundation:
+    description: "Entry point agents for diagnosis and strategy"
+    agents:
+      - marty-neumeier   # Brand Strategy - entry for branding
+      - dave-malouf      # DesignOps - entry for operations
+  tier_1_masters:
+    description: "Execution masters with specialized expertise"
+    agents:
+      - chris-do         # Design Business/Pricing
+      - paddy-galloway   # YouTube Strategy/Thumbnails
+      - joe-mcnally      # Flash Photography
+  tier_2_specialists:
+    description: "Deep specialists for specific deliverables"
+    agents:
+      - brad-frost       # Design Systems (Atomic Design)
+      - aaron-draplin    # Logo Design
+      - peter-mckinnon   # Photo Editing
+      - premium-design   # Dark Premium Theme Transformer
+  orchestrator:
+    description: "Routes requests to appropriate agents"
+    agent: design-chief
+
+agents:
+  - design-chief       # Orchestrator - routing and workflow coordination
+  - brad-frost         # Design Systems (Atomic Design) - Tier 2
+  - marty-neumeier     # Brand Strategy - Tier 0
+  - dave-malouf        # DesignOps - Tier 0
+  - chris-do           # Design Business - Tier 1
+  - aaron-draplin      # Logo Design - Tier 2
+  - paddy-galloway     # Thumbnails/YouTube - Tier 1
+  - joe-mcnally        # Photography Lighting - Tier 1
+  - peter-mckinnon     # Photo Editing - Tier 2
+  - premium-design     # Dark Premium Theme Transformer - Tier 2
+
+tasks:
+  # Brownfield workflow (audit existing codebase)
+  - audit-codebase
+  - audit-reading-experience
+  - audit-tailwind-config
+  - consolidate-patterns
+  - extract-tokens
+  - generate-migration-strategy
+  - generate-shock-report
+  - calculate-roi
+  # Greenfield workflow (new design system)
+  - setup-design-system
+  - build-component
+  - compose-molecule
+  - extend-pattern
+  - generate-documentation
+  - bootstrap-shadcn-library
+  - export-design-tokens-dtcg
+  # Accessibility
+  - a11y-audit
+  - aria-audit
+  - contrast-matrix
+  - focus-order-audit
+  # Refactoring
+  - atomic-refactor-plan
+  - atomic-refactor-execute
+  # Analytics & maintenance
+  - design-compare
+  - ds-health-metrics
+  - bundle-audit
+  - token-usage-analytics
+  - dead-code-detection
+  - validate-design-fidelity
+  - tailwind-upgrade
+  - integrate-squad
+  # Prefixed versions (ds-*)
+  - ds-audit-codebase
+  - ds-build-component
+  - ds-calculate-roi
+  - ds-compose-molecule
+  - ds-consolidate-patterns
+  - ds-extend-pattern
+  - ds-extract-tokens
+  - ds-generate-documentation
+  - ds-generate-migration-strategy
+  - ds-generate-shock-report
+  - ds-health-metrics
+  - ds-integrate-squad
+  - ds-rebuild-artifact
+  - ds-scan-artifact
+  - ds-setup-design-system
+  # Premium LP Pipeline (extended)
+  - transcribe-lp-brief
+  - deploy-vercel-lp
+  - notify-whatsapp-lp
+  # Shared
+  - create-doc
+  - execute-checklist
+
+templates:
+  - component-visual-spec-tmpl
+  - design-fidelity-report-tmpl
+  - premium-lp-content-schema
+  - premium-lp-template
+  - premium-lp-tokens
+  - automation-input-schema
+  - lp-brief-extraction-schema
+  - ds-artifact-analysis
+  - ds-health-report-tmpl
+  - ds-migration-strategy-tmpl
+  - ds-state-persistence-tmpl
+  - ds-tokens-schema-tmpl
+  - migration-strategy-tmpl
+  - state-persistence-tmpl
+  - tokens-schema-tmpl
+
+checklists:
+  - accessibility-wcag-checklist
+  - atomic-refactor-checklist
+  - component-quality-checklist
+  - design-fidelity-checklist
+  - ds-accessibility-wcag-checklist
+  - ds-component-quality-checklist
+  - ds-migration-readiness-checklist
+  - ds-pattern-audit-checklist
+  - migration-readiness-checklist
+  - pattern-audit-checklist
+  - reading-accessibility-checklist
+
+workflows:
+  - audit-only
+  - brownfield-complete
+  - greenfield-new
+  - premium-lp-complete
+
+tags:
+  - design-system
+  - ui
+  - components
+  - tokens
+  - accessibility
+  - wcag
+  - atomic-design
+  - brad-frost
+  - independent
+  - shareable

@@ -1,0 +1,92 @@
+# Content Distillery Squad Configuration
+# Version: 1.0.0
+# Created: 2026-02-12
+
+pack:
+  name: content-distillery
+  title: Content Distillery
+  version: 1.0.0
+  author: jose-amorim
+  description: >
+    Transforms long YouTube livestreams into structured frameworks,
+    heuristics, mental models, and multi-platform content pieces.
+    Built on research from 8 elite minds across content repurposing,
+    framework extraction, knowledge management, and YouTube strategy.
+
+  slash_prefix: ContentDistillery
+  pattern_prefix: CD
+  category: content-extraction
+
+agents:
+  orchestrator:
+    - distillery-chief
+
+  tier_0:
+    - tacit-extractor        # Cedric Chin
+    - model-identifier       # Shane Parrish
+
+  tier_1:
+    - knowledge-architect    # Tiago Forte
+    - content-atomizer       # Gary Vaynerchuk
+
+  tier_2:
+    - idea-multiplier        # Nicolas Cole & Dickie Bush
+    - ecosystem-designer     # Dan Koe
+    - production-ops         # Justin Welsh
+
+  tier_3:
+    - youtube-strategist     # Paddy Galloway
+
+workflows:
+  - full-distillery-pipeline
+  - framework-extraction
+  - content-derivation
+
+tasks:
+  - ingest-youtube
+  - extract-tacit-knowledge
+  - identify-frameworks
+  - progressive-summarize
+  - build-knowledge-base
+  - multiply-ideas
+  - atomize-content
+  - design-ecosystem
+  - produce-batch
+  - optimize-youtube
+  - distill-single-live
+  - cross-reference-frameworks
+
+quality_gates:
+  - id: QG-001
+    name: Transcription Valid
+    type: routing
+  - id: QG-002
+    name: Extraction Complete
+    type: blocking
+  - id: QG-003
+    name: Distillation Validated
+    type: blocking
+  - id: QG-004
+    name: Content Reviewed
+    type: blocking
+  - id: QG-005
+    name: YouTube Ready
+    type: advisory
+
+dependencies:
+  external_packs:
+    - etl-data-collector     # YouTube download + transcription
+    - transcription-pro      # Audio transcription pipeline
+
+  tools:
+    - youtube-transcript     # YouTube captions API
+    - whisper               # OpenAI Whisper for transcription
+    - ffmpeg                # Audio processing
+
+target_user: "Jose & David - personal use"
+use_cases:
+  - Ingest long YouTube livestreams
+  - Extract frameworks and mental models
+  - Extract practical heuristics
+  - Derive multi-platform content
+  - Build searchable knowledge base
