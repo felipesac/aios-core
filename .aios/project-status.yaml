@@ -1,19 +1,54 @@
 status:
   branch: main
-  modifiedFiles:
-    - .aios/project-status.yaml
-    - docs/projects/
-  modifiedFilesTotalCount: 2
+  modifiedFiles: []
+  modifiedFilesTotalCount: 0
   recentCommits:
     - >-
-      feat(finhealth-squad): add report/appeal output templates with pure TS
-      renderers [Item 10]
+      fix: resolve greeting timeout on Windows by increasing timeouts and cache
+      TTL
     - >-
-      feat(finhealth-squad): add data scrapers with BaseScraper pattern and DI
-      [Item 9]
-  currentEpic: null
+      feat(squads): install squad-creator, content-distillery, design squads
+      with slash commands
+  currentEpic: smart-trace seed enrichment & deploy verification
   currentStory: null
-  lastUpdate: '2026-02-15T02:52:54.426Z'
+  lastUpdate: '2026-02-23T19:30:00.000Z'
   isGitRepo: true
-timestamp: 1771123974428
-ttl: 60
+  smartTrace:
+    branch: main
+    recentCommits:
+      - 'fix(seed): align prescriptions and waypoints with actual DB schema'
+      - 'feat(seed): enrich supabase-seed-full with 14 new tables (~500+ records)'
+      - 'feat(rbac): add @Roles() enforcement for manufacturer, distributor, government, disposal_operator'
+    deployStatus: live
+    deployId: dep-d6eaeb08tnhs73adcp1g
+    renderService: smart-trace-api.onrender.com
+    seedStatus:
+      totalSteps: 35
+      totalRecords: 500+
+      tables: 25+
+      idempotent: true
+      lastRun: '2026-02-23T19:25:00.000Z'
+      newTables:
+        - prescriptions (20)
+        - drug_interactions (20)
+        - scheduled_jobs (10)
+        - stored_events (50)
+        - patients (8)
+        - patient_dispensation_records (15)
+        - suppliers (6)
+        - webhooks (6)
+        - notifications (15)
+        - audit_reports (5)
+        - job_executions (30)
+        - collection_waypoints (12)
+        - tenant_config (15)
+        - feature_flags (10)
+    verification:
+      healthCheck: ok
+      recallsEndpoint: ok (2 recalls returned with product_code/batch_number)
+      dispensationTests: 1329 passed (136 files)
+      e2eTests: 101 passed (5 files)
+      seedIdempotency: confirmed (3 consecutive runs)
+    renderDeployHook: updated (new key applied to .env + GitHub secret)
+timestamp: 1771886400000
+ttl: 300
