@@ -269,3 +269,8 @@ Type `*help` to see all commands, or `*yolo` to skip confirmations.
 - **@po (Pax)** - May request market insights
 
 ---
+<<<<<<<< HEAD:.codex/agents/analyst.md
+---
+*AIOX Agent - Synced from .aiox-core/development/agents/analyst.md*
+========
+>>>>>>>> upstream/main:.aiox-core/development/agents/analyst.md

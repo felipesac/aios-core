@@ -13,20 +13,29 @@
  * - Fallback strategy
  * - Backwards compatibility
  * - Story 10.3: User profile-based command filtering
+ * - Story ACT-12: Language delegated to Claude Code settings.json
  */
 
-const GreetingBuilder = require('../../.aios-core/development/scripts/greeting-builder');
-const ContextDetector = require('../../.aios-core/core/session/context-detector');
-const GitConfigDetector = require('../../.aios-core/infrastructure/scripts/git-config-detector');
+const GreetingBuilder = require('../../.aiox-core/development/scripts/greeting-builder');
+const ContextDetector = require('../../.aiox-core/core/session/context-detector');
+const GitConfigDetector = require('../../.aiox-core/infrastructure/scripts/git-config-detector');
 
 // Mock dependencies
-jest.mock('../../.aios-core/core/session/context-detector');
-jest.mock('../../.aios-core/infrastructure/scripts/git-config-detector');
-jest.mock('../../.aios-core/infrastructure/scripts/project-status-loader', () => ({
+jest.mock('../../.aiox-core/core/session/context-detector');
+jest.mock('../../.aiox-core/infrastructure/scripts/git-config-detector');
+jest.mock('../../.aiox-core/infrastructure/scripts/project-status-loader', () => ({
   loadProjectStatus: jest.fn(),
   formatStatusDisplay: jest.fn(),
 }));
-jest.mock('../../.aios-core/development/scripts/greeting-preference-manager', () => {
+jest.mock('../../.aiox-core/core/config/config-resolver', () => ({
+  resolveConfig: jest.fn(() => ({
+    config: { user_profile: 'advanced' },
+    warnings: [],
+    legacy: false,
+  })),
+}));
+const { resolveConfig: mockResolveConfig } = require('../../.aiox-core/core/config/config-resolver');
+jest.mock('../../.aiox-core/development/scripts/greeting-preference-manager', () => {
   return jest.fn().mockImplementation(() => ({
     getPreference: jest.fn().mockReturnValue('auto'),
     setPreference: jest.fn(),
@@ -34,7 +43,7 @@ jest.mock('../../.aios-core/development/scripts/greeting-preference-manager', ()
   }));
 });
 
-const { loadProjectStatus, formatStatusDisplay } = require('../../.aios-core/infrastructure/scripts/project-status-loader');
+const { loadProjectStatus, formatStatusDisplay } = require('../../.aiox-core/infrastructure/scripts/project-status-loader');
 
 describe('GreetingBuilder', () => {
   let builder;
@@ -110,8 +119,8 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation now always uses archetypal greeting for richer presentation
-      expect(greeting).toContain('TestAgent the Tester ready');
+      // Story ACT-7: Existing sessions use named greeting (brief) instead of archetypal
+      expect(greeting).toContain('TestAgent (Tester) ready');
       expect(greeting).not.toContain('Test automation expert'); // No role
       expect(greeting).toContain('Quick Commands'); // Quick commands
     });
@@ -121,8 +130,8 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation now always uses archetypal greeting for richer presentation
-      expect(greeting).toContain('TestAgent the Tester ready');
+      // Story ACT-7: Workflow sessions use named greeting (focused) instead of archetypal
+      expect(greeting).toContain('TestAgent (Tester) ready');
       expect(greeting).not.toContain('Test automation expert'); // No role
       expect(greeting).toContain('Key Commands'); // Key commands only
     });
@@ -276,10 +285,10 @@ describe('GreetingBuilder', () => {
 
       const greeting = await builder.buildGreeting(mockAgent, {});
 
-      // Implementation uses internal _formatProjectStatus instead of formatStatusDisplay
+      // Story ACT-7: Now uses narrative format when enriched context is available
       // Just verify project status is shown in greeting
       expect(greeting).toContain('Project Status');
-      expect(greeting).toContain('Branch');
+      expect(greeting).toContain('branch');
     });
 
     test('should use condensed format for workflow session', async () => {
@@ -458,76 +467,68 @@ describe('GreetingBuilder', () => {
     });
 
     describe('loadUserProfile()', () => {
-      test('should return advanced as default when config file not found', () => {
-        // Mock fs to return false for existsSync
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        fs.existsSync = jest.fn().mockReturnValue(false);
+      test('should return advanced as default when resolveConfig returns no user_profile', () => {
+        mockResolveConfig.mockReturnValueOnce({
+          config: {},
+          warnings: [],
+          legacy: false,
+        });
 
         const profile = builder.loadUserProfile();
         expect(profile).toBe('advanced');
-
-        fs.existsSync = originalExistsSync;
       });
 
       test('should return advanced when user_profile is missing from config', () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn().mockReturnValue(true);
-        fs.readFileSync = jest.fn().mockReturnValue('markdownExploder: true\nproject:\n  type: GREENFIELD');
+        mockResolveConfig.mockReturnValueOnce({
+          config: { project: { type: 'GREENFIELD' } },
+          warnings: [],
+          legacy: false,
+        });
 
         const profile = builder.loadUserProfile();
         expect(profile).toBe('advanced');
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
 
       test('should return advanced when user_profile is invalid', () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn().mockReturnValue(true);
-        fs.readFileSync = jest.fn().mockReturnValue('user_profile: invalid_value');
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'invalid_value' },
+          warnings: [],
+          legacy: false,
+        });
 
         const profile = builder.loadUserProfile();
         expect(profile).toBe('advanced');
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
 
       test('should return bob when user_profile is bob', () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn().mockReturnValue(true);
-        fs.readFileSync = jest.fn().mockReturnValue('user_profile: bob');
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
+        });
 
         const profile = builder.loadUserProfile();
         expect(profile).toBe('bob');
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
 
       test('should return advanced when user_profile is advanced', () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn().mockReturnValue(true);
-        fs.readFileSync = jest.fn().mockReturnValue('user_profile: advanced');
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'advanced' },
+          warnings: [],
+          legacy: false,
+        });
 
         const profile = builder.loadUserProfile();
         expect(profile).toBe('advanced');
+      });
 
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
+      test('should return advanced when resolveConfig throws', () => {
+        mockResolveConfig.mockImplementationOnce(() => {
+          throw new Error('Config load failed');
+        });
+
+        const profile = builder.loadUserProfile();
+        expect(profile).toBe('advanced');
       });
     });
 
@@ -579,17 +580,10 @@ describe('GreetingBuilder', () => {
 
     describe('Full greeting in bob mode', () => {
       test('PM agent should show commands in bob mode (AC5)', async () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn((path) => {
-          if (path.includes('core-config.yaml')) return true;
-          return originalExistsSync(path);
-        });
-        fs.readFileSync = jest.fn((path, encoding) => {
-          if (path.includes('core-config.yaml')) return 'user_profile: bob';
-          return originalReadFileSync(path, encoding);
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
         });
 
         const greeting = await builder.buildGreeting(mockPmAgent, {});
@@ -597,23 +591,13 @@ describe('GreetingBuilder', () => {
         expect(greeting).toContain('Morgan');
         expect(greeting).toContain('help');
         expect(greeting).not.toContain('Modo Assistido');
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
 
       test('Non-PM agent should show redirect message in bob mode (AC4)', async () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn((path) => {
-          if (path.includes('core-config.yaml')) return true;
-          return originalExistsSync(path);
-        });
-        fs.readFileSync = jest.fn((path, encoding) => {
-          if (path.includes('core-config.yaml')) return 'user_profile: bob';
-          return originalReadFileSync(path, encoding);
+        mockResolveConfig.mockReturnValueOnce({
+          config: { user_profile: 'bob' },
+          warnings: [],
+          legacy: false,
         });
 
         const greeting = await builder.buildGreeting(mockDevAgent, {});
@@ -622,23 +606,13 @@ describe('GreetingBuilder', () => {
         expect(greeting).toContain('Modo Assistido');
         expect(greeting).toContain('@pm');
         expect(greeting).not.toContain('develop'); // No commands shown
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
 
       test('All agents should show normal commands in advanced mode (AC2)', async () => {
-        const fs = require('fs');
-        const originalExistsSync = fs.existsSync;
-        const originalReadFileSync = fs.readFileSync;
-
-        fs.existsSync = jest.fn((path) => {
-          if (path.includes('core-config.yaml')) return true;
-          return originalExistsSync(path);
-        });
-        fs.readFileSync = jest.fn((path, encoding) => {
-          if (path.includes('core-config.yaml')) return 'user_profile: advanced';
-          return originalReadFileSync(path, encoding);
+        mockResolveConfig.mockReturnValue({
+          config: { user_profile: 'advanced' },
+          warnings: [],
+          legacy: false,
         });
 
         const pmGreeting = await builder.buildGreeting(mockPmAgent, {});
@@ -649,10 +623,47 @@ describe('GreetingBuilder', () => {
 
         expect(devGreeting).toContain('help');
         expect(devGreeting).not.toContain('Modo Assistido');
-
-        fs.existsSync = originalExistsSync;
-        fs.readFileSync = originalReadFileSync;
       });
+    });
+  });
+
+  describe('ACT-12: Language delegated to Claude Code settings.json', () => {
+    test('buildSimpleGreeting uses English help prompt (language handled natively by Claude Code)', () => {
+      const greeting = builder.buildSimpleGreeting(mockAgent);
+      expect(greeting).toContain('Type `*help`');
+    });
+
+    test('buildFixedLevelGreeting uses English help text', () => {
+      const greeting = builder.buildFixedLevelGreeting(mockAgent, 'named');
+      expect(greeting).toContain('Type `*help`');
+    });
+
+    test('buildPresentation uses English welcome back', () => {
+      const sectionContext = {
+        sessionType: 'existing',
+      };
+
+      const presentation = builder.buildPresentation(mockAgent, 'existing', '', sectionContext);
+      expect(presentation).toContain('welcome back');
+    });
+
+    test('buildFooter uses English guide prompt for new sessions', () => {
+      const sectionContext = {
+        sessionType: 'new',
+      };
+
+      const footer = builder.buildFooter(mockAgent, sectionContext);
+      expect(footer).toContain('Type `*guide`');
+    });
+
+    test('buildFooter uses English help prompt for existing sessions', () => {
+      const sectionContext = {
+        sessionType: 'existing',
+      };
+
+      const footer = builder.buildFooter(mockAgent, sectionContext);
+      expect(footer).toContain('Type `*help`');
+      expect(footer).toContain('*session-info');
     });
   });
 });

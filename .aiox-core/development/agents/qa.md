@@ -445,3 +445,8 @@ Type `*help` to see all commands.
 - **CodeRabbit** - Automated pre-review
 
 ---
+<<<<<<<< HEAD:.codex/agents/qa.md
+---
+*AIOX Agent - Synced from .aiox-core/development/agents/qa.md*
+========
+>>>>>>>> upstream/main:.aiox-core/development/agents/qa.md

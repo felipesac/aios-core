@@ -158,7 +158,7 @@ qa:
       const content = `
 project:
   type: GREENFIELD
-  [invalid: syntax
+  !!invalid %%% syntax
 `;
 
       const result = validateYamlSyntax(content);
@@ -212,7 +212,7 @@ project:
 
       const result = validateCoreConfigStructure(config);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Invalid project.type: INVALID_TYPE. Expected greenfield, brownfield, or existing_aios');
+      expect(result.errors).toContain('Invalid project.type: INVALID_TYPE. Expected greenfield, brownfield, or existing_aiox');
     });
 
     it('should validate IDE section if present', () => {

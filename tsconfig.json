@@ -20,8 +20,8 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@synkra/aiox-core": ["./.aiox-core/core"],
-      "@synkra/aiox-core/*": ["./.aiox-core/core/*"]
+      "aiox-core": ["./.aiox-core/core"],
+      "aiox-core/*": ["./.aiox-core/core/*"]
     }
   },
   "include": [
@@ -47,6 +47,7 @@
     ".aiox-core.backup*/**",
     "aiox-core.backup*/**",
     "aiox-core-deprecated/**",
+    "aiox-core-depracated/**",
     "eslint.config.js"
   ]
 }

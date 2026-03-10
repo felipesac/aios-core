@@ -283,5 +283,8 @@ Type `*help` to see all commands.
 - **@github-devops (Gage)** - Handles push operations
 
 ---
+<<<<<<<< HEAD:.aiox-core/development/agents/sm.md
+========
 ---
 *AIOX Agent - Synced from .aiox-core/development/agents/sm.md*
+>>>>>>>> upstream/main:.codex/agents/sm.md

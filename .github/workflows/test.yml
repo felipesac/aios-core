@@ -9,13 +9,16 @@ on:
     paths-ignore:
       - 'docs/**'
       - '*.md'
-      - '.aios/**'
+      - '.aiox/**'
       - 'squads/**'
   workflow_dispatch:
 
 concurrency:
   group: test-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 env:
   NODE_VERSION: '20'
@@ -68,7 +71,7 @@ jobs:
 
       - name: Test workspace package
         run: |
-          echo "Testing workspace package: aios-core"
+          echo "Testing workspace package: aiox-core"
 
           # Check if package.json exists
           if [ -f "package.json" ]; then
@@ -124,20 +127,20 @@ jobs:
           # Test that CLI entry point works
           node -e "
             try {
-              // Test bin/aios-init.js exists
+              // Test bin/aiox-init.js exists
               const fs = require('fs');
-              if (fs.existsSync('./bin/aios-init.js')) {
-                console.log('✅ aios-init.js exists');
+              if (fs.existsSync('./bin/aiox-init.js')) {
+                console.log('✅ aiox-init.js exists');
               } else {
-                console.log('❌ aios-init.js not found');
+                console.log('❌ aiox-init.js not found');
                 process.exit(1);
               }
 
-              // Test bin/aios.js exists
-              if (fs.existsSync('./bin/aios.js')) {
-                console.log('✅ aios.js exists');
+              // Test bin/aiox.js exists
+              if (fs.existsSync('./bin/aiox.js')) {
+                console.log('✅ aiox.js exists');
               } else {
-                console.log('❌ aios.js not found');
+                console.log('❌ aiox.js not found');
                 process.exit(1);
               }
 

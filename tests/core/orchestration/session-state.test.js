@@ -18,7 +18,7 @@ const {
   SESSION_STATE_VERSION,
   SESSION_STATE_FILENAME,
   CRASH_THRESHOLD_MINUTES,
-} = require('../../../.aios-core/core/orchestration/session-state');
+} = require('../../../.aiox-core/core/orchestration/session-state');
 
 // Test fixtures
 const TEST_PROJECT_ROOT = path.join(__dirname, '../../fixtures/test-project');
@@ -48,8 +48,8 @@ describe('SessionState', () => {
   });
 
   describe('Constants', () => {
-    it('should export SESSION_STATE_VERSION as 1.1', () => {
-      expect(SESSION_STATE_VERSION).toBe('1.1');
+    it('should export SESSION_STATE_VERSION as 1.2', () => {
+      expect(SESSION_STATE_VERSION).toBe('1.2');
     });
 
     it('should export SESSION_STATE_FILENAME as .session-state.yaml', () => {
@@ -145,7 +145,7 @@ describe('SessionState', () => {
       expect(state.session_state.workflow.phase_results).toEqual({});
     });
 
-    it('should include version 1.1', async () => {
+    it('should include version 1.2', async () => {
       const epicInfo = {
         id: 'epic-11',
         title: 'Projeto Bob',
@@ -155,7 +155,7 @@ describe('SessionState', () => {
 
       const state = await sessionState.createSessionState(epicInfo);
 
-      expect(state.session_state.version).toBe('1.1');
+      expect(state.session_state.version).toBe('1.2');
     });
   });
 
@@ -541,6 +541,23 @@ describe('SessionState', () => {
       expect(summary.progress.storiesDone).toEqual(['11.1', '11.2']);
       expect(summary.context.branch).toBe('feature/bob');
     });
+
+    it('should return 0 percentage when totalStories is 0 (no division by zero)', async () => {
+      const epicInfo = {
+        id: 'epic-empty',
+        title: 'Empty Epic',
+        totalStories: 0,
+        storyIds: [],
+      };
+      await sessionState.createSessionState(epicInfo, 'feature/empty');
+
+      const summary = sessionState.getProgressSummary();
+
+      expect(summary.progress.percentage).toBe(0);
+      expect(Number.isNaN(summary.progress.percentage)).toBe(false);
+      expect(summary.progress.total).toBe(0);
+      expect(summary.progress.completed).toBe(0);
+    });
   });
 
   describe('discard()', () => {
@@ -660,7 +677,7 @@ describe('SessionState', () => {
 
 describe('SessionState Migration (ADR-011)', () => {
   const TEST_PROJECT_ROOT = path.join(__dirname, '../../fixtures/test-migration-project');
-  const LEGACY_STATE_PATH = path.join(TEST_PROJECT_ROOT, '.aios/workflow-state');
+  const LEGACY_STATE_PATH = path.join(TEST_PROJECT_ROOT, '.aiox/workflow-state');
 
   beforeEach(async () => {
     await fs.rm(TEST_PROJECT_ROOT, { recursive: true, force: true });
@@ -699,7 +716,7 @@ describe('SessionState Migration (ADR-011)', () => {
 
     // Should have migrated
     expect(loadedState).not.toBeNull();
-    expect(loadedState.session_state.version).toBe('1.1');
+    expect(loadedState.session_state.version).toBe('1.2');
     expect(loadedState.session_state.workflow.current_phase).toBe('2_development');
     expect(loadedState.session_state.context_snapshot.last_executor).toBe('@dev');
 
