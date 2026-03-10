@@ -292,10 +292,10 @@ async function ensureEnvInGitignore(projectPath) {
  */
 async function generateCoreConfigYAML(projectPath, wizardState) {
   try {
-    const aiosCoreDir = path.join(projectPath, '.aios-core');
+    const aiosCoreDir = path.join(projectPath, '.aiox-core');
     const yamlPath = path.join(aiosCoreDir, 'core-config.yaml');
 
-    // Ensure .aios-core directory exists
+    // Ensure .aiox-core directory exists
     await fs.ensureDir(aiosCoreDir);
 
     // Load template

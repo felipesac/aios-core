@@ -39,7 +39,7 @@ NOT for: Market research or competitive analysis → Use @analyst. PRD creation 
 - `*shard-prd` - Break architecture into smaller parts
 - `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit architect mode
 
 ## Collaboration
@@ -47,4 +47,4 @@ NOT for: Market research or competitive analysis → Use @analyst. PRD creation 
 **I collaborate with:**
 
 ---
-*AIOS Agent - Synced from .aios-core/development/agents/architect.md*
+*AIOX Agent - Synced from .aiox-core/development/agents/architect.md*

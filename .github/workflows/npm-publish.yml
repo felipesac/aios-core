@@ -91,7 +91,7 @@ jobs:
       - name: Build all packages
         run: |
           # Create lib directories for packages that need them
-          for pkg in .aios-core memory security performance telemetry; do
+          for pkg in .aiox-core memory security performance telemetry; do
             if [ -d "$pkg" ]; then
               mkdir -p "$pkg/lib"
               echo '{"built": true}' > "$pkg/lib/build.json"
@@ -103,7 +103,7 @@ jobs:
       - name: Create distribution archive
         run: |
           mkdir -p dist/@synkra
-          tar -czf dist/@synkra/aios-core-${{ steps.package-version.outputs.version }}.tar.gz \
+          tar -czf dist/@synkra/aiox-core-${{ steps.package-version.outputs.version }}.tar.gz \
             --exclude=node_modules \
             --exclude=.git \
             --exclude=dist \
@@ -117,7 +117,7 @@ jobs:
           name: build-artifacts
           path: |
             dist/
-            .aios-core/lib/
+            .aiox-core/lib/
             memory/lib/
             security/lib/
             performance/lib/
@@ -157,10 +157,10 @@ jobs:
             echo "tag=preview" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check if aios-core should be published
+      - name: Check if aiox-core should be published
         id: should-publish
         run: |
-          PKG_NAME="aios-core"
+          PKG_NAME="aiox-core"
           VERSION="${{ needs.build.outputs.version }}"
 
           # Check if package exists in registry
@@ -172,7 +172,7 @@ jobs:
             echo "should_publish=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Publish aios-core to NPM
+      - name: Publish aiox-core to NPM
         if: steps.should-publish.outputs.should_publish == 'true'
         run: |
           # Create npmrc for authentication
@@ -181,7 +181,7 @@ jobs:
           # Publish with appropriate tag
           npm publish --tag ${{ steps.publish-tag.outputs.tag }} --access public
 
-          echo "✅ Published aios-core@${{ needs.build.outputs.version }} with tag ${{ steps.publish-tag.outputs.tag }}"
+          echo "✅ Published aiox-core@${{ needs.build.outputs.version }} with tag ${{ steps.publish-tag.outputs.tag }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -191,14 +191,14 @@ jobs:
           # Wait for npm registry to propagate (can take up to 60s)
           for i in 1 2 3 4 5 6; do
             sleep 15
-            if npm view "aios-core@${{ needs.build.outputs.version }}" version > /dev/null 2>&1; then
-              echo "✅ Verified: aios-core@${{ needs.build.outputs.version }} is available on NPM"
+            if npm view "aiox-core@${{ needs.build.outputs.version }}" version > /dev/null 2>&1; then
+              echo "✅ Verified: aiox-core@${{ needs.build.outputs.version }} is available on NPM"
               exit 0
             fi
             echo "⏳ Waiting for npm registry propagation... (attempt $i/6)"
           done
 
-          echo "❌ Verification failed: aios-core@${{ needs.build.outputs.version }} not found after 90s"
+          echo "❌ Verification failed: aiox-core@${{ needs.build.outputs.version }} not found after 90s"
           exit 1
 
   notify:
@@ -209,11 +209,11 @@ jobs:
       - name: Notify completion
         run: |
           if [ "${{ needs.publish.result }}" = "success" ]; then
-            echo "🎉 Successfully published aios-core to NPM:"
+            echo "🎉 Successfully published aiox-core to NPM:"
             echo "   Version: ${{ needs.build.outputs.version }}"
-            echo "   Package: aios-core"
+            echo "   Package: aiox-core"
             echo "   Registry: ${{ env.NPM_REGISTRY }}"
-            echo "   URL: https://www.npmjs.com/package/aios-core"
+            echo "   URL: https://www.npmjs.com/package/aiox-core"
           else
             echo "❌ Publishing failed"
             exit 1
@@ -230,22 +230,22 @@ jobs:
       - name: Generate release notes
         run: |
           cat > release-notes.md << 'EOF'
-          # AIOS-Core v${{ needs.build.outputs.version }}
+          # AIOX-Core v${{ needs.build.outputs.version }}
 
           ## 📦 NPM Package
 
           | Package | NPM Link | Description |
           |---------|----------|-------------|
-          | aios-core | [npmjs.com](https://www.npmjs.com/package/aios-core) | AI-Orchestrated System for Full Stack Development |
+          | aiox-core | [npmjs.com](https://www.npmjs.com/package/aiox-core) | AI-Orchestrated System for Full Stack Development |
 
           ## 🚀 Installation
 
           ```bash
           # Global installation (recommended)
-          npm install -g aios-core
+          npm install -g aiox-core
 
           # Or as project dependency
-          npm install aios-core
+          npm install aiox-core
           ```
 
           ## 📋 What's New

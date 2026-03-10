@@ -1,4 +1,4 @@
-# CLAUDE.md - Synkra AIOS
+# CLAUDE.md - Synkra AIOX
 
 Este arquivo configura o comportamento do Claude Code ao trabalhar neste repositório.
 
@@ -6,9 +6,9 @@ Este arquivo configura o comportamento do Claude Code ao trabalhar neste reposit
 
 ## Constitution
 
-O AIOS possui uma **Constitution formal** com princípios inegociáveis e gates automáticos.
+O AIOX possui uma **Constitution formal** com princípios inegociáveis e gates automáticos.
 
-**Documento completo:** `.aios-core/constitution.md`
+**Documento completo:** `.aiox-core/constitution.md`
 
 **Princípios fundamentais:**
 
@@ -27,7 +27,7 @@ O AIOS possui uma **Constitution formal** com princípios inegociáveis e gates 
 
 ## Premissa Arquitetural: CLI First
 
-O Synkra AIOS segue uma hierarquia clara de prioridades que deve guiar **TODAS** as decisões:
+O Synkra AIOX segue uma hierarquia clara de prioridades que deve guiar **TODAS** as decisões:
 
 ```
 CLI First → Observability Second → UI Third
@@ -54,14 +54,14 @@ CLI First → Observability Second → UI Third
 ## Estrutura do Projeto
 
 ```
-aios-core/
-├── .aios-core/              # Core do framework
+aiox-core/
+├── .aiox-core/              # Core do framework
 │   ├── core/                # Módulos principais (orchestration, memory, etc.)
 │   ├── development/         # Agents, tasks, templates, checklists
 │   └── scripts/             # Utilitários e scripts
 ├── apps/
 │   └── dashboard/           # Dashboard Next.js (Observability + UI)
-├── bin/                     # CLI executables (aios-init.js, aios.js)
+├── bin/                     # CLI executables (aiox-init.js, aiox.js)
 ├── src/                     # Source code
 ├── docs/                    # Documentação
 │   └── stories/             # Development stories (active/, completed/)
@@ -75,7 +75,7 @@ aios-core/
 ## Sistema de Agentes
 
 ### Ativação de Agentes
-Use `@agent-name` ou `/AIOS:agents:agent-name`:
+Use `@agent-name` ou `/AIOX:agents:agent-name`:
 
 | Agente | Persona | Escopo Principal |
 |--------|---------|------------------|
@@ -101,7 +101,7 @@ Use prefixo `*` para comandos:
 
 | Agente | Diretórios Principais |
 |--------|----------------------|
-| `@dev` | `src/`, `packages/`, `.aios-core/core/` |
+| `@dev` | `src/`, `packages/`, `.aiox-core/core/` |
 | `@architect` | `docs/architecture/`, system design |
 | `@data-engineer` | `packages/db/`, migrations, schema |
 | `@qa` | `tests/`, `*.test.js`, quality gates |
@@ -258,11 +258,11 @@ npm run typecheck           # Verificar tipos
 npm run build               # Build produção
 ```
 
-### AIOS
+### AIOX
 ```bash
-npx aios-core install       # Instalar AIOS
-npx aios-core doctor        # Diagnóstico do sistema
-npx aios-core info          # Informações do sistema
+npx aiox-core install       # Instalar AIOX
+npx aiox-core doctor        # Diagnóstico do sistema
+npx aiox-core info          # Informações do sistema
 ```
 
 ### Dashboard (apps/dashboard/)
@@ -290,15 +290,15 @@ Ver `.claude/rules/mcp-usage.md` para regras detalhadas.
 
 ### Habilitar Debug
 ```bash
-export AIOS_DEBUG=true
+export AIOX_DEBUG=true
 ```
 
 ### Logs
 ```bash
-tail -f .aios/logs/agent.log
+tail -f .aiox/logs/agent.log
 ```
 
 ---
 
-*Synkra AIOS Claude Code Configuration v3.0*
+*Synkra AIOX Claude Code Configuration v3.0*
 *CLI First | Observability Second | UI Third*

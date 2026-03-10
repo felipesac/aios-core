@@ -183,7 +183,7 @@ jobs:
           AUTHOR: ${{ github.actor }}
         run: |
           node -e "
-            const { recordPRReviewMetrics } = require('./.aios-core/quality/metrics-hook');
+            const { recordPRReviewMetrics } = require('./.aiox-core/quality/metrics-hook');
             (async () => {
               const passed = process.env.COVERAGE_RESULT === 'success';
               await recordPRReviewMetrics({

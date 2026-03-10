@@ -40,7 +40,7 @@ What problem does this squad solve? What domain or use case does it address?
 
 ### 🔗 Integration Points
 How does this squad integrate with:
-- Core AIOS framework (aios-core)?
+- Core AIOS framework (aiox-core)?
 - Other squads (ETL, Creator, MMOS)?
 - External services/APIs?
 
@@ -61,7 +61,7 @@ aios squad activate my-domain
 ```
 
 ### 📦 Dependencies
-- **Core Framework:** Required aios-core version?
+- **Core Framework:** Required aiox-core version?
 - **Other Squads:** Any dependencies on other AIOS Squads?
 - **External Services:** Any API keys or external services needed?
 

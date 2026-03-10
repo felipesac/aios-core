@@ -1,14 +1,14 @@
-# AIOS Monitor Server
+# AIOX Monitor Server
 
-Real-time event server for monitoring Claude Code activity in AIOS.
+Real-time event server for monitoring Claude Code activity in AIOX.
 
 ## Overview
 
-The Monitor Server captures events from Claude Code hooks and broadcasts them via WebSocket to the AIOS Dashboard for real-time visualization.
+The Monitor Server captures events from Claude Code hooks and broadcasts them via WebSocket to the AIOX Dashboard for real-time visualization.
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Claude Code   │────▶│  Monitor Server │────▶│  AIOS Dashboard │
+│   Claude Code   │────▶│  Monitor Server │────▶│  AIOX Dashboard │
 │   (CLI + Hooks) │     │  (Bun + SQLite) │     │  (Next.js + WS) │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
        stdin              HTTP POST              WebSocket
@@ -73,14 +73,14 @@ Environment variables:
 | Variable       | Default                     | Description          |
 | -------------- | --------------------------- | -------------------- |
 | `MONITOR_PORT` | `4001`                      | Server port          |
-| `MONITOR_DB`   | `~/.aios/monitor/events.db` | SQLite database path |
+| `MONITOR_DB`   | `~/.aiox/monitor/events.db` | SQLite database path |
 
 Hook environment variables:
 
 | Variable                  | Default                 | Description                     |
 | ------------------------- | ----------------------- | ------------------------------- |
-| `AIOS_MONITOR_URL`        | `http://localhost:4001` | Monitor server URL              |
-| `AIOS_MONITOR_TIMEOUT_MS` | `500`                   | HTTP timeout for sending events |
+| `AIOX_MONITOR_URL`        | `http://localhost:4001` | Monitor server URL              |
+| `AIOX_MONITOR_TIMEOUT_MS` | `500`                   | HTTP timeout for sending events |
 
 ## Architecture
 
@@ -93,7 +93,7 @@ apps/monitor-server/
 ├── package.json
 └── README.md
 
-.aios-core/monitor/hooks/
+.aiox-core/monitor/hooks/
 ├── lib/
 │   ├── send_event.py  # HTTP client
 │   └── enrich.py      # Context enrichment
@@ -121,15 +121,15 @@ interface Event {
   tool_result?: string;
   is_error?: boolean;
   duration_ms?: number;
-  aios_agent?: string; // @dev, @architect, etc.
-  aios_story_id?: string;
-  aios_task_id?: string;
+  aiox_agent?: string; // @dev, @architect, etc.
+  aiox_story_id?: string;
+  aiox_task_id?: string;
 }
 ```
 
 ## Dashboard Integration
 
-The AIOS Dashboard connects via WebSocket to receive real-time events:
+The AIOX Dashboard connects via WebSocket to receive real-time events:
 
 ```typescript
 // apps/dashboard/src/hooks/use-monitor-events.ts

@@ -38,13 +38,13 @@ This directory contains comprehensive installation and setup documentation for S
 ### New Installation
 
 ```bash
-npx @synkra/aios-core install
+npx @synkra/aiox-core install
 ```
 
 ### Upgrading
 
 ```bash
-npx @synkra/aios-core install --force-upgrade
+npx @synkra/aiox-core install --force-upgrade
 ```
 
 ### Having Issues?

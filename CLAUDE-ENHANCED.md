@@ -1,6 +1,6 @@
-# CLAUDE.md - AIOS Core (Enhanced Reference)
+# CLAUDE.md - AIOX Core (Enhanced Reference)
 
-Este arquivo enhance o CLAUDE.md oficial do aios-core com referências práticas.
+Este arquivo enhance o CLAUDE.md oficial do aiox-core com referências práticas.
 
 **Nota:** Leia também `.claude/CLAUDE.md` (oficial) e `.claude/rules/mcp-usage.md` (MCP governance)
 
@@ -10,14 +10,14 @@ Este arquivo enhance o CLAUDE.md oficial do aios-core com referências práticas
 
 ### Estrutura Projeto
 ```
-aios-core/
-├── .aios-core/              # Core framework
+aiox-core/
+├── .aiox-core/              # Core framework
 │   ├── constitution.md      # Princípios inegociáveis ⭐ READ THIS
 │   ├── core/                # Modules
 │   ├── development/         # Agents, tasks, templates
 │   └── scripts/             # Tools
 ├── apps/dashboard/          # Next.js (observability)
-├── bin/                     # CLI (aios, aios-core, aios-minimal)
+├── bin/                     # CLI (aiox, aiox-core, aiox-minimal)
 ├── src/                     # Framework source
 ├── packages/                # Shared packages
 ├── squads/                  # Expansion packs
@@ -34,7 +34,7 @@ aios-core/
 
 ## Constitution (Critical)
 
-**Arquivo:** `.aios-core/constitution.md`
+**Arquivo:** `.aiox-core/constitution.md`
 
 Princípios inegociáveis com gates automáticos:
 
@@ -61,7 +61,7 @@ CLI First → Observability Second → UI Third
 - Agentic orchestration
 - Todas decisões e automação
 - Source of truth
-- Exemplo: `aios-core init`, `aios-core validate:agents`
+- Exemplo: `aiox-core init`, `aiox-core validate:agents`
 
 ### 2. Observability (Secundária)
 - Monitor CLI in real-time
@@ -81,7 +81,7 @@ CLI First → Observability Second → UI Third
 ### Ativação
 ```bash
 @dev              # Ativar agente
-/AIOS:agents:dev  # Ou assim
+/AIOX:agents:dev  # Ou assim
 *help             # Ver comandos
 ```
 
@@ -515,7 +515,7 @@ npm run build
 ### Agentes não validam
 ```bash
 npm run validate:agents       # Ver erros
-# Corrigir `.aios-core/development/agents/*.md`
+# Corrigir `.aiox-core/development/agents/*.md`
 ```
 
 ### Testes falhando
@@ -534,7 +534,7 @@ npm run sync:ide --force
 
 ## Referências Importantes
 
-1. **Constitution**: `.aios-core/constitution.md` ⭐ MANDATORY READ
+1. **Constitution**: `.aiox-core/constitution.md` ⭐ MANDATORY READ
 2. **User Guide**: `docs/guides/user-guide.md` ⭐ WORKFLOW COMPLETE
 3. **Official CLAUDE.md**: `.claude/CLAUDE.md`
 4. **MCP Rules**: `.claude/rules/mcp-usage.md`
@@ -558,5 +558,5 @@ npm run sync:ide --force
 
 ---
 
-*AIOS Core v3.11.3 - Enhanced Reference Guide*
+*AIOX Core v3.11.3 - Enhanced Reference Guide*
 *CLI First | Agent-Driven | Story Development*

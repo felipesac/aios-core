@@ -26,7 +26,7 @@ Closes #(issue number)
 - [ ] 🧪 Test update
 
 ## 🎯 Scope
-- [ ] Core framework (`aios-core/`)
+- [ ] Core framework (`aiox-core/`)
 - [ ] Expansion pack (`expansion-packs/`)
 - [ ] Tools (`tools/`)
 - [ ] Documentation (`docs/`)

@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * Root directory of the aios-core project.
+ * Root directory of the aiox-core project.
  * Resolves from bin/utils/ up two levels to project root.
  */
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');

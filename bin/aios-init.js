@@ -13,7 +13,7 @@
  * is not available. All new development should use the new wizard.
  *
  * Migration path:
- * - Use `npx aios-core` which routes through bin/aios.js to the new wizard
+ * - Use `npx aiox-core` which routes through bin/aios.js to the new wizard
  * - Do NOT call this file directly
  *
  * Supported IDEs (8 total):
@@ -47,7 +47,7 @@ const VERSION = chalk.yellow(`Installer v${packageJsonVersion}`);
  * Smart path resolution for AIOS Core modules
  */
 function resolveAiosCoreModule(modulePath) {
-  const aiosCoreModule = path.join(__dirname, '..', '.aios-core', modulePath);
+  const aiosCoreModule = path.join(__dirname, '..', '.aiox-core', modulePath);
 
   const moduleExists =
     fs.existsSync(aiosCoreModule + '.js') ||
@@ -58,7 +58,7 @@ function resolveAiosCoreModule(modulePath) {
     throw new Error(
       `Cannot find AIOS Core module: ${modulePath}\n` +
         `Searched: ${aiosCoreModule}\n` +
-        'Please ensure @synkra/aios-core is installed correctly.'
+        'Please ensure @synkra/aiox-core is installed correctly.'
     );
   }
 
@@ -166,14 +166,14 @@ async function main() {
   console.log('');
 
   // Check for existing installation (Story 6.18 - Brownfield Upgrade)
-  const installedManifestPath = path.join(projectRoot, '.aios-core', '.installed-manifest.yaml');
+  const installedManifestPath = path.join(projectRoot, '.aiox-core', '.installed-manifest.yaml');
   const hasExistingInstall = fs.existsSync(installedManifestPath);
 
   if (hasExistingInstall && brownfieldUpgrader) {
     console.log(chalk.yellow('🔄 Existing AIOS installation detected!'));
     console.log('');
 
-    const sourceDir = path.join(context.frameworkLocation, '.aios-core');
+    const sourceDir = path.join(context.frameworkLocation, '.aiox-core');
     const upgradeCheck = brownfieldUpgrader.checkUpgradeAvailable(sourceDir, projectRoot);
 
     if (upgradeCheck.available) {
@@ -248,7 +248,7 @@ async function main() {
           brownfieldUpgrader.updateInstalledManifest(
             projectRoot,
             sourceManifest,
-            `aios-core@${packageJson.version}`
+            `aiox-core@${packageJson.version}`
           );
 
           console.log(chalk.green('✓') + ` Upgraded ${result.filesInstalled.length} files`);
@@ -464,8 +464,8 @@ async function main() {
   console.log('');
   console.log(chalk.blue('📦 Installing AIOS Core files...'));
 
-  const sourceCoreDir = path.join(context.frameworkLocation, '.aios-core');
-  const targetCoreDir = path.join(context.projectRoot, '.aios-core');
+  const sourceCoreDir = path.join(context.frameworkLocation, '.aiox-core');
+  const targetCoreDir = path.join(context.projectRoot, '.aiox-core');
 
   if (fs.existsSync(sourceCoreDir)) {
     await fse.copy(sourceCoreDir, targetCoreDir);
@@ -484,7 +484,7 @@ async function main() {
           brownfieldUpgrader.updateInstalledManifest(
             context.projectRoot,
             sourceManifest,
-            `aios-core@${packageJson.version}`
+            `aiox-core@${packageJson.version}`
           );
           console.log(
             chalk.green('✓') +
@@ -593,7 +593,7 @@ This directory contains the core AIOS-FullStack agents and tasks.
 - Tasks: Reference tasks in agent workflows
 
 ## Documentation
-See .aios-core/user-guide.md for complete documentation.
+See .aiox-core/user-guide.md for complete documentation.
 `
       );
     }
@@ -640,7 +640,7 @@ This directory contains the core AIOS-FullStack agent rules for Cursor.
 These rules are automatically loaded by Cursor to provide agent-specific context.
 
 ## Documentation
-See .aios-core/user-guide.md for complete documentation.
+See .aiox-core/user-guide.md for complete documentation.
 `
       );
     }
@@ -695,7 +695,7 @@ See .aios-core/user-guide.md for complete documentation.
             return {
               slug: `bmad-${agentName}`,
               name: `AIOS ${agentName.charAt(0).toUpperCase() + agentName.slice(1)}`,
-              roleDefinition: `AIOS-FullStack ${agentName} agent - see .aios-core/agents/${f}`,
+              roleDefinition: `AIOS-FullStack ${agentName} agent - see .aiox-core/agents/${f}`,
               groups: ['aios'],
               source: 'project',
             };
@@ -742,7 +742,7 @@ See .aios-core/user-guide.md for complete documentation.
     // Secondary: context-based framework location
     path.join(context.frameworkLocation, 'expansion-packs'),
     // Tertiary: installed in project's node_modules
-    path.join(context.projectRoot, 'node_modules', '@synkra/aios-core', 'expansion-packs'),
+    path.join(context.projectRoot, 'node_modules', '@synkra/aiox-core', 'expansion-packs'),
     path.join(context.projectRoot, 'node_modules', '@aios', 'fullstack', 'expansion-packs'),
   ];
 
@@ -951,7 +951,7 @@ See .aios-core/user-guide.md for complete documentation.
 
   console.log('');
   console.log(chalk.cyan('📁 Installed Structure:'));
-  console.log('  ' + chalk.dim('.aios-core/') + '           - Framework core files');
+  console.log('  ' + chalk.dim('.aiox-core/') + '           - Framework core files');
 
   if (ides.includes('claude')) {
     console.log('  ' + chalk.dim('.claude/'));
@@ -1046,7 +1046,7 @@ See .aios-core/user-guide.md for complete documentation.
   console.log('  ' + chalk.yellow('General:'));
   console.log('    • Run ' + chalk.yellow('aios validate') + ' to verify installation integrity');
   console.log('    • Run ' + chalk.yellow('aios validate --repair') + ' to fix any missing files');
-  console.log('    • Check .aios-core/user-guide.md for complete documentation');
+  console.log('    • Check .aiox-core/user-guide.md for complete documentation');
   console.log('    • Explore expansion-packs/ for additional capabilities');
   console.log('');
   console.log(chalk.gray('═'.repeat(80)));
@@ -1068,7 +1068,7 @@ function updateGitIgnore(mode, projectRoot) {
     const frameworkRules = [
       '',
       '# AIOS-FullStack Framework Files (auto-managed - do not edit)',
-      '.aios-core/',
+      '.aiox-core/',
       'node_modules/@aios/',
       'outputs/minds/',
       '.aios-installation-config.yaml',

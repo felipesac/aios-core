@@ -46,13 +46,13 @@ Este directorio contiene documentación completa de instalación y configuració
 ### Nueva Instalación
 
 ```bash
-npx @synkra/aios-core install
+npx @synkra/aiox-core install
 ```
 
 ### Actualización
 
 ```bash
-npx @synkra/aios-core install --force-upgrade
+npx @synkra/aiox-core install --force-upgrade
 ```
 
 ### ¿Tiene Problemas?

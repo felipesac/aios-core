@@ -15,7 +15,7 @@ body:
       label: Which repository does this idea relate to?
       description: Select the repository this idea is most relevant to
       options:
-        - aios-core (Core Framework)
+        - aiox-core (Core Framework)
         - aios-squads (AIOS Squads - ETL, Creator, MMOS)
         - mcp-ecosystem (MCP Tools & Docker MCP Toolkit)
         - Multiple / Cross-repo

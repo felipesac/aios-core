@@ -12,28 +12,28 @@
 core:
   - changed-files:
     - any-glob-to-any-file:
-      - '.aios-core/**/*'
-      - 'aios-core/**/*'
+      - '.aiox-core/**/*'
+      - 'aiox-core/**/*'
       - 'src/core/**/*'
 
 agents:
   - changed-files:
     - any-glob-to-any-file:
-      - '.aios-core/agents/**/*'
+      - '.aiox-core/agents/**/*'
       - '**/*.agent.md'
       - '.claude/commands/**/*'
 
 templates:
   - changed-files:
     - any-glob-to-any-file:
-      - '.aios-core/**/templates/**/*'
+      - '.aiox-core/**/templates/**/*'
       - '**/*-tmpl.yaml'
       - '**/*-tmpl.md'
 
 workflows:
   - changed-files:
     - any-glob-to-any-file:
-      - '.aios-core/workflows/**/*'
+      - '.aiox-core/workflows/**/*'
       - '**/*.workflow.yaml'
 
 # ============================================
@@ -66,7 +66,7 @@ mcp:
   - changed-files:
     - any-glob-to-any-file:
       - 'mcp-ecosystem/**/*'
-      - '.aios-core/tools/mcp/**/*'
+      - '.aiox-core/tools/mcp/**/*'
       - '**/*mcp*.yaml'
       - '**/*mcp*.json'
 

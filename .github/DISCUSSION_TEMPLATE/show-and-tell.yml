@@ -39,7 +39,7 @@ body:
       description: Which parts of AIOS does your project use?
       multiple: true
       options:
-        - aios-core (Core Framework)
+        - aiox-core (Core Framework)
         - aios-squads (AIOS Squads)
         - ETL Squad
         - Creator Squad

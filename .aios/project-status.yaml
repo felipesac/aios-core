@@ -1,17 +1,20 @@
 status:
   branch: main
-  modifiedFiles: []
-  modifiedFilesTotalCount: 0
+  modifiedFiles:
+    - .aios/project-status.yaml
+    - squads/squad-creator/data/squad-registry.yaml
+    - '"C\357\200\272Usersfcfelsmart-tracetmp-test/"'
+    - squads/finhealth-squad/dist/
+    - squads/jarvis-2/
+  modifiedFilesTotalCount: 5
   recentCommits:
     - >-
-      fix: resolve greeting timeout on Windows by increasing timeouts and cache
-      TTL
-    - >-
-      feat(squads): install squad-creator, content-distillery, design squads
-      with slash commands
+      feat(squads): install zona-genialidade squad with slash commands and full
+      assessment
+    - 'chore: remove smartTrace section from project-status.yaml'
   currentEpic: null
   currentStory: null
-  lastUpdate: '2026-02-23T19:30:00.000Z'
+  lastUpdate: '2026-03-10T19:51:35.694Z'
   isGitRepo: true
-timestamp: 1771886400000
+timestamp: 1773172295695
 ttl: 300

@@ -59,16 +59,16 @@ AIOS-FullStack v${packageJson.version}
 AI-Orchestrated System for Full Stack Development
 
 USAGE:
-  npx @synkra/aios-core@latest              # Run installation wizard
-  npx @synkra/aios-core@latest install      # Install in current project
-  npx @synkra/aios-core@latest init <name>  # Create new project
-  npx @synkra/aios-core@latest update       # Update to latest version
-  npx @synkra/aios-core@latest validate     # Validate installation integrity
-  npx @synkra/aios-core@latest info         # Show system info
-  npx @synkra/aios-core@latest doctor       # Run diagnostics
-  npx @synkra/aios-core@latest --version    # Show version
-  npx @synkra/aios-core@latest --version -d # Show detailed version info
-  npx @synkra/aios-core@latest --help       # Show this help
+  npx @synkra/aiox-core@latest              # Run installation wizard
+  npx @synkra/aiox-core@latest install      # Install in current project
+  npx @synkra/aiox-core@latest init <name>  # Create new project
+  npx @synkra/aiox-core@latest update       # Update to latest version
+  npx @synkra/aiox-core@latest validate     # Validate installation integrity
+  npx @synkra/aiox-core@latest info         # Show system info
+  npx @synkra/aiox-core@latest doctor       # Run diagnostics
+  npx @synkra/aiox-core@latest --version    # Show version
+  npx @synkra/aiox-core@latest --version -d # Show detailed version info
+  npx @synkra/aiox-core@latest --help       # Show this help
 
 UPDATE:
   aios update                    # Update to latest version
@@ -99,13 +99,13 @@ SERVICE DISCOVERY:
 
 EXAMPLES:
   # Install in current directory
-  npx @synkra/aios-core@latest
+  npx @synkra/aiox-core@latest
 
   # Install with minimal mode (only expansion-creator)
-  npx @synkra/aios-core-minimal@latest
+  npx @synkra/aiox-core-minimal@latest
 
   # Create new project
-  npx @synkra/aios-core@latest init my-project
+  npx @synkra/aiox-core@latest init my-project
 
   # Search for workers
   aios workers search "json csv"
@@ -126,10 +126,10 @@ async function showVersion() {
 
   // Detailed version output (Story 7.2: Version Tracking)
   console.log(`AIOS-FullStack v${packageJson.version}`);
-  console.log('Package: @synkra/aios-core');
+  console.log('Package: @synkra/aiox-core');
 
   // Check for local installation
-  const localVersionPath = path.join(process.cwd(), '.aios-core', 'version.json');
+  const localVersionPath = path.join(process.cwd(), '.aiox-core', 'version.json');
 
   if (fs.existsSync(localVersionPath)) {
     try {
@@ -162,7 +162,7 @@ async function showVersion() {
         console.log('\n⚠️  Version mismatch!');
         console.log(`  Local:  ${versionInfo.version}`);
         console.log(`  Latest: ${packageJson.version}`);
-        console.log('  Run \'npx aios-core update\' to update.');
+        console.log('  Run \'npx aiox-core update\' to update.');
       } else {
         console.log('\n✅ Up to date');
       }
@@ -171,7 +171,7 @@ async function showVersion() {
     }
   } else {
     console.log('\n📭 No local installation found');
-    console.log('  Run \'npx aios-core install\' to install AIOS in this project.');
+    console.log('  Run \'npx aiox-core install\' to install AIOS in this project.');
   }
 }
 
@@ -185,8 +185,8 @@ function showInfo() {
   console.log(`Working Directory: ${process.cwd()}`);
   console.log(`Install Location: ${path.join(__dirname, '..')}`);
 
-  // Check if .aios-core exists
-  const aiosCoreDir = path.join(__dirname, '..', '.aios-core');
+  // Check if .aiox-core exists
+  const aiosCoreDir = path.join(__dirname, '..', '.aiox-core');
   if (fs.existsSync(aiosCoreDir)) {
     console.log('\n✓ AIOS Core installed');
 
@@ -214,7 +214,7 @@ async function runValidate() {
 
   try {
     // Load the validate command module
-    const { createValidateCommand } = require('../.aios-core/cli/commands/validate/index.js');
+    const { createValidateCommand } = require('../.aiox-core/cli/commands/validate/index.js');
     const validateCmd = createValidateCommand();
 
     // Parse and execute (Note: don't include 'validate' as it's the command name, not an argument)
@@ -326,7 +326,7 @@ async function runDoctor() {
 
   if (showHelp) {
     console.log(`
-Usage: aios-core doctor [options]
+Usage: aiox-core doctor [options]
 
 Run system diagnostics and optionally fix issues.
 
@@ -336,9 +336,9 @@ Options:
   -h, --help     Show this help message
 
 Examples:
-  $ npx aios-core doctor              # Run diagnostics
-  $ npx aios-core doctor --fix        # Fix detected issues
-  $ npx aios-core doctor --dry-run    # Preview fixes
+  $ npx aiox-core doctor              # Run diagnostics
+  $ npx aiox-core doctor --fix        # Fix detected issues
+  $ npx aiox-core doctor --dry-run    # Preview fixes
 `);
     return;
   }
@@ -409,7 +409,7 @@ Examples:
   }
 
   // Check 4: AIOS installation
-  const aiosCoreDir = path.join(__dirname, '..', '.aios-core');
+  const aiosCoreDir = path.join(__dirname, '..', '.aiox-core');
   if (fs.existsSync(aiosCoreDir)) {
     console.log(`✔ Synkra AIOS: v${packageJson.version}`);
 
@@ -445,7 +445,7 @@ Examples:
       fixAction: async () => {
         console.log('  🔧 Installing AIOS...');
         try {
-          execSync('npx aios-core install --force --quiet', { stdio: 'inherit', timeout: 60000 });
+          execSync('npx aiox-core install --force --quiet', { stdio: 'inherit', timeout: 60000 });
           console.log('  ✓ Installation complete');
         } catch (installError) {
           console.error(`  ✗ Installation failed: ${installError.message}`);
@@ -455,7 +455,7 @@ Examples:
     });
     hasErrors = true;
     console.log('✗ AIOS Core not installed');
-    console.log('  Run: npx @synkra/aios-core@latest');
+    console.log('  Run: npx @synkra/aiox-core@latest');
   }
 
   // Apply fixes if --fix
@@ -559,7 +559,7 @@ function cleanGitignore(gitignorePath) {
 // Helper: Show uninstall help
 function showUninstallHelp() {
   console.log(`
-Usage: npx aios-core uninstall [options]
+Usage: npx aiox-core uninstall [options]
 
 Remove AIOS from the current project.
 
@@ -570,7 +570,7 @@ Options:
   -h, --help   Show this help message
 
 What gets removed:
-  - .aios-core/     Framework core files
+  - .aiox-core/     Framework core files
   - docs/stories/   Story files (if created by AIOS)
   - squads/         Squad expansion packs
   - .gitignore      AIOS-added entries only
@@ -584,23 +584,23 @@ Exit Codes:
 
 Examples:
   # Interactive uninstall (with confirmation)
-  npx aios-core uninstall
+  npx aiox-core uninstall
 
   # Force uninstall without prompts
-  npx aios-core uninstall --force
+  npx aiox-core uninstall --force
 
   # See what would be removed
-  npx aios-core uninstall --dry-run
+  npx aiox-core uninstall --dry-run
 
   # Uninstall but keep project data
-  npx aios-core uninstall --keep-data
+  npx aiox-core uninstall --keep-data
 `);
 }
 
 // Helper: Show doctor help
 function showDoctorHelp() {
   console.log(`
-Usage: npx aios-core doctor [options]
+Usage: npx aiox-core doctor [options]
 
 Run health checks on your AIOS installation.
 
@@ -611,7 +611,7 @@ Options:
   -h, --help   Show this help message
 
 Checks performed:
-  • Required directories exist (.aios-core/, .aios/)
+  • Required directories exist (.aiox-core/, .aios/)
   • Configuration files are valid JSON/YAML
   • Agent definitions are complete
   • Task files have required fields
@@ -623,13 +623,13 @@ Exit Codes:
 
 Examples:
   # Run health check
-  npx aios-core doctor
+  npx aiox-core doctor
 
   # Auto-fix detected issues
-  npx aios-core doctor --fix
+  npx aiox-core doctor --fix
 
   # Preview what would be fixed
-  npx aios-core doctor --fix --dry-run
+  npx aiox-core doctor --fix --dry-run
 `);
 }
 
@@ -640,7 +640,7 @@ async function runUninstall(options = {}) {
 
   // Items to remove
   const itemsToRemove = [
-    { path: '.aios-core', description: 'Framework core' },
+    { path: '.aiox-core', description: 'Framework core' },
     { path: 'squads', description: 'Squad expansion packs' },
   ];
 
@@ -768,14 +768,14 @@ async function runUninstall(options = {}) {
     if (keepData) {
       console.log('   Your project data in .aios/ has been preserved.');
     }
-    console.log('\n   To reinstall: npx aios-core install');
+    console.log('\n   To reinstall: npx aiox-core install');
   }
 }
 
 // Helper: Show install help
 function showInstallHelp() {
   console.log(`
-Usage: npx aios-core install [options]
+Usage: npx aiox-core install [options]
 
 Install AIOS in the current directory.
 
@@ -800,19 +800,19 @@ Exit Codes:
 
 Examples:
   # Interactive installation
-  npx aios-core install
+  npx aiox-core install
 
   # Force reinstall without prompts
-  npx aios-core install --force
+  npx aiox-core install --force
 
   # Brownfield: merge configs automatically
-  npx aios-core install --merge
+  npx aiox-core install --merge
 
   # Silent install for CI/CD
-  npx aios-core install --quiet --force
+  npx aiox-core install --quiet --force
 
   # Preview what would be installed
-  npx aios-core install --dry-run
+  npx aiox-core install --dry-run
 `);
 }
 
@@ -820,7 +820,7 @@ Examples:
 // Helper: Show init help
 function showInitHelp() {
   console.log(`
-Usage: npx aios-core init <project-name> [options]
+Usage: npx aiox-core init <project-name> [options]
 
 Create a new AIOS project with the specified name.
 
@@ -837,10 +837,10 @@ Available Templates:
   enterprise  Everything + dashboards + team integrations
 
 Examples:
-  npx aios-core init my-project
-  npx aios-core init my-project --template minimal
-  npx aios-core init my-project --force --skip-install
-  npx aios-core init . --template enterprise
+  npx aiox-core init my-project
+  npx aiox-core init my-project --template minimal
+  npx aiox-core init my-project --force --skip-install
+  npx aiox-core init . --template enterprise
 `);
 }
 
@@ -889,7 +889,7 @@ async function initProject() {
 
   if (!projectName) {
     console.error('❌ Project name is required');
-    console.log('\nUsage: npx aios-core init <project-name> [options]');
+    console.log('\nUsage: npx aiox-core init <project-name> [options]');
     console.log('Run with --help for more information.');
     process.exit(1);
   }
@@ -945,7 +945,7 @@ async function main() {
     case 'workers':
       // Service Discovery CLI - Story 2.7
       try {
-        const { run } = require('../.aios-core/cli/index.js');
+        const { run } = require('../.aiox-core/cli/index.js');
         await run(process.argv);
       } catch (error) {
         console.error(`❌ Workers command error: ${error.message}`);
@@ -956,7 +956,7 @@ async function main() {
     case 'config':
       // Layered Configuration CLI - Story PRO-4
       try {
-        const { run } = require('../.aios-core/cli/index.js');
+        const { run } = require('../.aiox-core/cli/index.js');
         await run(process.argv);
       } catch (error) {
         console.error(`❌ Config command error: ${error.message}`);

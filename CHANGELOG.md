@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Synkra AIOS will be documented in this file.
+All notable changes to Synkra AIOX will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -124,7 +124,7 @@ This release marks the **Open-Source Community Readiness** milestone, preparing 
   - Resolved path resolution issues across platforms
 
 - **Scripts Path Consolidation** (6.16)
-  - Standardized script locations under `.aios-core/scripts/`
+  - Standardized script locations under `.aiox-core/scripts/`
 
 - **Semantic Release Automation** (6.17)
   - Automated versioning on merge to main
@@ -148,7 +148,7 @@ This release marks the **Open-Source Community Readiness** milestone, preparing 
 
 - **Agent Delegation Guidance** - All agents now include "NOT for" sections in `whenToUse`
 - **PR Title Format** - DevOps `*create-pr` now generates Conventional Commits format titles
-- **Scripts Location** - Consolidated under `.aios-core/scripts/` for consistency
+- **Scripts Location** - Consolidated under `.aiox-core/scripts/` for consistency
 - **MCP Configuration** - Unified rules in `.claude/rules/mcp-usage.md`
 
 ### Fixed
@@ -208,7 +208,7 @@ This release marks the **Open-Source Community Readiness** milestone, preparing 
 
 ### Technical
 - Story: 4.6 - Move Hybrid-Ops to Separate Repository
-- Breaking Change: hybrid-ops no longer bundled with @synkra/aios-core
+- Breaking Change: hybrid-ops no longer bundled with @synkra/aiox-core
 - Migration: Users can install from external repo to `expansion-packs/hybrid-ops/`
 - Story: 4.7 - Removed `expansion-packs/hybrid-ops.legacy/` directory (legacy backup no longer needed)
 - Story: 4.5.3 - Expansion-Packs Naming Convention Migration
@@ -230,11 +230,11 @@ This release marks the **Open-Source Community Readiness** milestone, preparing 
 ### Fixed
 - NPX installation from temporary directory no longer attempts IDE detection
 - Clear error message guides users to correct installation directory
-- Prevents confusion when running `npx @synkra/aios-core install` from home directory
+- Prevents confusion when running `npx @synkra/aiox-core install` from home directory
 
 ### Changed
 - Early exit with `process.exit(1)` when NPX temporary context detected
-- Help message provides actionable solution: `cd /path/to/your/project && npx @synkra/aios-core install`
+- Help message provides actionable solution: `cd /path/to/your/project && npx @synkra/aiox-core install`
 
 ### Technical
 - Story: 2.3 - NPX Installation Context Detection & Help Text (macOS)

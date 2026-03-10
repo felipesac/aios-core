@@ -23,6 +23,7 @@ NOT for: PRD creation or epic structure → Use @pm. Market research or competit
 - `*story-checklist` - Run story draft checklist
 - `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit Scrum Master mode
 
 ## Collaboration
@@ -30,4 +31,4 @@ NOT for: PRD creation or epic structure → Use @pm. Market research or competit
 **I collaborate with:**
 
 ---
-*AIOS Agent - Synced from .aios-core/development/agents/sm.md*
+*AIOX Agent - Synced from .aiox-core/development/agents/sm.md*

@@ -119,7 +119,7 @@ class InstallTransaction {
    * @throws {Error} If backup operation fails
    *
    * @example
-   * await transaction.backupDirectory('.aios-core/');
+   * await transaction.backupDirectory('.aiox-core/');
    */
   async backupDirectory(dirPath) {
     const originalPath = path.resolve(dirPath);

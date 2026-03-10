@@ -5,7 +5,7 @@
 ### Task Information
 
 - **Task Name:** <!-- e.g., db-validate-kiss -->
-- **Task File:** <!-- e.g., .aios-core/development/tasks/db-validate-kiss.md -->
+- **Task File:** <!-- e.g., .aiox-core/development/tasks/db-validate-kiss.md -->
 - **Related Agent(s):** <!-- e.g., @data-engineer -->
 
 ### Changes Made

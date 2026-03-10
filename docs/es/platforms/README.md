@@ -235,8 +235,8 @@ special_features:
 ```mermaid
 graph TD
     subgraph "AIOS Core"
-        Agents["Definiciones de Agentes<br/>.aios-core/development/agents"]
-        Templates["Templates de IDE<br/>.aios-core/product/templates"]
+        Agents["Definiciones de Agentes<br/>.aiox-core/development/agents"]
+        Templates["Templates de IDE<br/>.aiox-core/product/templates"]
         Sync["Sistema de Sync<br/>scripts ide-sync"]
     end
 

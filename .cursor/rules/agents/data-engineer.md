@@ -8,7 +8,7 @@
 
 - `*help` - Show all available commands with descriptions
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit data-engineer mode
 - `*doc-out` - Output complete document
 - `*execute-checklist {checklist}` - Run DBA checklist
@@ -40,4 +40,4 @@
 **I collaborate with:**
 
 ---
-*AIOS Agent - Synced from .aios-core/development/agents/data-engineer.md*
+*AIOX Agent - Synced from .aiox-core/development/agents/data-engineer.md*

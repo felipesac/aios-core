@@ -25,8 +25,8 @@ The AIOS installer fails immediately on Linux systems with a module not found er
 
 ```
 Error: Cannot find AIOS Core module: utils/repository-detector
-Searched: ${PROJECT_ROOT}/.aios-core/utils/repository-detector
-Please ensure @synkra/aios-core is installed correctly.
+Searched: ${PROJECT_ROOT}/.aiox-core/utils/repository-detector
+Please ensure @synkra/aiox-core is installed correctly.
     at loadAIOSCore (${PROJECT_ROOT}/bin/aios-init.js:43:11)
 ```
 
@@ -116,7 +116,7 @@ Please ensure @synkra/aios-core is installed correctly.
    - Cross-platform path separator issues (Windows `\` vs Linux `/`)
 
 2. **Missing File/Directory**
-   - `.aios-core/utils/repository-detector.js` may not exist in repository
+   - `.aiox-core/utils/repository-detector.js` may not exist in repository
    - Module may have been renamed or moved in recent commits
    - Build/install process may not create required directory structure
 
@@ -127,7 +127,7 @@ Please ensure @synkra/aios-core is installed correctly.
 
 ### Investigation Needed
 
-- [ ] Verify `.aios-core/utils/repository-detector.js` exists in repo
+- [ ] Verify `.aiox-core/utils/repository-detector.js` exists in repo
 - [ ] Check `bin/aios-init.js:43` for path construction logic
 - [ ] Review recent commits for module renames/moves
 - [ ] Test module loading on Windows vs Linux
@@ -142,18 +142,18 @@ Please ensure @synkra/aios-core is installed correctly.
 1. **Verify module exists:**
 
    ```bash
-   ls -la .aios-core/utils/repository-detector.js
+   ls -la .aiox-core/utils/repository-detector.js
    ```
 
 2. **Fix path resolution in `bin/aios-init.js:43`:**
 
    ```javascript
    // Before (suspected):
-   const detector = require('./.aios-core/utils/repository-detector');
+   const detector = require('./.aiox-core/utils/repository-detector');
 
    // After (cross-platform):
    const path = require('path');
-   const detectorPath = path.resolve(__dirname, '..', '.aios-core', 'utils', 'repository-detector');
+   const detectorPath = path.resolve(__dirname, '..', '.aiox-core', 'utils', 'repository-detector');
    const detector = require(detectorPath);
    ```
 
@@ -227,7 +227,7 @@ Please ensure @synkra/aios-core is installed correctly.
 ### Code References
 
 - **Installer:** `bin/aios-init.js:43` (error location)
-- **Missing Module:** `.aios-core/utils/repository-detector` (expected location)
+- **Missing Module:** `.aiox-core/utils/repository-detector` (expected location)
 
 ### Related Stories
 

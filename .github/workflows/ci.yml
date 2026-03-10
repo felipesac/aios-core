@@ -54,7 +54,7 @@ jobs:
           filters: |
             code:
               - 'src/**'
-              - '.aios-core/**'
+              - '.aiox-core/**'
               - 'bin/**'
               - 'packages/**'
               - 'scripts/**'
@@ -221,7 +221,7 @@ jobs:
         run: npm ci
 
       - name: Validate story checkboxes
-        run: node .aios-core/utils/aios-validator.js stories
+        run: node .aiox-core/utils/aios-validator.js stories
 
   manifest-validation:
     name: Install Manifest Validation
@@ -397,7 +397,7 @@ jobs:
           time npm run typecheck || true
 
           echo -e "\nStory validation time:"
-          time node .aios-core/utils/aios-validator.js stories || true
+          time node .aiox-core/utils/aios-validator.js stories || true
         continue-on-error: true
 
   # Cross-platform testing - ONLY on main branch push
@@ -438,8 +438,8 @@ jobs:
 
       - name: Test CLI basic commands
         run: |
-          npx aios-core --version || echo "CLI version check skipped"
-          npx aios-core --help || echo "CLI help check skipped"
+          npx aiox-core --version || echo "CLI version check skipped"
+          npx aiox-core --help || echo "CLI help check skipped"
         continue-on-error: true
 
   # Installer smoke test - ensures correct wizard is being used (Story 6.1.4)
@@ -515,7 +515,7 @@ jobs:
           echo "Checking package.json includes all required paths..."
 
           # Check for required paths in files field
-          REQUIRED_PATHS=("bin/" "packages/" ".aios-core/")
+          REQUIRED_PATHS=("bin/" "packages/" ".aiox-core/")
 
           for path in "${REQUIRED_PATHS[@]}"; do
             if grep -q "\"$path\"" package.json; then

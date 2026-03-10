@@ -17,8 +17,10 @@ NOT for: Market research or competitive analysis → Use @analyst. Technical arc
 - `*create-epic` - Create epic for brownfield
 - `*create-story` - Create user story
 - `*research` - Generate deep research prompt
+- `*execute-epic` - Execute epic plan with wave-based parallel development
 - `*gather-requirements` - Elicit and document requirements from stakeholders
 - `*write-spec` - Generate formal specification document from requirements
+- `*toggle-profile` - Toggle user profile between bob (assisted) and advanced modes
 - `*guide` - Show comprehensive usage guide for this agent
 
 ## All Commands
@@ -31,11 +33,13 @@ NOT for: Market research or competitive analysis → Use @analyst. Technical arc
 - `*doc-out` - Output complete document
 - `*shard-prd` - Break PRD into smaller parts
 - `*research` - Generate deep research prompt
+- `*execute-epic` - Execute epic plan with wave-based parallel development
 - `*gather-requirements` - Elicit and document requirements from stakeholders
 - `*write-spec` - Generate formal specification document from requirements
+- `*toggle-profile` - Toggle user profile between bob (assisted) and advanced modes
 - `*session-info` - Show current session details (agent history, commands)
 - `*guide` - Show comprehensive usage guide for this agent
-- `*yolo` - Toggle confirmation skipping
+- `*yolo` - Toggle permission mode (cycle: ask > auto > explore)
 - `*exit` - Exit PM mode
 
 ## Collaboration
@@ -43,4 +47,4 @@ NOT for: Market research or competitive analysis → Use @analyst. Technical arc
 **I collaborate with:**
 
 ---
-*AIOS Agent - Synced from .aios-core/development/agents/pm.md*
+*AIOX Agent - Synced from .aiox-core/development/agents/pm.md*

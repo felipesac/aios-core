@@ -27,7 +27,7 @@ reviews:
 
   # Path-specific review instructions (array format per schema)
   path_instructions:
-    - path: ".aios-core/development/agents/**"
+    - path: ".aiox-core/development/agents/**"
       instructions: |
         Verify agent follows AIOS agent YAML structure (persona_profile, commands, dependencies).
         Check that persona_profile includes archetype, communication style, and greeting_levels.
@@ -35,20 +35,20 @@ reviews:
         Ensure agent has proper visibility metadata for commands.
         Check for security: no hardcoded credentials or sensitive data.
 
-    - path: ".aios-core/development/tasks/**"
+    - path: ".aiox-core/development/tasks/**"
       instructions: |
         Verify task follows AIOS task format with clear elicitation points.
         Check that deliverables are well-defined.
         Validate any referenced dependencies exist in the codebase.
         Ensure task has proper error handling guidance.
 
-    - path: ".aios-core/development/workflows/**"
+    - path: ".aiox-core/development/workflows/**"
       instructions: |
         Verify workflow YAML structure is valid.
         Check step ordering and dependencies make logical sense.
         Validate referenced agents and tasks exist.
 
-    - path: ".aios-core/product/templates/**"
+    - path: ".aiox-core/product/templates/**"
       instructions: |
         Ensure template follows AIOS template conventions.
         Check placeholder syntax is consistent.

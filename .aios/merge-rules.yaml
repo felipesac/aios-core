@@ -258,7 +258,7 @@ notifications:
 
 metadata:
   # Project name
-  project: "aios-core"
+  project: "aiox-core"
 
   # Rules version
   version: "1.0.0"

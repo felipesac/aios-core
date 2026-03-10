@@ -16,7 +16,7 @@ body:
     attributes:
       label: Which repository is affected?
       options:
-        - aios-core (Core Framework)
+        - aiox-core (Core Framework)
         - aios-squads (AIOS Squads)
         - mcp-ecosystem (Docker MCP Toolkit)
         - Multiple / Not sure

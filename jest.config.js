@@ -6,7 +6,7 @@ module.exports = {
   testMatch: [
     '**/tests/**/*.test.js',
     '**/tests/**/*.spec.js',
-    '**/.aios-core/**/__tests__/**/*.test.js',
+    '**/.aiox-core/**/__tests__/**/*.test.js',
   ],
 
   // Ignore patterns - exclude incompatible test frameworks
@@ -44,7 +44,7 @@ module.exports = {
     'tests/e2e/story-creation-clickup.test.js',
     'tests/installer/v21-structure.test.js',
     // Squad template tests use ESM imports - run separately with --experimental-vm-modules
-    '.aios-core/development/templates/squad-template/tests/',
+    '.aiox-core/development/templates/squad-template/tests/',
     // Manifest tests need manifest data alignment (OSR-10 tech debt)
     'tests/unit/manifest/manifest-generator.test.js',
     'tests/unit/manifest/manifest-validator.test.js',
@@ -55,7 +55,7 @@ module.exports = {
   // Coverage collection (Story TD-3: Updated paths)
   collectCoverageFrom: [
     'src/**/*.js',
-    '.aios-core/**/*.js',
+    '.aiox-core/**/*.js',
     'bin/**/*.js',
     'packages/**/*.js',
     'scripts/**/*.js',
@@ -66,22 +66,22 @@ module.exports = {
     '!**/*.test.js',
     '!**/*.spec.js',
     // Exclude templates and generated files
-    '!.aios-core/development/templates/**',
-    '!.aios-core/product/templates/**',
+    '!.aiox-core/development/templates/**',
+    '!.aiox-core/product/templates/**',
     '!**/dist/**',
     // Story TD-6: Exclude I/O-heavy health check plugins from core coverage
     // These are integration-test candidates (git, npm, network, disk, docker, etc.)
     // Core engine/healers/reporters remain in scope with 80%+ coverage
-    '!.aios-core/core/health-check/checks/**',
+    '!.aiox-core/core/health-check/checks/**',
     // Story TD-6: Exclude config/manifest modules - mostly I/O operations
     // These modules handle file system operations and JSON parsing
     // Better suited for integration tests
-    '!.aios-core/core/config/**',
-    '!.aios-core/core/manifest/**',
+    '!.aiox-core/core/config/**',
+    '!.aiox-core/core/manifest/**',
     // Story TD-6: Exclude registry (file I/O heavy) and utils (helper functions)
     // These provide supporting functionality tested indirectly through main modules
-    '!.aios-core/core/registry/**',
-    '!.aios-core/core/utils/**',
+    '!.aiox-core/core/registry/**',
+    '!.aiox-core/core/utils/**',
   ],
 
   // Coverage thresholds (Story TD-3)
@@ -100,7 +100,7 @@ module.exports = {
     // TD-6: Adjusted to 45% to reflect current coverage (47.14%)
     // TEMPORARY: Lowered to 38% for PR #76 - Gemini integration adds many new files
     // Many core modules are I/O-heavy orchestration that's difficult to unit test
-    '.aios-core/core/': {
+    '.aiox-core/core/': {
       lines: 38,
     },
   },
